@@ -17,6 +17,5 @@ test/acceptance/*-results.xml
 
 build/
 dist/
-app/bower_components/
 .sass-cache/
 bower_components/
