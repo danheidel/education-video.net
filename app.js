@@ -3,7 +3,7 @@
 var express = require('express');
 var app = express();
 var cons = require('consolidate');
-var path = require('path');
+//var path = require('path');
 var http = require('http');
 var passport = require('passport');
 var flash = require('connect-flash');
@@ -47,7 +47,7 @@ app.configure('test', function(){
 });
 
 //sets up log-in/account sign-up route handlers
-require('./site/routes.js')(app, passport);
+require('./site/js/routes/loginRoutes.js')(app, passport);
 
 //DRYing router code for common routes
 function baseRoutes(route, data){
@@ -66,6 +66,7 @@ baseRoutes('channels', channels);
 
 var creators = require('./api/routes/creatorRoutes');
 baseRoutes('creators', creators);
+
 
 var server  = http.createServer(app);
 

@@ -3,12 +3,12 @@
 
 var mongoose = require('mongoose');
 
-var schema = new mongoose.schema({
+var schema = new mongoose.Schema({
   name: String,
   location: String,
   description: String,
-  tags: [{name: String, ref: 'Tag'}],
-  _creator: {type: String, ref: 'Creator'},
+  //tags: [{name: String, ref: 'Tag'}],
+  _creator: {type: String, ref: 'Creator'}
 });
 
 module.exports = mongoose.model('Channel', schema);

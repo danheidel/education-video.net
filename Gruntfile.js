@@ -14,9 +14,25 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-casper');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-mongoimport');
+  grunt.loadNpmTasks('grunt-notify');
+  grunt.loadNpmTasks('grunt-env');
+  grunt.loadNpmTasks('grunt-mongo-drop');
+  grunt.loadNpmTasks('grunt-mocha-cov');
+  grunt.loadNpmTasks('grunt-concurrent');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
+    env: {
+      options: {
+      },
+      dev: {
+        NODE_ENV: 'development'
+      },
+      test: {
+        NODE_ENV: 'test'
+      }
+    },
 
     clean: {
       build: ['build'],
@@ -29,15 +45,15 @@ module.exports = function(grunt) {
     copy: {
       prod: {
         expand: true,
-        cwd: 'site/static',
-        src: ['css/*.css', '*.html', 'img/**/*' ],
+        cwd: 'site',
+        src: ['css/*.css', '*.html', 'images/**/*' ],
         dest: 'dist/',
         flatten: false,
         filter: 'isFile'
       },
       dev: {
         expand: true,
-        cwd: 'site/static',
+        cwd: 'site',
         src: ['css/*.css', '*.html', 'images/**/*' ],
         dest: 'build/',
         flatten: false,
@@ -47,10 +63,10 @@ module.exports = function(grunt) {
 
     browserify: {
       prod: {
-        src: ['site/js/*.js'],
+        src: ['site/*.js'],
         dest: 'dist/browser.js',
         options: {
-          transform: ['debowerify'],
+          transform: ['debowerify','hbsfy'],
           debug: false
         }
       },
@@ -58,8 +74,26 @@ module.exports = function(grunt) {
         src: ['site/js/*.js'],
         dest: 'build/browser.js',
         options: {
-          transform: ['debowerify'],
+          transform: ['debowerify','hbsfy'],
           debug: true
+        }
+      }
+    },
+
+    notify: {
+      server: {
+        options: {
+          message: 'Server is ready'
+        }
+      },
+      express: {
+        options: {
+          message: 'express is ready'
+        }
+      },
+      watch: {
+        options: {
+          message: 'watch'
         }
       }
     },
@@ -70,7 +104,8 @@ module.exports = function(grunt) {
       },
       dev: {
         options: {
-          script: 'app.js'
+          script: 'app.js',
+          node_env: 'development'
         }
       },
       prod: {
@@ -81,36 +116,69 @@ module.exports = function(grunt) {
       },
       test: {
         options: {
-          script: 'app.js'
+          script: 'app.js',
+          node_env: 'test'
         }
       }
     },
     simplemocha: {
-      dev:{
+      test:{
         src:['test/*_test.js','!test/acceptance/*_test.js'],
         options:{
           reporter: 'spec',
           slow: 200,
-          timeout: 1000
+          timeout: 1000,
+          node_env: 'test'
         }
       }
     },
+
+    mochacov: {
+      coverage: {
+        options: {
+          reporter: 'mocha-term-cov-reporter',
+          coverage: true
+        }
+      },
+      coveralls: {
+        options: {
+          coveralls: {
+            serviceName: 'travis-ci'
+          }
+        }
+      },
+      unit: {
+        options: {
+          reporter: 'spec',
+          require: ['chai']
+        }
+      },
+      html: {
+        options: {
+          reporter: 'html-cov',
+          require: ['chai']
+        }
+      },
+      options: {
+        files: 'test/*.js',
+        ui: 'bdd',
+        colors: true
+      }
+    },
+
     watch: {
       all: {
         files:['app.js', './**/*.js' ],
         tasks:['jshint']
       },
       express: {
-        files:  [ 'app.js','site/**/*' ],
-        tasks:  [ /*'sass:dev',*/ 'browserify:dev', 'express:dev' ],
+        files:  [ 'app.js','api/**/*','site/**/*','site/*.js' ],
+        tasks:  [ 'clean', 'copy', 'sass:dev', 'browserify:dev', 'express:dev' ],
         options: {
           // for grunt-contrib-watch v0.5.0+, "nospawn: true" for lower versions.
           // Without this option specified express won't be reloaded
           spawn: false
-        },
-      },
-      options:{
-        forever: false
+        }
       }
     },
     casper: {
@@ -125,14 +193,14 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      all: ['Gruntfile.js', 'server.js', 'api/**/*.js', 'app/**/*.js'],
+      all: ['Gruntfile.js', 'app.js', 'api/**/*.js', 'site**/*.js'],
       options: {
         jshintrc: true
       }
     },
     sass: {
       dist: {
-        files: {'build/css/styles.css': 'app/assets/scss/styles.scss'}
+        files: {'build/css/styles.css': 'site/scss/styles.scss'}
       },
       dev: {
         options: {
@@ -144,7 +212,7 @@ module.exports = function(grunt) {
     },
     mongoimport: {
       options: {
-        db : 'edu',
+        db : 'oaa-test',
         //optional
         //host : 'localhost',
         //port: '27017',
@@ -153,39 +221,40 @@ module.exports = function(grunt) {
         //stopOnError : false,
         collections : [
           {
-            name: 'user',
-            type: 'json',
-            file: 'db/seeds/users.json',
-            jsonArray: true,
-            upsert: true,
-            drop: true
-          },
-          {
-            name : 'creators',
+            name : 'users',
             type : 'json',
-            file : 'db/seeds/creators.json',
+            file : 'db/seeds/users.json',
             jsonArray : true,  //optional
             upsert : true,  //optional
             drop : true  //optional
           },
           {
-            name : 'channels',
+            name : 'meetings',
             type :'json',
-            file : 'db/seeds/channels.json',
+            file : 'db/seeds/meetings.json',
             jsonArray : true,
             upsert : true,
             drop : true
           }
         ]
       }
+    },
+    concurrent: {
+      buildDev: [/*'sass:dev',*/ 'browserify:dev', 'jshint:all']
+    },
+    mongo_drop: {
+      test: {
+        'uri' : 'mongodb://localhost/education-test'
+      }
     }
   });
 
-  grunt.registerTask('build:dev',  ['clean:dev', /*'sass:dev',*/ 'browserify:dev', 'jshint:all', 'copy:dev']);
+  grunt.registerTask('build:dev', ['clean:dev', 'concurrent:buildDev', 'copy:dev']);
   grunt.registerTask('build:prod', ['clean:prod', 'browserify:prod', 'jshint:all', 'copy:prod']);
-  grunt.registerTask('test', ['jshint', 'simplemocha:dev']);
-  grunt.registerTask('server', [ 'build:dev', 'express:dev','watch:express' ]);
-  grunt.registerTask('test:acceptance',['express:dev','casper']);
+  grunt.registerTask('test:prepare', ['mongo_drop', 'mongoimport']);
+  grunt.registerTask('test', ['env:test', 'jshint', 'mochacov:unit','mochacov:coverage' ]);
+  grunt.registerTask('travis', ['jshint', 'mochacov:unit', 'mochacov:coverage', 'mochacov:coveralls']);
+  grunt.registerTask('server', [ 'env:dev', 'build:dev', 'express:dev', 'watch:express','notify' ]);
+  grunt.registerTask('test:acceptance',['build:dev', 'express:dev', 'casper']);
   grunt.registerTask('default', ['jshint', 'test','watch:express']);
-
 };

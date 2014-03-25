@@ -2,15 +2,15 @@
 /**/
 //blank route file
 
-var $$$ = require('../models/$$$');
+var QQ = require('../models/QQ');
 
 exports.collection = function(req, res){
   res.setHeader('Content-Type', 'application/json');
-  $$$.find({}, function(err, $$$s){
+  QQ.find({}, function(err, qqs){
     if(err){
       res.send(500, {'error': err});
     } else {
-      res.send(JSON.stringify($$$s));
+      res.send(JSON.stringify(qqs));
     }
   });
 };
@@ -18,23 +18,23 @@ exports.collection = function(req, res){
 exports.findById = function(req, res){
   res.setHeader('Content-Type', 'application/json');
   var id = req.params.id;
-  $$$.findOne({'_id': String(id)}, function(err, $$$ById){
+  QQ.findOne({'_id': String(id)}, function(err, qqById){
     if(err){
       res.send(500, {'error': err});
     } else {
-      res.send($$$ById);
+      res.send(qqById);
     }
   });
 };
 
 exports.create = function(req, res){
   //needs validation
-  var user = new $$$(req.body);
-  user.save(function(err, new$$$){
+  var qq = new QQ(req.body);
+  qq.save(function(err, newQQ){
     if(err){
       res.send(500, {'error': err});
     } else {
-      res.send(new$$$);
+      res.send(newQQ);
     }
   });
 };
@@ -43,8 +43,8 @@ exports.update = function(req, res){
   var id = String(req.params.id);
   //get rid of _id to prevent Mongo from shitting a brick
   delete req.body._id;
-  var user = req.body;
-  $$$.update({'_id': id}, user, function(err){
+  var qq = req.body;
+  QQ.update({'_id': id}, qq, function(err){
     if(err){
       res.send(500, {'error': err});
     } else {
@@ -55,7 +55,7 @@ exports.update = function(req, res){
 
 exports.destroy = function(req, res){
   var id = String(req.params.id);
-  $$$.remove({'_id': id}, function(err){
+  QQ.remove({'_id': id}, function(err){
     if(err){
       res.send(500, {'error': err});
     } else {
