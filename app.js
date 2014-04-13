@@ -9,13 +9,9 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var mongoose = require('mongoose');
 
-var port = process.argv[2] || process.env.PORT || 4000;
+var user, port;
 
-//a port to listen on must be provided
-if(typeof port === 'undefined'){
-  console.error('no port defined!');
-  process.exit();
-}
+startup();
 
 app.engine('hbs', cons.handlebars);
 app.set('view engine', 'hbs');
@@ -73,3 +69,30 @@ var server  = http.createServer(app);
 server.listen(port, function(){
   console.log('serving on port: ' + port);
 });
+
+function startup(){
+  console.log('starting as user: ' + process.env.USER);
+
+  user = parseInt(process.env.NODEUSERID) || parseInt(process.argv[2]);
+  if(!user){
+    console.error('no user specified, exiting');
+    process.exit();
+  }
+
+  //attempt to de-escalate user permissions
+  try {
+    process.setgid(user);
+    process.setuid(user);
+  } catch (e) {
+    console.error('problem setting user/group, exiting');
+    console.dir(e);
+    process.exit();
+  }
+  console.log('user changed to: ' + user);
+
+  port = parseInt(process.env.NODESERVERPORT) || parseInt(process.argv[3]);
+  if(!port){
+    console.error('no port defined, exiting');
+    process.exit();
+  }
+}
