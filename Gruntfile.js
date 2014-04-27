@@ -26,16 +26,26 @@ module.exports = function(grunt) {
     env: {
       options: {
       },
+      prod: {
+        NODE_ENV: 'production'
+      },
       dev: {
-        NODE_ENV: 'development'
+        NODE_ENV: 'development',
+        NODEUSERID: '1000',
+        NODESERVERPORT: '3000'
       },
       test: {
-        NODE_ENV: 'test'
+        NODE_ENV: 'test',
+        NODEUSERID: '1000',
+        NODESERVERPORT: '3000',
+        SESSION_SECRET: 'test'
       }
     },
 
     clean: {
-      build: ['build'],
+      test: {
+        src: ['build/**/*']
+      },
       dev: {
         src: ['build/**/*']
       },
@@ -52,6 +62,14 @@ module.exports = function(grunt) {
         filter: 'isFile'
       },
       dev: {
+        expand: true,
+        cwd: 'site',
+        src: ['css/*.css', '*.html', 'images/**/*' ],
+        dest: 'build/',
+        flatten: false,
+        filter: 'isFile'
+      },
+      test: {
         expand: true,
         cwd: 'site',
         src: ['css/*.css', '*.html', 'images/**/*' ],
@@ -123,7 +141,7 @@ module.exports = function(grunt) {
     },
     simplemocha: {
       test:{
-        src:['test/*_test.js','!test/acceptance/*_test.js'],
+        src:['test/mocha/*_test.js','!test/acceptance/*_test.js'],
         options:{
           reporter: 'spec',
           slow: 200,
@@ -173,7 +191,7 @@ module.exports = function(grunt) {
       },
       express: {
         files:  [ 'app.js','api/**/*','site/**/*','site/*.js' ],
-        tasks:  [ 'clean', 'copy', 'sass:dev', 'browserify:dev', 'express:dev' ],
+        tasks:  [ 'clean', 'copy', /*'sass:dev',*/ 'browserify:dev', 'express:dev' ],
         options: {
           // for grunt-contrib-watch v0.5.0+, "nospawn: true" for lower versions.
           // Without this option specified express won't be reloaded
@@ -212,13 +230,7 @@ module.exports = function(grunt) {
     },
     mongoimport: {
       options: {
-        db : 'oaa-test',
-        //optional
-        //host : 'localhost',
-        //port: '27017',
-        //username : 'username',
-        //password : 'password',
-        //stopOnError : false,
+        db : 'education-test',
         collections : [
           {
             name : 'users',
@@ -249,12 +261,15 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.registerTask('build:test', ['clean:test', 'concurrent:buildDev', 'copy:dev']);
   grunt.registerTask('build:dev', ['clean:dev', 'concurrent:buildDev', 'copy:dev']);
   grunt.registerTask('build:prod', ['clean:prod', 'browserify:prod', 'jshint:all', 'copy:prod']);
   grunt.registerTask('test:prepare', ['mongo_drop', 'mongoimport']);
-  grunt.registerTask('test', ['env:test', 'jshint', 'mochacov:unit','mochacov:coverage' ]);
+  grunt.registerTask('test', ['env:test', 'simplemocha']);
+  grunt.registerTask('test:cover', ['env:test', 'jshint', 'mochacov:unit','mochacov:coverage' ]);
   grunt.registerTask('travis', ['jshint', 'mochacov:unit', 'mochacov:coverage', 'mochacov:coveralls']);
   grunt.registerTask('server', [ 'env:dev', 'build:dev', 'express:dev', 'watch:express','notify' ]);
+  grunt.registerTask('server:test', [ 'env:test', 'jshint', 'build:test', 'express:test', 'watch:express','notify' ]);
   grunt.registerTask('test:acceptance',['build:dev', 'express:dev', 'casper']);
   grunt.registerTask('default', ['jshint', 'test','watch:express']);
 };

@@ -3,16 +3,19 @@
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
+var setupModel = require('./models').setupModel;
 
 var schema = new mongoose.Schema({
   firstName: String,
   lastName: String,
-  email: String,
   local: {
     email: String,
     password: String
   }
 });
+
+//delete the local vars and __v
+setupModel(schema);
 
 schema.methods.generateHash = function(password){
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);

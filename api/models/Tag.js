@@ -18,4 +18,4 @@ var schema = new mongoose.Schema({
 //delete the local vars and __v
 setupModel(schema);
 
-module.exports = mongoose.model('Creator', schema);
+module.exports = mongoose.model('Tag', schema);

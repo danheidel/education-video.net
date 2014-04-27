@@ -2,7 +2,7 @@
 
 var LocalStrategy = require('passport-local').Strategy;
 
-var User = require('../api/model/User');
+var User = require('../models/User');
 
 module.exports = function(passport){
 
@@ -29,7 +29,7 @@ module.exports = function(passport){
       } else {
         var newUser = new User();
         newUser.local.email = email;
-        newUser.local.password = newUser.generateHast(password);
+        newUser.local.password = newUser.generateHash(password);
         newUser.save(function(err){
           if(err) throw err;
           return done(null, newUser);
@@ -38,7 +38,7 @@ module.exports = function(passport){
     });
   }));
 
-  passport.user('local-login', new LocalStrategy({
+  passport.use('local-login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
