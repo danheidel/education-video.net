@@ -10,7 +10,8 @@ var schema = new mongoose.Schema({
   lastName: String,
   local: {
     email: String,
-    password: String
+    password: String,
+    permissions: String
   }
 });
 
@@ -18,7 +19,7 @@ var schema = new mongoose.Schema({
 setupModel(schema);
 
 schema.methods.generateHash = function(password){
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 };
 
 schema.methods.validatePassword = function(password){

@@ -145,7 +145,7 @@ module.exports = function(grunt) {
         options:{
           reporter: 'spec',
           slow: 200,
-          timeout: 1000,
+          timeout: 500,
           node_env: 'test'
         }
       }
@@ -195,7 +195,8 @@ module.exports = function(grunt) {
         options: {
           // for grunt-contrib-watch v0.5.0+, "nospawn: true" for lower versions.
           // Without this option specified express won't be reloaded
-          spawn: false
+          spawn: false,
+          debounceDelay:1000
         }
       }
     },
@@ -211,7 +212,7 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      all: ['Gruntfile.js', 'app.js', 'api/**/*.js', 'site**/*.js'],
+      all: ['Gruntfile.js', 'app.js', 'api/**/*.js', 'site**/*.js', '!api/db/**/*.js'],
       options: {
         jshintrc: true
       }
@@ -233,17 +234,25 @@ module.exports = function(grunt) {
         db : 'education-test',
         collections : [
           {
-            name : 'users',
+            name : 'tags',
             type : 'json',
-            file : 'db/seeds/users.json',
+            file : 'api/db/seeds/tags.json',
+            jsonArray : true,  //optional
+            //upsert : true,  //optional
+            drop : true  //optional
+          },
+          {
+            name : 'creators',
+            type : 'json',
+            file : 'api/db/seeds/creators.json',
             jsonArray : true,  //optional
             upsert : true,  //optional
             drop : true  //optional
           },
           {
-            name : 'meetings',
+            name : 'channels',
             type :'json',
-            file : 'db/seeds/meetings.json',
+            file : 'api/db/seeds/channels.json',
             jsonArray : true,
             upsert : true,
             drop : true

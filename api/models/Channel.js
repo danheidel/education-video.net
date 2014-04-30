@@ -8,9 +8,12 @@ var schema = new mongoose.Schema({
   name: String,
   location: String,
   description: String,
-  //tags: [{tagID: String}],
+  _tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
   //_videos: [{videoID: String}],
-  _creators: [{creatorID: String}]
+  _creators: [{type: mongoose.Schema.Types.ObjectId, ref: 'Creator'}],
+  local:{
+    owners: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+  }
 });
 
 //delete the local vars and __v

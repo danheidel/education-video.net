@@ -1,12 +1,33 @@
 'use strict';
 
+var _ = require('lodash');
 var superagent = require('superagent');
 var chai = require('chai');
 var expect = chai.expect;
 var should = chai.should();
 var app = require('../../app.js').app;
+var users = {};
 
 describe('User JSON API', function(){
+  before(function(done){
+    //pull in the test users for checking security models
+    console.log('before');
+    var User = require('../../api/models/User');
+    User.find({}, function(err, retObject){
+      if(err){
+        console.log(err);
+        return done(err);
+      }
+      users.adminId = _.find(retObject, {firstName: 'Admin'});
+      users.user1Id = _.find(retObject, {firstName: 'User1'});
+      users.user2Id = _.find(retObject, {firstName: 'User2'});
+      users.nobodyId = _.find(retObject, {firstName: 'Nobody'});
+      console.log(users);
+      console.log('before done');
+      return done();
+    });
+  });
+
   var id;
   var url = 'http://localhost:3000/api/v1/users/';
   it('can create a user', function(done){
@@ -47,6 +68,8 @@ describe('User JSON API', function(){
       expect(res.body.length).above(0);
       expect(res.body[0].__v).to.not.exist;
       expect(res.body[0].local).to.not.exist;
+      //if create failed, point to an existing id for remaining tests
+      if(!id){id = res.body[0]._id;}
       done();
     }
   });
