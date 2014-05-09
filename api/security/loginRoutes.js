@@ -14,12 +14,34 @@ module.exports = function(app, passport) {
       });
   });
 
-  // process the login form
-  app.post('/login', passport.authenticate('local-login', {
-    successRedirect : '/profile', // redirect to the secure profile section
-    failureRedirect : '/login', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
-  }));
+  //process the login form
+  app.post('/login', function(req, res, next){
+    //console.log('app.post login');
+    passport.authenticate('local-login', {
+      successRedirect : '/profile', // redirect to the secure profile section
+      failureRedirect : '/login', // redirect back to the signup page if there is an error
+      failureFlash : true // allow flash messages
+    }, function(err, user, info){
+      // console.log('passport authenticate return');
+      // console.dir('err: ' + err);
+      // console.dir('user: ');
+      // console.dir(user);
+      // console.dir('info: ');
+      // console.dir(info);
+      // console.dir('req.user');
+      // console.log(req.user);
+      req.login(user, function(err){
+        if(err){
+          console.log(err);
+          return next(err);
+        }
+        return res.send(req.user);
+      });
+      // console.dir('req.user');
+      // console.log(req.user);
+      //console.log('is authenticated? ' + req.isAuthenticated());
+    })(req, res, next);
+  });
 
   // display signup form
   app.get('/signup', function(req, res) {

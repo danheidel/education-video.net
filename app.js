@@ -12,7 +12,9 @@ var passport = require('passport');
 require('./api/security/passport')(passport);
 var flash = require('connect-flash');
 var routeFactory = require('./api/routes/routeGenerator').routeFactory;
-var securityFuncs = require('./api/security/securityFuncs');
+var securityFuncs = require('./api/routes/securityFuncs');
+var sanitizeFuncs = require('./api/routes/sanitizeFuncs');
+var handlerFuncs = require('./api/routes/handlerFuncs');
 var errorHandler = require('errorhandler');
 var logger = require('morgan');
 var mongoose = require('mongoose');
@@ -24,13 +26,12 @@ app.set('view engine', 'hbs');
 app.set('views', __dirname + '/site/templates');
 
 //all env
-//app.use(express.bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(__dirname + '/site/static'));
 
-var sessionSecret = process.env.SESSION_SECRET || 'nokey';
+var sessionSecret = process.env.SESSION_SECRET || process.argv[2] || 'nokey';
 app.use(expressSession({secret: sessionSecret}));
 
 if(env === 'production'){
@@ -53,17 +54,46 @@ if(env === 'test'){
   app.use(passport.session());
   app.use(flash());
   app.use(errorHandler());
-  app.use(logger());
+  //app.use(logger());
   mongoose.connect('mongodb://localhost/education-test');
 }
 
-//sets up express routes
-var routeOptions = {};
-routeFactory('/api/v1/users', '../models/User', app, securityFuncs.userSecurity, routeOptions);
-routeFactory('/api/v1/creators', '../models/Creator', app, securityFuncs.creatorSecurity, routeOptions);
-routeFactory('/api/v1/tags', '../models/Tag', app, securityFuncs.tagSecurity, routeOptions);
-routeOptions.populate = ['_creators', '_tags'];
-routeFactory('/api/v1/channels', '../models/Channel', app, securityFuncs.channelSecurity, routeOptions);
+var creatorOptions = {
+  sanitizeInput: sanitizeFuncs.baseInput,
+  sanitizeOutput: sanitizeFuncs.baseOutput,
+  handleCreate: handlerFuncs.createBase,
+  handleUpdate: handlerFuncs.updateBase,
+  securityFunc: securityFuncs.creatorSecurity
+};
+routeFactory('/api/v1/creators', '../models/Creator', app, creatorOptions);
+
+var tagOptions = {
+  sanitizeInput: sanitizeFuncs.baseInput,
+  sanitizeOutput: sanitizeFuncs.baseOutput,
+  handleCreate: handlerFuncs.createBase,
+  handleUpdate: handlerFuncs.updateBase,
+  securityFunc: securityFuncs.tagSecurity
+};
+routeFactory('/api/v1/tags', '../models/Tag', app, tagOptions);
+
+var channelOptions = {
+  sanitizeInput: sanitizeFuncs.baseInput,
+  sanitizeOutput: sanitizeFuncs.baseOutput,
+  handleCreate: handlerFuncs.createBase,
+  handleUpdate: handlerFuncs.updateBase,
+  securityFunc: securityFuncs.channelSecurity,
+  populate: ['_creators', '_tags']
+};
+routeFactory('/api/v1/channels', '../models/Channel', app, channelOptions);
+
+var UserOptions = {
+  sanitizeInput: sanitizeFuncs.baseInput,
+  sanitizeOutput: sanitizeFuncs.baseOutput,
+  handleCreate: handlerFuncs.CreateUser,
+  handleUpdate: handlerFuncs.UpdateUser,
+  securityFunc: securityFuncs.userSecurity
+};
+routeFactory('/api/v1/users', '../models/User', app, UserOptions);
 
 //sets up log-in/account sign-up route handlers
 require('./api/security/loginRoutes.js')(app, passport);

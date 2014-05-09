@@ -10,9 +10,9 @@ var testLogin = require('../testLogin');
 var users = {};
 
 var id;
-var url = 'http://localhost:3000/api/v1/creators/';
+var url = 'http://localhost:3000/api/v1/tags/';
 
-describe('Creator JSON API', function(){
+describe('tag JSON API', function(){
   before(function(done){
     testLogin.loginAdmin(done, users);
   });
@@ -26,11 +26,11 @@ describe('Creator JSON API', function(){
     testLogin.loginNobody(done, users);
   });
 
-  it('create a creator as user1', function(done){
+  it('create a tag as user1', function(done){
     users.user1Agent.post(url)
       .send({
-        name:'My test creator',
-        description:'Test creator',
+        name:'My test tag',
+        description:'Test tag',
         contact:{
           youTube: 'www.youtube.com/foo'
         }
@@ -50,10 +50,10 @@ describe('Creator JSON API', function(){
       expect(res.body._id).not.equal(null);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My test creator');
+      expect(res.body.name).equal('My test tag');
     }
   });
-  it('can get a creator collection as admin', function(done){
+  it('can get a tag collection as admin', function(done){
     users.adminAgent.get(url)
       .end(function(err, res){
         try{
@@ -71,7 +71,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can get a creator collection as user1', function(done){
+  it('can get a tag collection as user1', function(done){
     users.user1Agent.get(url)
       .end(function(err, res){
         try{
@@ -87,7 +87,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can get a creator collection as user2', function(done){
+  it('can get a tag collection as user2', function(done){
     users.user2Agent.get(url)
       .end(function(err, res){
         try{
@@ -103,7 +103,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can get a creator collection as nobody', function(done){
+  it('can get a tag collection as nobody', function(done){
     users.nobodyAgent.get(url)
       .end(function(err, res){
         try{
@@ -119,7 +119,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can get a single creator as admin', function(done){
+  it('can get a single tag as admin', function(done){
     users.adminAgent.get(url + id)
       .end(function(err, res){
         try{
@@ -131,11 +131,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My test creator');
+      expect(res.body.name).equal('My test tag');
       done();
     }
   });
-  it('can get a single creator as user1', function(done){
+  it('can get a single tag as user1', function(done){
     users.user1Agent.get(url + id)
       .end(function(err, res){
         try{
@@ -147,11 +147,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My test creator');
+      expect(res.body.name).equal('My test tag');
       done();
     }
   });
-  it('can get a single creator as user2', function(done){
+  it('can get a single tag as user2', function(done){
     users.user2Agent.get(url + id)
       .end(function(err, res){
         try{
@@ -163,11 +163,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My test creator');
+      expect(res.body.name).equal('My test tag');
       done();
     }
   });
-  it('can get a single creator as nobody', function(done){
+  it('can get a single tag as nobody', function(done){
     users.nobodyAgent.get(url + id)
       .end(function(err, res){
         try{
@@ -179,13 +179,13 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My test creator');
+      expect(res.body.name).equal('My test tag');
       done();
     }
   });
-  it('can update a single creator as admin', function(done){
+  it('can update a single tag as admin', function(done){
     users.adminAgent.put(url + id)
-      .send({name:'New creator name - admin'})
+      .send({name:'New tag name - admin'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -197,7 +197,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can verify creator edit as admin', function(done){
+  it('can verify tag edit as admin', function(done){
     users.adminAgent.get(url + id)
       .end(function(err, res){
         try{
@@ -209,11 +209,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('New creator name - admin');
+      expect(res.body.name).equal('New tag name - admin');
       done();
     }
   });
-  it('can verify creator edit as user1', function(done){
+  it('can verify tag edit as user1', function(done){
     users.user1Agent.get(url + id)
       .end(function(err, res){
         try{
@@ -225,13 +225,13 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('New creator name - admin');
+      expect(res.body.name).equal('New tag name - admin');
       done();
     }
   });
-  it('can update a single creator as user1', function(done){
+  it('can update a single tag as user1', function(done){
     users.user1Agent.put(url + id)
-      .send({name:'New creator name - user1'})
+      .send({name:'New tag name - user1'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -243,7 +243,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can verify second creator edit as admin', function(done){
+  it('can verify second tag edit as admin', function(done){
     users.adminAgent.get(url + id)
       .end(function(err, res){
         try{
@@ -255,11 +255,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('New creator name - user1');
+      expect(res.body.name).equal('New tag name - user1');
       done();
     }
   });
-  it('can verify second creator edit as user1', function(done){
+  it('can verify second tag edit as user1', function(done){
     users.user1Agent.get(url + id)
       .end(function(err, res){
         try{
@@ -271,13 +271,13 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('New creator name - user1');
+      expect(res.body.name).equal('New tag name - user1');
       done();
     }
   });
-  it('cannot update a single creator as user2', function(done){
+  it('cannot update a single tag as user2', function(done){
     users.user2Agent.put(url + id)
-      .send({name:'New creator name - user2'})
+      .send({name:'New tag name - user2'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -289,9 +289,9 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('cannot update a single creator as nobody', function(done){
+  it('cannot update a single tag as nobody', function(done){
     users.nobodyAgent.put(url + id)
-      .send({name:'New creator name - user2'})
+      .send({name:'New tag name - user2'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -315,11 +315,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('New creator name - user1');
+      expect(res.body.name).equal('New tag name - user1');
       done();
     }
   });
-  it('cannot delete a creator as nobody', function(done){
+  it('cannot delete a tag as nobody', function(done){
     users.nobodyAgent.del(url + id)
       .end(function(err, res){
         try{
@@ -332,7 +332,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('cannot delete a creator as user2', function(done){
+  it('cannot delete a tag as user2', function(done){
     users.user2Agent.del(url + id)
       .end(function(err, res){
         try{
@@ -345,7 +345,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can delete a creator as user1 (owner)', function(done){
+  it('can delete a tag as user1 (owner)', function(done){
     users.adminAgent.del(url + id)
       .end(function(err, res){
         try{
@@ -358,7 +358,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can verify creator deletion', function(done){
+  it('can verify tag deletion', function(done){
     users.adminAgent.get(url + id)
       .end(function(err, res){
         try{
@@ -371,11 +371,11 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('create a creator as admin', function(done){
+  it('create a tag as admin', function(done){
     users.adminAgent.post(url)
       .send({
-        name:'My admin creator',
-        description:'Test creator',
+        name:'My admin tag',
+        description:'Test tag',
         contact:{
           youTube: 'www.youtube.com/foo'
         }
@@ -393,10 +393,10 @@ describe('Creator JSON API', function(){
       expect(res.body._id).not.equal(null);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My admin creator');
+      expect(res.body.name).equal('My admin tag');
     }
   });
-  it('can get a single creator as admin', function(done){
+  it('can get a single tag as admin', function(done){
     users.adminAgent.get(url + id)
       .end(function(err, res){
         try{
@@ -408,11 +408,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My admin creator');
+      expect(res.body.name).equal('My admin tag');
       done();
     }
   });
-  it('can get a admin creator as user1', function(done){
+  it('can get a admin tag as user1', function(done){
     users.user1Agent.get(url + id)
       .end(function(err, res){
         try{
@@ -424,11 +424,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My admin creator');
+      expect(res.body.name).equal('My admin tag');
       done();
     }
   });
-  it('can get a admin creator as user2', function(done){
+  it('can get a admin tag as user2', function(done){
     users.user2Agent.get(url + id)
       .end(function(err, res){
         try{
@@ -440,11 +440,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My admin creator');
+      expect(res.body.name).equal('My admin tag');
       done();
     }
   });
-  it('can get a admin creator as nobody', function(done){
+  it('can get a admin tag as nobody', function(done){
     users.nobodyAgent.get(url + id)
       .end(function(err, res){
         try{
@@ -456,13 +456,13 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My admin creator');
+      expect(res.body.name).equal('My admin tag');
       done();
     }
   });
-  it('cannot update admin creator as nobody', function(done){
+  it('cannot update admin tag as nobody', function(done){
     users.nobodyAgent.put(url + id)
-      .send({name:'New creator name - nobody'})
+      .send({name:'New tag name - nobody'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -474,9 +474,9 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('cannot update admin creator as user2', function(done){
+  it('cannot update admin tag as user2', function(done){
     users.user2Agent.put(url + id)
-      .send({name:'New creator name - user2'})
+      .send({name:'New tag name - user2'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -488,9 +488,9 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('cannot update admin creator as user1', function(done){
+  it('cannot update admin tag as user1', function(done){
     users.user2Agent.put(url + id)
-      .send({name:'New creator name - user1'})
+      .send({name:'New tag name - user1'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -514,13 +514,13 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My admin creator');
+      expect(res.body.name).equal('My admin tag');
       done();
     }
   });
-  it('can update admin creator as admin', function(done){
+  it('can update admin tag as admin', function(done){
     users.adminAgent.put(url + id)
-      .send({name:'New creator name - Admin'})
+      .send({name:'New tag name - Admin'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -544,11 +544,11 @@ describe('Creator JSON API', function(){
       expect(res.body._id).equal(id);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('New creator name - Admin');
+      expect(res.body.name).equal('New tag name - Admin');
       done();
     }
   });
-  it('cannot delete admin creator as nobody', function(done){
+  it('cannot delete admin tag as nobody', function(done){
     users.nobodyAgent.del(url + id)
       .end(function(err, res){
         try{
@@ -561,7 +561,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('cannot delete admin creator as user2', function(done){
+  it('cannot delete admin tag as user2', function(done){
     users.user2Agent.del(url + id)
       .end(function(err, res){
         try{
@@ -574,7 +574,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('cannot delete admin creator as user1', function(done){
+  it('cannot delete admin tag as user1', function(done){
     users.user1Agent.del(url + id)
       .end(function(err, res){
         try{
@@ -587,7 +587,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can delete a creator as admin (owner)', function(done){
+  it('can delete a tag as admin (owner)', function(done){
     users.adminAgent.del(url + id)
       .end(function(err, res){
         try{
@@ -600,7 +600,7 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('can verify creator deletion', function(done){
+  it('can verify tag deletion', function(done){
     users.adminAgent.get(url + id)
       .end(function(err, res){
         try{
@@ -613,11 +613,11 @@ describe('Creator JSON API', function(){
       done();
     }
   });
-  it('cannot create a creator as unauthenticated', function(done){
+  it('cannot create a tag as unauthenticated', function(done){
     users.nobodyAgent.post(url)
       .send({
-        name:'My nobody creator',
-        description:'Test creator',
+        name:'My nobody tag',
+        description:'Test tag',
         contact:{
           youTube: 'www.youtube.com/foo'
         }

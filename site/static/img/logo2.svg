@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="92.941154"
+   height="93.553642"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="logo.svg">
+  <defs
+     id="defs4">
+    <font
+       horiz-adv-x="1024"
+       id="font3027"
+       inkscape:label="font 1"
+       horiz-origin-x="0"
+       horiz-origin-y="0"
+       vert-origin-x="45"
+       vert-origin-y="90"
+       vert-adv-y="90">
+      <font-face
+         units-per-em="1024"
+         id="font-face3029"
+         font-family="SVGFont 1" />
+      <missing-glyph
+         d="M0,0h1000v1024h-1000z"
+         id="missing-glyph3031" />
+    </font>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="129.87522"
+     inkscape:cy="51.109939"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1219"
+     inkscape:window-height="906"
+     inkscape:window-x="3"
+     inkscape:window-y="58"
+     inkscape:window-maximized="0"
+     fit-margin-top="5"
+     fit-margin-left="5"
+     fit-margin-right="5"
+     fit-margin-bottom="5" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(4.6176199,4.5802284)">
+    <g
+       id="g3039">
+      <text
+         transform="matrix(0.92253915,0.3859035,-0.3859035,0.92253915,0,0)"
+         sodipodi:linespacing="125%"
+         id="text2985"
+         y="59.192402"
+         x="22.879013"
+         style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Schola;-inkscape-font-specification:TeX Gyre Schola"
+         xml:space="preserve"><tspan
+           style="font-size:82px"
+           y="59.192402"
+           x="22.879013"
+           id="tspan2987"
+           sodipodi:role="line">P</tspan></text>
+      <text
+         transform="matrix(0.87716002,-0.43142003,0.38888583,0.94877428,0,0)"
+         sodipodi:linespacing="125%"
+         id="text2989"
+         y="82.863647"
+         x="8.2107868"
+         style="font-size:60.25286102px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Schola;-inkscape-font-specification:TeX Gyre Schola"
+         xml:space="preserve"><tspan
+           style="font-size:77.46795654px"
+           y="82.863647"
+           x="8.2107868"
+           id="tspan2991"
+           sodipodi:role="line">L</tspan></text>
+    </g>
+  </g>
+</svg>

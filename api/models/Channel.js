@@ -12,11 +12,16 @@ var schema = new mongoose.Schema({
   //_videos: [{videoID: String}],
   _creators: [{type: mongoose.Schema.Types.ObjectId, ref: 'Creator'}],
   local:{
-    owners: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
   }
-});
+}, {strict: true});
 
 //delete the local vars and __v
 setupModel(schema);
+
+schema.methods.security = function(){};
+schema.methods.create = function(){};
+schema.methods.update = function(){};
+schema.methods.sanitizeInput = function(){};
 
 module.exports = mongoose.model('Channel', schema);

@@ -1,5 +1,8 @@
 'use strict';
-/*global _*/
+
+module.exports.securityFactory = function(){
+
+};
 
 module.exports.userSecurity = function(user, dbObject){
   if(!user){
@@ -11,9 +14,12 @@ module.exports.userSecurity = function(user, dbObject){
     return 'full';
   }
   if(user.local.permissions === 'user'){
-    if(_.find(dbObject.local.owners, function(owner){
-      return owner === user._id;
-    })){
+    if(!dbObject){
+      //no dbObject supplied - e.g.: object is being created
+      //does user have rights to do this?
+      return 'full';
+    }
+    if(dbObject.local.owner.equals(user._id)){
       //user owns this object, can do edits
       return 'full';
     }else{
@@ -34,9 +40,12 @@ module.exports.tagSecurity = function(user, dbObject){
     return 'full';
   }
   if(user.local.permissions === 'user'){
-    if(_.find(dbObject.local.owners, function(owner){
-      return owner === user._id;
-    })){
+    if(!dbObject){
+      //no dbObject supplied - e.g.: object is being created
+      //does user have rights to do this?
+      return 'full';
+    }
+    if(dbObject.local.owner.equals(user._id)){
       //user owns this object, can do edits
       return 'full';
     }else{
@@ -57,9 +66,12 @@ module.exports.creatorSecurity = function(user, dbObject){
     return 'full';
   }
   if(user.local.permissions === 'user'){
-    if(_.find(dbObject.local.owners, function(owner){
-      return owner === user._id;
-    })){
+    if(!dbObject){
+      //no dbObject supplied - e.g.: object is being created
+      //does user have rights to do this?
+      return 'full';
+    }
+    if(dbObject.local.owner.equals(user._id)){
       //user owns this object, can do edits
       return 'full';
     }else{
@@ -80,9 +92,12 @@ module.exports.channelSecurity = function(user, dbObject){
     return 'full';
   }
   if(user.local.permissions === 'user'){
-    if(_.find(dbObject.local.owners, function(owner){
-      return owner === user._id;
-    })){
+    if(!dbObject){
+      //no dbObject supplied - e.g.: object is being created
+      //does user have rights to do this?
+      return 'full';
+    }
+    if(dbObject.local.owner.equals(user._id)){
       //user owns this object, can do edits
       return 'full';
     }else{

@@ -1,43 +1,383 @@
 'use strict';
-
-var _ = require('lodash');
-var superagent = require('superagent');
+/*jshint expr: true*/
+// var _ = require('lodash');
+// var superagent = require('superagent');
 var chai = require('chai');
 var expect = chai.expect;
 var should = chai.should();
 var app = require('../../app.js').app;
+var testLogin = require('../testLogin');
 var users = {};
 
-describe('User JSON API', function(){
+var id;
+var url = 'http://localhost:3000/api/v1/users/';
+
+describe('user JSON API', function(){
   before(function(done){
-    //pull in the test users for checking security models
-    console.log('before');
-    var User = require('../../api/models/User');
-    User.find({}, function(err, retObject){
-      if(err){
-        console.log(err);
-        return done(err);
-      }
-      users.adminId = _.find(retObject, {firstName: 'Admin'});
-      users.user1Id = _.find(retObject, {firstName: 'User1'});
-      users.user2Id = _.find(retObject, {firstName: 'User2'});
-      users.nobodyId = _.find(retObject, {firstName: 'Nobody'});
-      console.log(users);
-      console.log('before done');
-      return done();
-    });
+    testLogin.loginAdmin(done, users);
+  });
+  before(function(done){
+    testLogin.loginUser1(done, users);
+  });
+  before(function(done){
+    testLogin.loginUser2(done, users);
+  });
+  before(function(done){
+    testLogin.loginNobody(done, users);
   });
 
-  var id;
-  var url = 'http://localhost:3000/api/v1/users/';
-  it('can create a user', function(done){
-    superagent.post(url)
+  it('create a user as user1', function(done){
+    users.user1Agent.post(url)
       .send({
-        firstName:'Foo',
-        lastName:'Bar',
-        local: {
-          email:'foo@foo.com',
-          password:'youcantseeme'
+        firstName: 'Test',
+        lastName: 'McTesterson'
+      })
+      .end(function(err, res){
+        try{
+          expects(err, res);
+          done();
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log('created object');
+      console.log(res.body);
+      expect(err).eql(null);
+      id = res.body._id;
+      expect(res.status).to.not.equal(403);
+      expect(res.body._id).not.equal(null);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My test user');
+    }
+  });
+  it('can get a user collection as admin', function(done){
+    users.adminAgent.get(url)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.length).above(0);
+      expect(res.body[0].name).to.exist;
+      expect(res.body[0].__v).to.not.exist;
+      expect(res.body[0].local).to.not.exist;
+      //if create fails, get at least one record id to test get single
+      if(!id){id = res.body[0]._id;}
+      done();
+    }
+  });
+  it('can get a user collection as user1', function(done){
+    users.user1Agent.get(url)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.length).above(0);
+      expect(res.body[0].name).to.exist;
+      expect(res.body[0].__v).to.not.exist;
+      expect(res.body[0].local).to.not.exist;
+      done();
+    }
+  });
+  it('can get a user collection as user2', function(done){
+    users.user2Agent.get(url)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.length).above(0);
+      expect(res.body[0].name).to.exist;
+      expect(res.body[0].__v).to.not.exist;
+      expect(res.body[0].local).to.not.exist;
+      done();
+    }
+  });
+  it('can get a user collection as nobody', function(done){
+    users.nobodyAgent.get(url)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.length).above(0);
+      expect(res.body[0].name).to.exist;
+      expect(res.body[0].__v).to.not.exist;
+      expect(res.body[0].local).to.not.exist;
+      done();
+    }
+  });
+  it('can get a single user as admin', function(done){
+    users.adminAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log(res.body);
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My test user');
+      done();
+    }
+  });
+  it('can get a single user as user1', function(done){
+    users.user1Agent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My test user');
+      done();
+    }
+  });
+  it('can get a single user as user2', function(done){
+    users.user2Agent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My test user');
+      done();
+    }
+  });
+  it('can get a single user as nobody', function(done){
+    users.nobodyAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My test user');
+      done();
+    }
+  });
+  it('can update a single user as admin', function(done){
+    users.adminAgent.put(url + id)
+      .send({name:'New user name - admin'})
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).equal('success');
+      done();
+    }
+  });
+  it('can verify user edit as admin', function(done){
+    users.adminAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('New user name - admin');
+      done();
+    }
+  });
+  it('can verify user edit as user1', function(done){
+    users.user1Agent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('New user name - admin');
+      done();
+    }
+  });
+  it('can update a single user as user1', function(done){
+    users.user1Agent.put(url + id)
+      .send({name:'New user name - user1'})
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log(res.body);
+      expect(err).equal(null);
+      expect(res.body.msg).equal('success');
+      done();
+    }
+  });
+  it('can verify second user edit as admin', function(done){
+    users.adminAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('New user name - user1');
+      done();
+    }
+  });
+  it('can verify second user edit as user1', function(done){
+    users.user1Agent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('New user name - user1');
+      done();
+    }
+  });
+  it('cannot update a single user as user2', function(done){
+    users.user2Agent.put(url + id)
+      .send({name:'New user name - user2'})
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('cannot update a single user as nobody', function(done){
+    users.nobodyAgent.put(url + id)
+      .send({name:'New user name - user2'})
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('can verify lack of unauthorized edits', function(done){
+    users.adminAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log(res.body);
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('New user name - user1');
+      done();
+    }
+  });
+  it('cannot delete a user as nobody', function(done){
+    users.nobodyAgent.del(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('cannot delete a user as user2', function(done){
+    users.user2Agent.del(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('can delete a user as user1 (owner)', function(done){
+    users.adminAgent.del(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).equal('success');
+      done();
+    }
+  });
+  it('can verify user deletion', function(done){
+    users.adminAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body._id).to.not.exist;
+      done();
+    }
+  });
+  it('create a user as admin', function(done){
+    users.adminAgent.post(url)
+      .send({
+        name:'My admin user',
+        description:'Test user',
+        contact:{
+          youTube: 'www.youtube.com/foo'
         }
       })
       .end(function(err, res){
@@ -52,46 +392,140 @@ describe('User JSON API', function(){
       expect(res.status).to.not.equal(403);
       expect(res.body._id).not.equal(null);
       expect(res.body.__v).to.not.exist;
-      expect(res.body.firstName).equal('Foo');
       expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My admin user');
     }
   });
-  it('can get a user collection', function(done){
-    superagent.get(url)
+  it('can get a single user as admin', function(done){
+    users.adminAgent.get(url + id)
       .end(function(err, res){
         try{
           expects(err, res);
         }catch(e){console.error(e);}
       });
     function expects(err, res){
-      expect(err).equal(null);
-      expect(res.body.length).above(0);
-      expect(res.body[0].__v).to.not.exist;
-      expect(res.body[0].local).to.not.exist;
-      //if create failed, point to an existing id for remaining tests
-      if(!id){id = res.body[0]._id;}
-      done();
-    }
-  });
-  it('can get a single user', function(done){
-    superagent.get(url + id)
-      .end(function(err, res){
-        try{
-          expects(err, res);
-        }catch(e){console.error(e);}
-      });
-    function expects(err, res){
+      console.log(res.body);
       expect(err).equal(null);
       expect(res.body._id).equal(id);
-      expect(res.body.firstName).equal('Foo');
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My admin user');
       done();
     }
   });
-  it('can update a single user', function(done){
-    superagent.put(url + id)
-      .send({firstName:'New user name'})
+  it('can get a admin user as user1', function(done){
+    users.user1Agent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log(res.body);
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My admin user');
+      done();
+    }
+  });
+  it('can get a admin user as user2', function(done){
+    users.user2Agent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log(res.body);
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My admin user');
+      done();
+    }
+  });
+  it('can get a admin user as nobody', function(done){
+    users.nobodyAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log(res.body);
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My admin user');
+      done();
+    }
+  });
+  it('cannot update admin user as nobody', function(done){
+    users.nobodyAgent.put(url + id)
+      .send({name:'New user name - nobody'})
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('cannot update admin user as user2', function(done){
+    users.user2Agent.put(url + id)
+      .send({name:'New user name - user2'})
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('cannot update admin user as user1', function(done){
+    users.user2Agent.put(url + id)
+      .send({name:'New user name - user1'})
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('can verify lack of unauthorized edits', function(done){
+    users.adminAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log(res.body);
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('My admin user');
+      done();
+    }
+  });
+  it('can update admin user as admin', function(done){
+    users.adminAgent.put(url + id)
+      .send({name:'New user name - Admin'})
       .end(function(err, res){
         try{
           expects(err, res);
@@ -103,8 +537,25 @@ describe('User JSON API', function(){
       done();
     }
   });
-  it('can verify user edit', function(done){
-    superagent.get(url + id)
+  it('can verify admin edits', function(done){
+    users.adminAgent.get(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      console.log(res.body);
+      expect(err).equal(null);
+      expect(res.body._id).equal(id);
+      expect(res.body.__v).to.not.exist;
+      expect(res.body.local).to.not.exist;
+      expect(res.body.name).equal('New user name - Admin');
+      done();
+    }
+  });
+  it('cannot delete admin user as nobody', function(done){
+    users.nobodyAgent.del(url + id)
       .end(function(err, res){
         try{
           expects(err, res);
@@ -112,14 +563,38 @@ describe('User JSON API', function(){
       });
     function expects(err, res){
       expect(err).equal(null);
-      expect(res.body._id).equal(id);
-      expect(res.body.__v).to.not.exist;
-      expect(res.body.firstName).equal('New user name');
+      expect(res.body.msg).not.equal('success');
       done();
     }
   });
-  it('can delete a user', function(done){
-    superagent.del(url + id)
+  it('cannot delete admin user as user2', function(done){
+    users.user2Agent.del(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('cannot delete admin user as user1', function(done){
+    users.user1Agent.del(url + id)
+      .end(function(err, res){
+        try{
+          expects(err, res);
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).equal(null);
+      expect(res.body.msg).not.equal('success');
+      done();
+    }
+  });
+  it('can delete a user as admin (owner)', function(done){
+    users.adminAgent.del(url + id)
       .end(function(err, res){
         try{
           expects(err, res);
@@ -132,7 +607,7 @@ describe('User JSON API', function(){
     }
   });
   it('can verify user deletion', function(done){
-    superagent.get(url + id)
+    users.adminAgent.get(url + id)
       .end(function(err, res){
         try{
           expects(err, res);
@@ -142,6 +617,27 @@ describe('User JSON API', function(){
       expect(err).equal(null);
       expect(res.body._id).to.not.exist;
       done();
+    }
+  });
+  it('cannot create a user as unauthenticated', function(done){
+    users.nobodyAgent.post(url)
+      .send({
+        name:'My nobody user',
+        description:'Test user',
+        contact:{
+          youTube: 'www.youtube.com/foo'
+        }
+      })
+      .end(function(err, res){
+        try{
+          expects(err, res);
+          done();
+        }catch(e){console.error(e);}
+      });
+    function expects(err, res){
+      expect(err).eql(null);
+      id = res.body._id;
+      expect(res.status).to.equal(403);
     }
   });
 });

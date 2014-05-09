@@ -145,7 +145,7 @@ module.exports = function(grunt) {
         options:{
           reporter: 'spec',
           slow: 200,
-          timeout: 500,
+          timeout: 2000,
           node_env: 'test'
         }
       }

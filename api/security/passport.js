@@ -4,14 +4,21 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/User');
 
-module.exports = function(passport){
+var passport;
+
+module.exports = function(iPassport){
+  passport = iPassport;
 
   passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    // console.log('serialize user');
+    // console.log(user);
+    done(null, user._id);
   });
 
   passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {
+      // console.log('de-serialize user');
+      // console.log(user);
       done(err, user);
     });
   });
@@ -44,15 +51,35 @@ module.exports = function(passport){
     passReqToCallback: true
   },
   function(req, email, password, done){
+    // console.log('logging in');
+    // console.log(req.body);
     User.findOne({'local.email': email}, function(err, user){
       if(err){return done(err);}
       if(!user){
+        console.log('User not found:' + email);
         return done(null, false, req.flash('loginMessage', 'No user found.'));
       }
-      if(!user.validPassword(password)){
+      if(!user.validatePassword(password)){
+        console.log('incorrect password: ' + password);
         return done(null, false, req.flash('loginMessage', 'Incorrect password!'));
       }
+      console.log('user validation success: ' + user.firstName + ' ' + user.lastName);
       return done(null, user);
     });
   }));
+
+  passport.use('local-test',
+    new LocalStrategy({
+      usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback: true
+    },function(req, username, password, done){
+      console.log('local-test');
+      console.log('incoming username');
+      console.log(username);
+      console.log('incoming password');
+      console.log(password);
+      return done(null, {email:username, password: password, _id: '1'});
+    })
+  );
 };

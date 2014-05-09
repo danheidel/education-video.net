@@ -14,6 +14,7 @@ var channels = JSON.parse(fs.readFileSync('channels.json'));
 var creators = JSON.parse(fs.readFileSync('creators.json'));
 var tags = JSON.parse(fs.readFileSync('tags.json'));
 
+var usersDone = 0;
 var creatorsDone = 0;
 var tagsDone = 0;
 var channelsDone = 0;
@@ -24,62 +25,97 @@ var tempUser, user1, user2, admin, nobody;
 
 //create some users to test security model
 tempUser  = new User({firstName: 'Admin', lastName: 'Superuser',
-  local:{email: 'bamf@bar.com', password: 'reallycantseeeme', permissions: 'admin'}
+  local:{email: 'bamf@bar.com', permissions: 'admin'}
 });
+tempUser.local.password = tempUser.generateHash('admin');
 tempUser.save(function(err, retObject){
   if(err){console.error(err);}
-  else{admin = retObject._id;}
-});
-tempUser  = new User({firstName: 'User1', lastName: 'Foo',
-  local:{email: 'foo@bar.com', password: 'cantseeme', permissions: 'user'}
-});
-tempUser.save(function(err, retObject){
-  if(err){console.error(err);}
-  else{user1 = retObject._id;}
-});
-tempUser  = new User({firstName: 'User2', lastName: 'Schmoo',
-  local:{email: 'schmoo@bar.com', password: 'cantseeme', permissions: 'user'}
-});
-tempUser.save(function(err, retObject){
-  if(err){console.error(err);}
-  else{user2 = retObject._id;}
-});
-tempUser  = new User({firstName: 'Nobody', lastName: 'Schlub',
-  local:{email: 'bluh@bar.com', password: 'cantseeeme', permissions: 'test'}
-});
-tempUser.save(function(err, retObject){
-  if(err){console.error(err);}
-  else{nobody = retObject._id;}
+  else{
+    admin = retObject._id;
+    usersDone ++;
+    areUsersDone();
+  }
 });
 
-for(var rep=0;rep<creators.length;rep++){
-  var tempCreator = new Creator(creators[rep]);
-  (function(rep){
-    tempCreator.save(function(err, saved){
-      if(err){
-        console.error(err);
-        process.exit();
-      }
-      creatorsIDs[creators[rep].id] = saved._id;
-      creatorsDone ++;
-      checkIfDone();
-    });
-  })(rep);
+tempUser  = new User({firstName: 'User1', lastName: 'Foo',
+  local:{email: 'foo@bar.com', permissions: 'user'}
+});
+tempUser.local.password = tempUser.generateHash('user1');
+tempUser.save(function(err, retObject){
+  if(err){console.error(err);}
+  else{
+    user1 = retObject._id;
+    usersDone ++;
+    areUsersDone();
+  }
+});
+
+tempUser  = new User({firstName: 'User2', lastName: 'Schmoo',
+  local:{email: 'schmoo@bar.com', permissions: 'user'}
+});
+tempUser.local.password = tempUser.generateHash('user2');
+tempUser.save(function(err, retObject){
+  if(err){console.error(err);}
+  else{
+    user2 = retObject._id;
+    usersDone ++;
+    areUsersDone();
+  }
+});
+
+tempUser  = new User({firstName: 'Nobody', lastName: 'Schlub',
+  local:{email: 'bluh@bar.com', permissions: 'test'}
+});
+tempUser.local.password = tempUser.generateHash('nobody');
+tempUser.save(function(err, retObject){
+  if(err){console.error(err);}
+  else{
+    nobody = retObject._id;
+    usersDone ++;
+    areUsersDone();
+  }
+});
+
+function areUsersDone(){
+  if(usersDone >= 4){
+    popChildren();
+  }
 }
 
-for(var rep=0;rep<tags.length;rep++){
-  var tempTag = new Tag(tags[rep]);
-  (function(rep){
-    tempTag.save(function(err, saved){
-      if(err){
-        console.error(err);
-        process.exit();
-      }
-      tagsIDs[tags[rep].id] = saved._id;
-      tagsDone ++;
-      checkIfDone();
-    });
-  })(rep);
+function popChildren(){
+  for(var rep=0;rep<creators.length;rep++){
+    creators[rep].local = {};
+    creators[rep].local.owner = admin;
+    var tempCreator = new Creator(creators[rep]);
+    (function(rep){
+      tempCreator.save(function(err, saved){
+        if(err){
+          console.error(err);
+          process.exit();
+        }
+        creatorsIDs[creators[rep].id] = saved._id;
+        creatorsDone ++;
+        checkIfDone();
+      });
+    })(rep);
+  }
+
+  for(var rep=0;rep<tags.length;rep++){
+    tags[rep].local = {};
+    tags[rep].local.owner = admin;
+    var tempTag = new Tag(tags[rep]);
+    (function(rep){
+      tempTag.save(function(err, saved){
+        if(err){
+          console.error(err);
+          process.exit();
+        }
+        tagsIDs[tags[rep].id] = saved._id;
+        tagsDone ++;
+        checkIfDone();
+      });
+    })(rep);
+  }
 }
 
 function checkIfDone(){
@@ -100,6 +136,8 @@ function importChannels(){
     for(var rep2=0;rep2<channels[rep]._tags.length;rep2++){
       channels[rep]._tags[rep2] = tagsIDs[channels[rep]._tags[rep2]];
     }
+    channels[rep].local = {};
+    channels[rep].local.owner = admin;
     var tempChannel = new Channel(channels[rep]);
     (function(rep){
       console.log(rep);
