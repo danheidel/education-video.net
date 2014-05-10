@@ -14,9 +14,4 @@ var schema = new mongoose.Schema({
 //delete the local vars and __v
 setupModel(schema);
 
-schema.methods.security = function(){};
-schema.methods.create = function(){};
-schema.methods.update = function(){};
-schema.methods.sanitizeInput = function(){};
-
 module.exports = mongoose.model('Tag', schema);
