@@ -47,7 +47,7 @@ describe('user JSON API', function(){
       expect(res.body._id).not.equal(null);
       expect(res.body.__v).to.not.exist;
       expect(res.body.local).to.not.exist;
-      expect(res.body.name).equal('My test user');
+      expect(res.body.firstName).equal('Test');
     }
   });
   it('can get a user collection as admin', function(done){

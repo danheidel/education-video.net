@@ -6,3 +6,102 @@ body {
 a {
   color: #00B7FF;
 }
+
+.cabinet {
+  margin: 0.5rem;
+  float:left;
+  width:30%;
+}
+
+.cabinet1{
+  margin: 0.5rem;
+  float:left;
+  width:95%;
+}
+
+.cabinet2{
+  margin: 0.5rem;
+  float:left;
+  width:45%;
+}
+
+.cabinet3{
+  margin: 0.5rem;
+  float:left;
+  width:31%;
+}
+
+.cabinet4{
+  margin: 0.5rem;
+  float:left;
+  width:23%;
+}
+
+.cabinet5{
+  margin: 0.5rem;
+  float:left;
+  width:18%;
+}
+
+.drawer {
+  margin:0.5rem;
+  width:100%;
+  border: 1px solid #ccc;
+  overflow-y: auto;
+  overflow-x:auto;
+  -webkit-box-shadow: 1rem 1rem 0.5rem 0rem rgba(0,0,0,0.75);
+  -moz-box-shadow: 1rem 1rem 0.5rem 0rem rgba(0,0,0,0.75);
+  box-shadow: 1rem 1rem 0.5rem 0rem rgba(0,0,0,0.75);
+  -webkit-border-radius: 2rem;
+  -moz-border-radius: 2rem;
+  border-radius: 2rem;
+}
+
+.drawer.closed{
+  overflow-y:hidden;
+  overflow-x:hidden;
+  max-height: 0;
+  transition-property:all;
+  transition-duration: 0.7s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.drawer.odd {
+  background-color: #666;
+}
+
+.drawer.even {
+  background-color: #BBB;
+}
+
+.drawer.ng-move,
+.drawer.ng-enter,
+.drawer.ng-leave {
+  /*-webkit-transition:all linear 0.5s;
+  transition:all linear 0.5s;*/
+  -webkit-transition: cubic-bezier(0, 1, 0.5, 1);
+  -moz-transition: cubic-bezier(0, 1, 0.5, 1);
+  -o-transition: cubic-bezier(0, 1, 0.5, 1);
+  -ms-transition: cubic-bezier(0, 1, 0.5, 1);
+  transition: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.drawer.ng-leave.ng-leave-active,
+.drawer.ng-move,
+.drawer.ng-enter {
+  overflow-y:hidden;
+  overflow-x:hidden;
+  max-height: 0;
+}
+
+.drawer.ng-leave,
+.drawer.ng-move.ng-move-active,
+.drawer.ng-enter.ng-enter-active {
+  overflow-y: auto;
+  overflow-x:auto;
+  max-height: 40rem;
+}
+
+.indrawer{
+  padding:0.5rem;
+}

@@ -30,6 +30,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(__dirname + '/site/static'));
+app.use(express.static(__dirname + '/site/js'));
+app.use(express.static(__dirname + '/site/templates'));
+app.use(express.static(__dirname + '/bower_components'));
 
 var sessionSecret = process.env.SESSION_SECRET || process.argv[2] || 'nokey';
 app.use(expressSession({secret: sessionSecret}));
@@ -54,46 +57,42 @@ if(env === 'test'){
   app.use(passport.session());
   app.use(flash());
   app.use(errorHandler());
-  //app.use(logger());
+  app.use(logger());
   mongoose.connect('mongodb://localhost/education-test');
 }
 
-var creatorOptions = {
+routeFactory('/api/v1/creators', '../models/Creator', app, {
   sanitizeInput: sanitizeFuncs.baseInput,
   sanitizeOutput: sanitizeFuncs.baseOutput,
   handleCreate: handlerFuncs.createBase,
   handleUpdate: handlerFuncs.updateBase,
   securityFunc: securityFuncs.creatorSecurity
-};
-routeFactory('/api/v1/creators', '../models/Creator', app, creatorOptions);
+});
 
-var tagOptions = {
+routeFactory('/api/v1/tags', '../models/Tag', app, {
   sanitizeInput: sanitizeFuncs.baseInput,
   sanitizeOutput: sanitizeFuncs.baseOutput,
   handleCreate: handlerFuncs.createBase,
   handleUpdate: handlerFuncs.updateBase,
   securityFunc: securityFuncs.tagSecurity
-};
-routeFactory('/api/v1/tags', '../models/Tag', app, tagOptions);
+});
 
-var channelOptions = {
+routeFactory('/api/v1/channels', '../models/Channel', app, {
   sanitizeInput: sanitizeFuncs.baseInput,
   sanitizeOutput: sanitizeFuncs.baseOutput,
   handleCreate: handlerFuncs.createBase,
   handleUpdate: handlerFuncs.updateBase,
   securityFunc: securityFuncs.channelSecurity,
   populate: ['_creators', '_tags']
-};
-routeFactory('/api/v1/channels', '../models/Channel', app, channelOptions);
+});
 
-var UserOptions = {
+routeFactory('/api/v1/users', '../models/User', app, {
   sanitizeInput: sanitizeFuncs.baseInput,
   sanitizeOutput: sanitizeFuncs.baseOutput,
   handleCreate: handlerFuncs.CreateUser,
   handleUpdate: handlerFuncs.UpdateUser,
   securityFunc: securityFuncs.userSecurity
-};
-routeFactory('/api/v1/users', '../models/User', app, UserOptions);
+});
 
 //sets up log-in/account sign-up route handlers
 require('./api/security/loginRoutes.js')(app, passport);

@@ -229,43 +229,15 @@ module.exports = function(grunt) {
         files: {'build/css/styles.css': 'site/scss/styles.scss'}
       }
     },
-    mongoimport: {
-      options: {
-        db : 'education-test',
-        collections : [
-          {
-            name : 'tags',
-            type : 'json',
-            file : 'api/db/seeds/tags.json',
-            jsonArray : true,  //optional
-            //upsert : true,  //optional
-            drop : true  //optional
-          },
-          {
-            name : 'creators',
-            type : 'json',
-            file : 'api/db/seeds/creators.json',
-            jsonArray : true,  //optional
-            upsert : true,  //optional
-            drop : true  //optional
-          },
-          {
-            name : 'channels',
-            type :'json',
-            file : 'api/db/seeds/channels.json',
-            jsonArray : true,
-            upsert : true,
-            drop : true
-          }
-        ]
-      }
-    },
     concurrent: {
       buildDev: [/*'sass:dev',*/ 'browserify:dev', 'jshint:all']
     },
     mongo_drop: {
       test: {
         'uri' : 'mongodb://localhost/education-test'
+      },
+      dev: {
+        'uri' : 'mongodb://localhost/education-dev'
       }
     }
   });
@@ -273,7 +245,6 @@ module.exports = function(grunt) {
   grunt.registerTask('build:test', ['clean:test', 'concurrent:buildDev', 'copy:dev']);
   grunt.registerTask('build:dev', ['clean:dev', 'concurrent:buildDev', 'copy:dev']);
   grunt.registerTask('build:prod', ['clean:prod', 'browserify:prod', 'jshint:all', 'copy:prod']);
-  grunt.registerTask('test:prepare', ['mongo_drop', 'mongoimport']);
   grunt.registerTask('test', ['env:test', 'simplemocha']);
   grunt.registerTask('test:cover', ['env:test', 'jshint', 'mochacov:unit','mochacov:coverage' ]);
   grunt.registerTask('travis', ['jshint', 'mochacov:unit', 'mochacov:coverage', 'mochacov:coveralls']);

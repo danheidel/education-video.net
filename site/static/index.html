@@ -1,14 +1,38 @@
 <!doctype html>
-<html land="en ng-app">
+<html lang="en" ng-app="educationApp">
 <head>
   <meta charset="utf-8">
   <title>Online educational videos</title>
   <link rel="stylesheet" href="css/style.css">
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-resource/angular-resource.js"></script>
-  <script src="js/services.js"></script>
+  <script src="angular/angular.js"></script>
+  <script src="angular-animate/angular-animate.js"></script>
+  <script src="angular-resource/angular-resource.js"></script>
+  <script src="lodash/dist/lodash.js"></script>
+  <script src="controller.js"></script>
 </head>
-<body>
-Stuff will be here later.
+<body ng-controller="channelListController">
+  Creator: <input ng-model="query.creators">
+  Tags: <input ng-model="query.tags">
+  query: {{query}}
+  <div id="channel-view">
+    <channel-drawers channels="channels"></channel-drawers>
+  </div>
+  <!--<div id="channel-view">
+    <div class="cabinet">
+      <div class="drawer" ng-class="{even: $even, odd: $odd}" ng-repeat="channel in channels | looseCreatorComparator : query.creators | looseTagComparator : query.tags | modulusFilter : 3 : 0">
+        <ng-include src="'drawer.html'"></ng-include>
+      </div>
+    </div>
+    <div class="cabinet">
+      <div class="drawer" ng-class="{odd: $even, even: $odd}" ng-repeat="channel in channels | looseCreatorComparator : query.creators | looseTagComparator : query.tags | modulusFilter : 3 : 1">
+        <ng-include src="'drawer.html'"></ng-include>
+      </div>
+    </div>
+    <div class="cabinet">
+      <div class="drawer" ng-class="{even: $even, odd: $odd}" ng-repeat="channel in channels | looseCreatorComparator : query.creators | looseTagComparator : query.tags | modulusFilter : 3 : 2">
+        <ng-include src="'drawer.html'"></ng-include>
+      </div>
+    </div>
+  </div>-->
 </body>
 </html>

@@ -3,7 +3,19 @@
 var fs = require('fs');
 //var _ = require('lodash');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/education-test');
+var mode = process.argv[2];
+
+//if no mode selected, exit
+if(!mode) {process.exit();}
+
+switch(mode){
+  case 'test' : mongoose.connect('mongodb://localhost/education-test');
+  break;
+  case 'dev' : mongoose.connect('mongodb://localhost/education-dev');
+  break;
+  case 'dev' : mongoose.connect('mongodb://localhost/education-prod');
+  break;
+}
 
 var Channel = require('../../models/Channel');
 var Creator = require('../../models/Creator');
@@ -23,58 +35,67 @@ var tagsIDs = [];
 var creatorsIDs = [];
 var tempUser, user1, user2, admin, nobody;
 
-//create some users to test security model
-tempUser  = new User({firstName: 'Admin', lastName: 'Superuser',
-  local:{email: 'bamf@bar.com', permissions: 'admin'}
-});
-tempUser.local.password = tempUser.generateHash('admin');
-tempUser.save(function(err, retObject){
-  if(err){console.error(err);}
-  else{
-    admin = retObject._id;
-    usersDone ++;
-    areUsersDone();
-  }
-});
+if(mode === 'test') {
+  //if in test mode, populate test users, otherwise just import seed data
+  makeTestUsers();
+} else {
+  popChildren();
+}
 
-tempUser  = new User({firstName: 'User1', lastName: 'Foo',
-  local:{email: 'foo@bar.com', permissions: 'user'}
-});
-tempUser.local.password = tempUser.generateHash('user1');
-tempUser.save(function(err, retObject){
-  if(err){console.error(err);}
-  else{
-    user1 = retObject._id;
-    usersDone ++;
-    areUsersDone();
-  }
-});
+function makeTestUsers(){
+  //create some users to test security model
+  tempUser  = new User({firstName: 'Admin', lastName: 'Superuser',
+    local:{email: 'bamf@bar.com', permissions: 'admin'}
+  });
+  tempUser.local.password = tempUser.generateHash('admin');
+  tempUser.save(function(err, retObject){
+    if(err){console.error(err);}
+    else{
+      admin = retObject._id;
+      usersDone ++;
+      areUsersDone();
+    }
+  });
 
-tempUser  = new User({firstName: 'User2', lastName: 'Schmoo',
-  local:{email: 'schmoo@bar.com', permissions: 'user'}
-});
-tempUser.local.password = tempUser.generateHash('user2');
-tempUser.save(function(err, retObject){
-  if(err){console.error(err);}
-  else{
-    user2 = retObject._id;
-    usersDone ++;
-    areUsersDone();
-  }
-});
+  tempUser  = new User({firstName: 'User1', lastName: 'Foo',
+    local:{email: 'foo@bar.com', permissions: 'user'}
+  });
+  tempUser.local.password = tempUser.generateHash('user1');
+  tempUser.save(function(err, retObject){
+    if(err){console.error(err);}
+    else{
+      user1 = retObject._id;
+      usersDone ++;
+      areUsersDone();
+    }
+  });
 
-tempUser  = new User({firstName: 'Nobody', lastName: 'Schlub',
-  local:{email: 'bluh@bar.com', permissions: 'test'}
-});
-tempUser.local.password = tempUser.generateHash('nobody');
-tempUser.save(function(err, retObject){
-  if(err){console.error(err);}
-  else{
-    nobody = retObject._id;
-    usersDone ++;
-    areUsersDone();
-  }
-});
+  tempUser  = new User({firstName: 'User2', lastName: 'Schmoo',
+    local:{email: 'schmoo@bar.com', permissions: 'user'}
+  });
+  tempUser.local.password = tempUser.generateHash('user2');
+  tempUser.save(function(err, retObject){
+    if(err){console.error(err);}
+    else{
+      user2 = retObject._id;
+      usersDone ++;
+      areUsersDone();
+    }
+  });
+
+  tempUser  = new User({firstName: 'Nobody', lastName: 'Schlub',
+    local:{email: 'bluh@bar.com', permissions: 'test'}
+  });
+  tempUser.local.password = tempUser.generateHash('nobody');
+  tempUser.save(function(err, retObject){
+    if(err){console.error(err);}
+    else{
+      nobody = retObject._id;
+      usersDone ++;
+      areUsersDone();
+    }
+  });
+}
 
 function areUsersDone(){
   if(usersDone >= 4){
