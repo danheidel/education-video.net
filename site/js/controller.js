@@ -8,15 +8,12 @@ angular.module('educationApp', ['ngAnimate'])
   $http.get('api/v1/channels').success(function(data){
     $scope.channels = data;
   });
-  $scope.query = {
-    creators: 'vi'
-  };
 })
 
 .directive('channelDrawers', function($window, $compile){
   return{
     restrict: 'E',
-    replace: true,
+    //replace: true,
     scope: {
       channels: '='
     },
@@ -40,7 +37,7 @@ angular.module('educationApp', ['ngAnimate'])
             columns = point.columns;
           }
         });
-        var tempHtml = '';
+        var tempHtml = '', tempElement;
         for(var rep=0;rep<columns;rep++){
           tempHtml +=
           '<div class="cabinet' + columns + '">' +
@@ -50,47 +47,14 @@ angular.module('educationApp', ['ngAnimate'])
           '</div>';
         }
         console.log(tempHtml);
-        element.html(tempHtml);
+        tempElement = angular.element(tempHtml);
+        element.after(tempElement).remove();
 
         return function(scope, element, attr){
-          $compile(tempHtml)(scope);
+          $compile(tempElement)(scope);
         };
       }
     }
-    // link: function(scope, element, attr){
-    //   scope.breakpoints = [
-    //     {width: 0, columns: 1},
-    //     {width: 510, columns: 2},
-    //     {width: 850, columns: 3},
-    //     {width: 1190, columns: 4},
-    //     {width: 1530, columns: 5}
-    //   ];
-
-    //   angular.element($window).bind('resize', setWindowSize);
-    //   setWindowSize();  //call on init
-
-    //   function setWindowSize(){
-    //     scope.windowSize = $window.innerWidth;
-    //     console.log(scope.windowSize);
-    //     _.forEach(scope.breakpoints, function(point){
-    //       if(point.width <= scope.windowSize){
-    //         scope.columns = point.columns;
-    //       }
-    //     });
-    //     var tempHtml = '';
-    //     for(var rep=0;rep<scope.columns;rep++){
-    //       tempHtml +=
-    //       '<div class="cabinet' + scope.columns + '">' +
-    //         '<div class="drawer" ng-class="{' + ((rep%2 === 0)?'even: $even, odd: $odd':'even: $odd, odd:$even') + '}" ng-repeat="channel in channels | looseCreatorComparator : query.creators | looseTagComparator : query.tags | modulusFilter : ' + scope.columns + ' : ' + rep + '">' +
-    //           '<ng-include src="\'drawer.html\'"></ng-include>' +
-    //         '</div>' +
-    //       '</div>';
-    //     }
-    //     console.log(tempHtml);
-    //     element.html(tempHtml);
-    //     $compile(element.contents())(scope);
-    //   }
-    // }
   };
 })
 
