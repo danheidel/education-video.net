@@ -81,7 +81,7 @@ module.exports = function(grunt) {
 
     browserify: {
       prod: {
-        src: ['site/*.js'],
+        src: ['site/js/**/*.js'],
         dest: 'dist/browser.js',
         options: {
           transform: ['debowerify','hbsfy'],
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
         }
       },
       dev: {
-        src: ['site/js/*.js'],
+        src: ['site/js/**/*.js'],
         dest: 'build/browser.js',
         options: {
           transform: ['debowerify','hbsfy'],

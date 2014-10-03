@@ -1,9 +1,9 @@
-<div class="indrawer">
-  <h2><a href="{{channel.location}}">{{channel.name}}</a></h2>
+<div class="inpanel">
+  <h3><a href="{{channel.location}}">{{channel.name}}</a></h3>
   <p>Description: {{channel.description}}</p>
   <div ng-repeat="creator in channel._creators">
-    {{creator.name}}
-    <ul>
+    <span ng-click="authorShow = !authorShow">{{creator.name}}</span>
+    <ul ng-show="authorShow">
       <li>
         <a ng-if="creator.contact.email" ng-href="{{creator.contact.email}}">email</a>
         <span ng-if="!creator.contact.email">no email :(</span>
@@ -28,8 +28,7 @@
   </div>
   Tags
   <div>
-    <ul>
-      <li ng-repeat="tag in channel._tags">{{tag.name}}</li>
-    </ul>
+    <span class="tag-span" ng-repeat="tag in channel._tags">{{tag.name}}</span>
+    <br/>
   </div>
 </div>

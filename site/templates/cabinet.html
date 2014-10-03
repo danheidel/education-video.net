@@ -1,5 +1,0 @@
-<div class="cabinet">
-  <div class="drawer" ng-class="{even: $even, odd: $odd}" ng-repeat="channel in channels | looseCreatorComparator : query.creators | looseTagComparator : query.tags | modulusFilter : 3 : 0">
-    <ng-include src="'drawer.html'"></ng-include>
-  </div>
-</div>

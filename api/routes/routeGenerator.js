@@ -29,7 +29,12 @@ exports.routeFactory = function(route, objectPath, app, options){
     options.securityFunc = function(user, dbObject){
       void(user);
       void(dbObject);
-      return 'none';
+      return {
+        read: false,
+        create: false,
+        edit: false,
+        del: false
+      };
     };
   }
   //if no sanitizeInput, create no-op stub
@@ -38,25 +43,40 @@ exports.routeFactory = function(route, objectPath, app, options){
       void(input);
     };
   }
-  //if no sanitizeOutput, create no-op stub
-  if(!options.sanitizeOutput){
-    options.sanitizeOutput = function(output){
-      console.log('default sanitize output');
-      void(output);
+  //if no checkCreate, create no-op stub
+  if(!options.checkCreate){
+    options.checkCreate = function(input, res){
+      void(input);
+      void(res);
+    };
+  }
+  //if no checkUpdate, create no-op stub
+  if(!options.checkUpdate){
+    options.checkUpdate = function(input, res){
+      void(input);
+      void(res);
     };
   }
   //if no handleCreate, create no-op stub
   if(!options.handleCreate){
-    options.handleCreate = function(newObject, req){
+    options.handleCreate = function(input, userId, newObject){
       void(newObject);
-      void(req);
+      void(input);
+      void(userId);
     };
   }
   //if no handleUpdate, create no-op stub
   if(!options.handleUpdate){
-    options.handleUpdate = function(newObject, oldObject){
-      void(newObject);
+    options.handleUpdate = function(input, userId, oldObject){
+      void(input);
       void(oldObject);
+      void(userId);
+    };
+  }
+  //if no sanitizeOutput, create no-op stub
+  if(!options.sanitizeOutput){
+    options.sanitizeOutput = function(output){
+      void(output);
     };
   }
 
@@ -76,8 +96,8 @@ exports.routeFactory = function(route, objectPath, app, options){
       //for each populate field
       _.each(retObject[pop], function(popObject){
         //the populated object might be an array, so iterate another level
-        if(options.securityFunc(user, popObject)!== 'none'){
-          //user has read or full access to resource
+        if(options.securityFunc(user, popObject).read){
+          //user has access to read resource
           options.sanitizeOutput(popObject);
         } else {
           //user shouldn't see this populated object
@@ -89,9 +109,9 @@ exports.routeFactory = function(route, objectPath, app, options){
 
   var collection = function(req, res){
     // console.log('is authenticated? ' + req.isAuthenticated());
-    if(!req.isAuthenticated() && options.securityFunc(undefined) === 'none'){
+    if(!req.isAuthenticated() && !options.securityFunc(undefined).read){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to this resource'});
+      res.send(403, {'error': 'unauthenticated users do not have access to read this resource'});
       return;
     }
     res.setHeader('Content-Type', 'application/json');
@@ -110,8 +130,7 @@ exports.routeFactory = function(route, objectPath, app, options){
           var checkedArray = [];
           _.each(retArray, function(retObject){
             //for each element, do access check and sanitize
-            var accessVal = options.securityFunc(req.user, retObject);
-            if(accessVal !== 'none'){
+            if(options.securityFunc(req.user, retObject).read){
               //if user has at read / full access to resource
               options.sanitizeOutput(retObject);
               if(options.populate){
@@ -133,9 +152,9 @@ exports.routeFactory = function(route, objectPath, app, options){
 
   var findById = function(req, res){
     // console.log('is authenticated? ' + req.isAuthenticated());
-    if(!req.isAuthenticated() && options.securityFunc(undefined) === 'none'){
+    if(!req.isAuthenticated() && !options.securityFunc(undefined).read){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to this resource'});
+      res.send(403, {'error': 'unauthenticated users do not have access to read this resource'});
       return;
     }
     res.setHeader('Content-Type', 'application/json');
@@ -156,8 +175,7 @@ exports.routeFactory = function(route, objectPath, app, options){
           res.send(500, {'error': 'no resource with that id could be found'});
         } else {
           //console.log(retObject);
-          var accessVal = options.securityFunc(req.user, retObject);
-          if(accessVal !== 'none'){
+          if(options.securityFunc(req.user, retObject).read){
             //if user has at read / full access to resource
             if(retObject){
               //if object returned, sanitize it
@@ -182,27 +200,30 @@ exports.routeFactory = function(route, objectPath, app, options){
 
   var create = function(req, res){
     // console.log('is authenticated? ' + req.isAuthenticated());
-    if(!req.isAuthenticated() && options.securityFunc(undefined) !== 'full'){
+    if(!req.isAuthenticated() && !options.securityFunc(undefined).create){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      console.log('unauthenticated users do not have access to this resource');
-      res.send(403, {'error': 'unauthenticated users do not have access to this resource'});
+      res.send(403, {'error': 'unauthenticated users do not have access to create this resource'});
       return;
     }
     //see if user has access rights to create a resource
-    if(!options.securityFunc(req.user, null)){
-      console.log('user does not have rights to create that resource');
+    if(!options.securityFunc(req.user, null).create){
       res.send(403, {'error':'user does not have rights to create that resource'});
       return;
     }
     options.sanitizeInput(req.body);
-    //handle any necessary operations on new object (e.g., setting private vars for ownership, permisions, etc)
-    options.handleCreate(req.body, req);
+    options.checkCreate(req.body, res);
 
     var dbObject = new DbObject(req.body);
+
+    //handle any necessary operations on new object (e.g., setting private vars for ownership, permisions, etc)
+    //if object is being created by unauthenticated user, res.user will be undefined, handle that
+    options.handleCreate(req.body, (req.user ? req.user._id : null), dbObject);
+
     if(!options.create){
       dbObject.save(function(err, createdObject){
         if(err){
           res.send(500, {'error': err});
+          console.dir(err);
         } else {
           options.sanitizeOutput(createdObject);
           res.send(createdObject);
@@ -218,9 +239,9 @@ exports.routeFactory = function(route, objectPath, app, options){
 
   var update = function(req, res){
     // console.log('is authenticated? ' + req.isAuthenticated());
-    if(!req.isAuthenticated() && options.securityFunc(undefined) !== 'full'){
+    if(!req.isAuthenticated() && !options.securityFunc(undefined).update){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to this resource'});
+      res.send(403, {'error': 'unauthenticated users do not have access to modify this resource'});
       return;
     }
     var id = String(req.params.id);
@@ -233,9 +254,11 @@ exports.routeFactory = function(route, objectPath, app, options){
       } else {
         //complete the update
         options.sanitizeInput(req.body);
-        options.handleUpdate(req.body, oldObject);
-        var accessVal = options.securityFunc(req.user, oldObject);
-        if(accessVal === 'full'){
+        options.checkUpdate(req.body, res);
+
+        options.handleUpdate(req.body, (req.user ? req.user._id : null), oldObject);
+
+        if(options.securityFunc(req.user, oldObject).update){
           //only allow updates to this object if user has full write access to it
           if(!options.update){
             DbObject.update({'_id': id}, req.body, function(err){
@@ -259,9 +282,9 @@ exports.routeFactory = function(route, objectPath, app, options){
 
   var destroy = function(req, res){
     // console.log('is authenticated? ' + req.isAuthenticated());
-    if(!req.isAuthenticated() && options.securityFunc(undefined) !== 'full'){
+    if(!req.isAuthenticated() && !options.securityFunc(undefined).destroy){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to this resource'});
+      res.send(403, {'error': 'unauthenticated users do not have access to delete this resource'});
       return;
     }
     var id = String(req.params.id);
@@ -273,8 +296,7 @@ exports.routeFactory = function(route, objectPath, app, options){
         res.send(500, {'error':'no resource with that id was found'});
       } else {
         //complete the deletion
-        var accessVal = options.securityFunc(req.user, retObject);
-        if(accessVal === 'full'){
+        if(options.securityFunc(req.user, retObject).destroy){
           if(!options.destroy){
             DbObject.remove({'_id': id}, function(err){
               if(err){

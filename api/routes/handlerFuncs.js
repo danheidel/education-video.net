@@ -1,37 +1,39 @@
 'use strict';
 
-var createBase = function(newObject, req){
+var createBase = function(input, userId, newObject){
   if(!newObject.local){
     newObject.local = {};
   }
-  newObject.local.owner = req.user._id;
+  newObject.local.owner = userId;
 };
 
 module.exports.createBase = createBase;
 
-var updateBase = function(newObject, oldObject){
-  if(!newObject.local){
-    newObject.local = {};
+var updateBase = function(input, userId, oldObject){
+  if(!input.local){
+    input.local = {};
   }
-  newObject.local.owner = oldObject.local.owner;
+  input.local.owner = oldObject.local.owner;
 };
 
 module.exports.updateBase = updateBase;
 
-module.exports.createUser = function(newObject, req){
+//important note - always nake sure that ownnership is applied to all new objects, handle unathenticated users by finding an alternate source of ownership
+
+module.exports.createUser = function(input, userId, newObject){
   if(!newObject.local){
     newObject.local = {};
   }
-  newObject.local.email = req.body.email;
-  newObject.local.password = newObject.generateHash(req.body.password);
+  newObject.local.email = input.email;
+  newObject.local.password = newObject.generateHash(input.password);
   newObject.local.permissions = 'user';
 };
 
-module.exports.updateUser = function(newObject, oldObject){
-  if(!newObject.local){
-    newObject.local = {};
+module.exports.updateUser = function(input, userId, oldObject){
+  if(!input.local){
+    input.local = {};
   }
-  newObject.local.email = oldObject.local.email;
-  newObject.local.password = oldObject.local.password;
-  newObject.local.permissions = oldObject.local.permissions;
+  input.local.email = oldObject.local.email;
+  input.local.password = oldObject.local.password;
+  input.local.permissions = oldObject.local.permissions;
 };

@@ -25,6 +25,9 @@
     "async": "~0.2.10",
     "angular": "~1.2.16",
     "angular-resource": "~1.2.16",
-    "angular-animate": "~1.2.16"
+    "angular-animate": "~1.2.16",
+    "angular-route": "~1.2.16",
+    "angular-ui": "~0.4.0",
+    "angular-ui-router": "~0.2.10"
   }
 }

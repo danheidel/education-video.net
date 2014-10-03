@@ -1,0 +1,34 @@
+
+  {{splitChannels.length}}
+  <ng-include src="'login.html'"></ng-include>
+  <canvas id="science-canvas"></canvas>
+  <div id="control-container">
+    <div id="controls" class="roundnborder center-block">
+      <div id="control-toggle" class="center">*</div>
+      <div>
+        Creator: <input ng-model="filter.creators">
+        Tags: <input ng-model="filter.tags">
+        <br/>
+        query: {{filter}}
+        <br/>
+      </div>
+    </div>
+  </div>
+
+  <div id="header">
+    <h1>YouTube Educational Videos</h1>
+  </div>
+
+  <div id="channel-view">
+    <div ng-repeat="modColumn in splitChannels"
+      ng-class="{'col-even' : !$even, 'col-odd' : !$odd}"
+      ng-style="{ width: 99 / windowAttr.columns + '%' }"
+      class="cabinet">
+      <div ng-repeat="channel in modColumn"
+        ng-class="{'row-even' : !$even, 'row-odd' : !$odd}"
+        ng-cloak
+        class="panel roundnborder">
+        <ng-include src="'panel.html'"></ng-include>
+      </div>
+    </div>
+  </div>

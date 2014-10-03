@@ -1,0 +1,26 @@
+<div id="login-panel" ng-controller="accountController">
+  <h3 ng-click="accountShow = !accountShow">Create account</h3>
+  <form ng-show="accountShow" name="accountForm">
+    Account name: <input class="input-required validation-color" ng-model="user.displayName" required> *
+    <br>
+    Email: <input type="email" class="input-required validation-color" ng-model="user.email" required> *
+    <br>
+    Password: <input class="input-required validation-color" ng-show="showpassword" type="text" ng-model="user.password" required>
+      <input class="input-required validation-color" ng-hide="showpassword" type="password" ng-model="user.password"> *
+    show password <input type="checkbox" ng-model="showpassword" ng-checked="false">
+    <br>
+    <input type="button" value="send" ng-click="submitNewUser(accountForm)">
+  </form>
+  <h3 ng-click="loginShow = !loginShow">Login</h3>
+  <form ng-show="loginShow" name="loginForm">
+    Email: <input type="email" class="input-required validation-color" ng-model="login.email" required> *
+    <br>
+    Password: <input class="input-required validation-color" ng-show="showpassword" type="text" ng-model="login.password" required>
+      <input class="input-required validation-color" ng-hide="showpassword" type="password" ng-model="login.password"> *
+    show password <input type="checkbox" ng-model="showpassword" ng-checked="false">
+    <br>
+    <input type="button" value="send" ng-click="formLoginUser(loginForm)">
+  </form>
+  <h3 ng-click="logoutUser()">Logout</h3>
+  <h3 ng-click="getUser()">check user</h3>
+</div>

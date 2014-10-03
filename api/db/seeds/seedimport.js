@@ -2,8 +2,14 @@
 
 var fs = require('fs');
 //var _ = require('lodash');
+var async = require('async');
 var mongoose = require('mongoose');
+var getChannelsByName = require('../../normalizers/YTNormalizer.js').getChannelsByName;
+var getChannelsById = require('../../normalizers/YTNormalizer.js').getChannelsById;
 var mode = process.argv[2];
+global = {
+  ytKey: process.argv[3]
+}
 
 //if no mode selected, exit
 if(!mode) {process.exit();}
@@ -21,6 +27,7 @@ var Channel = require('../../models/Channel');
 var Creator = require('../../models/Creator');
 var Tag = require('../../models/Tag');
 var User = require('../../models/User');
+var YTChannel = require('../../models/YTChannel')
 
 var channels = JSON.parse(fs.readFileSync('channels.json'));
 var creators = JSON.parse(fs.readFileSync('creators.json'));
@@ -33,6 +40,7 @@ var channelsDone = 0;
 
 var tagsIDs = [];
 var creatorsIDs = [];
+var ytIDs = [];
 var tempUser, user1, user2, admin, nobody;
 
 if(mode === 'test') {
@@ -44,7 +52,7 @@ if(mode === 'test') {
 
 function makeTestUsers(){
   //create some users to test security model
-  tempUser  = new User({firstName: 'Admin', lastName: 'Superuser',
+  tempUser  = new User({displayName: 'Admin', lastName: 'Superuser',
     local:{email: 'bamf@bar.com', permissions: 'admin'}
   });
   tempUser.local.password = tempUser.generateHash('admin');
@@ -57,7 +65,7 @@ function makeTestUsers(){
     }
   });
 
-  tempUser  = new User({firstName: 'User1', lastName: 'Foo',
+  tempUser  = new User({displayName: 'User1', lastName: 'Foo',
     local:{email: 'foo@bar.com', permissions: 'user'}
   });
   tempUser.local.password = tempUser.generateHash('user1');
@@ -70,7 +78,7 @@ function makeTestUsers(){
     }
   });
 
-  tempUser  = new User({firstName: 'User2', lastName: 'Schmoo',
+  tempUser  = new User({displayName: 'User2', lastName: 'Schmoo',
     local:{email: 'schmoo@bar.com', permissions: 'user'}
   });
   tempUser.local.password = tempUser.generateHash('user2');
@@ -83,7 +91,7 @@ function makeTestUsers(){
     }
   });
 
-  tempUser  = new User({firstName: 'Nobody', lastName: 'Schlub',
+  tempUser  = new User({displayName: 'Nobody', lastName: 'Schlub',
     local:{email: 'bluh@bar.com', permissions: 'test'}
   });
   tempUser.local.password = tempUser.generateHash('nobody');
@@ -107,6 +115,7 @@ function popChildren(){
   for(var rep=0;rep<creators.length;rep++){
     creators[rep].local = {};
     creators[rep].local.owner = admin;
+
     var tempCreator = new Creator(creators[rep]);
     (function(rep){
       tempCreator.save(function(err, saved){
@@ -116,7 +125,7 @@ function popChildren(){
         }
         creatorsIDs[creators[rep].id] = saved._id;
         creatorsDone ++;
-        checkIfDone();
+        creatorsTagsDone();
       });
     })(rep);
   }
@@ -133,23 +142,99 @@ function popChildren(){
         }
         tagsIDs[tags[rep].id] = saved._id;
         tagsDone ++;
-        checkIfDone();
+        creatorsTagsDone();
       });
     })(rep);
   }
 }
 
-function checkIfDone(){
+function creatorsTagsDone(){
   console.log('creators: '+ creatorsDone);
   console.log('tags: ' + tagsDone);
-  if(creatorsDone === creators.length && tagsDone === tags.length){
+  if(creatorsDone >= creators.length && tagsDone >= tags.length){
     console.log('done with tags and creators!');
     //mongoose.disconnect();
-    importChannels();
+    ytImport();
   }
 }
 
+function ytImport(){
+  console.log(channels.length);
+  async.each(channels, function(channel, callback){
+    var channelName = channel.location.split('/').pop();
+    console.log('-' + channelName);
+    getChannelsByName({channelName: channelName}, function(err, data){
+      if(data.items.length > 0){
+        //console.log(data.items[0]);
+        var tempYT = new YTChannel({
+          youtubeId: data.items[0].id,
+          location: channel.location,
+          title: data.items[0].snippet.title,
+          started: data.items[0].snippet.publishedAt,
+          thumbnail: data.items[0].snippet.thumbnails.medium.url,
+          description: data.items[0].snippet.description,
+          local:{
+            owner: admin
+          }
+        });
+        //console.log(tempYT);
+        tempYT.save(function(err, saved){
+          if(err){
+            callback(err);
+          }else{
+            ytIDs[channel.id] = saved._id;
+            callback();
+          }
+        });
+      }else if(err){
+        callback(err);
+      }else{
+        console.log('no data returned for ' + channelName);
+        ytRetry(channelName, channel, callback);
+      }
+    });
+  }, function(err){
+    if(err){
+      console.error(err);
+    } else {
+      importChannels();
+    }
+  });
+}
+
+function ytRetry(channelId, channel, callback){
+  console.log('retrying ' + channelId + ' as an id');
+  getChannelsById({id: channelId}, function(err, data){
+    if(data.items.length > 0){
+      //console.log(data.items[0]);
+      var tempYT = new YTChannel({
+        youtubeId: data.items[0].id,
+        location: channel.location,
+        title: data.items[0].snippet.title,
+        started: data.items[0].snippet.publishedAt,
+        thumbnail: data.items[0].snippet.thumbnails.medium.url,
+        description: data.items[0].snippet.description,
+        local:{
+          owner: admin
+        }
+      });
+      tempYT.save(function(err, saved){
+        if(err){
+          callback(err);
+        }else{
+          console.log('retry as id worked for ' + channelId);
+          ytIDs[channel.id] = saved._id;
+          callback();
+        }
+      });
+    } else {
+      callback('unable to get data for ' + channelId);
+    }
+  });
+}
+
 function importChannels(){
+  channelsDone = 0;
   for(var rep=0;rep<channels.length;rep++){
     for(var rep2=0;rep2<channels[rep]._creators.length;rep2++){
       channels[rep]._creators[rep2] = creatorsIDs[channels[rep]._creators[rep2]];
@@ -157,6 +242,7 @@ function importChannels(){
     for(var rep2=0;rep2<channels[rep]._tags.length;rep2++){
       channels[rep]._tags[rep2] = tagsIDs[channels[rep]._tags[rep2]];
     }
+    channels[rep]._youtube = ytIDs[channels[rep].id];
     channels[rep].local = {};
     channels[rep].local.owner = admin;
     var tempChannel = new Channel(channels[rep]);
@@ -171,20 +257,14 @@ function importChannels(){
         console.log(saved);
         channelsDone ++;
         if(channelsDone === channels.length){
-          allDone();
+          importDone();
         }
       });
     })(rep);
   }
 }
 
-function allDone(){
-  // console.log('------------------------------');
-  // console.log(channels[0]);
-  // Channel.findOne({'_id': String(channels[0]._id)}).populate([{path:'_tags'}, {path:'_creators'}]).exec(function(err, result){
-  //   if(err){console.log(err);}
-  //   console.log(result);
-  // });
-  console.log('all done!');
+function importDone(){
+  console.log('all done importing from JSON!');
   mongoose.disconnect();
 }

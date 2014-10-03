@@ -346,7 +346,7 @@ describe('Creator JSON API', function(){
     }
   });
   it('can delete a creator as user1 (owner)', function(done){
-    users.adminAgent.del(url + id)
+    users.user1Agent.del(url + id)
       .end(function(err, res){
         try{
           expects(err, res);
@@ -489,7 +489,7 @@ describe('Creator JSON API', function(){
     }
   });
   it('cannot update admin creator as user1', function(done){
-    users.user2Agent.put(url + id)
+    users.user1Agent.put(url + id)
       .send({name:'New creator name - user1'})
       .end(function(err, res){
         try{

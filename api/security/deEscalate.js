@@ -3,8 +3,8 @@
 module.exports.startup = function(){
   var user, port;
   console.log('starting as user: ' + process.env.USER);
-  console.log('specified user: ' + process.env.NODEUSERID);
-  console.log('specified port: ' + process.env.NODESERVERPORT);
+  console.log('specified user: ' + (process.env.NODEUSERID || parseInt(process.argv[2])));
+  console.log('specified port: ' + (process.env.NODESERVERPORT || parseInt(process.argv[3])));
 
   user = parseInt(process.env.NODEUSERID) || parseInt(process.argv[2]);
   if(!user){

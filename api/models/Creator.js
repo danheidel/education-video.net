@@ -6,7 +6,11 @@ var setupModel = require('./models').setupModel;
 
 var schema = new mongoose.Schema({
   //_id: String,
-  name: String,
+  name: {
+    type: String,
+    required:true,
+    index: {unique: true}
+  },
   description: String,
   contact:{
     website: String,

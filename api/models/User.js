@@ -6,12 +6,25 @@ var bcrypt = require('bcrypt-nodejs');
 var setupModel = require('./models').setupModel;
 
 var schema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
+  displayName: {
+    type: String,
+    required: true,
+    index: {unique: true}
+  },
   local: {
-    email: String,
-    password: String,
-    permissions: String
+    email: {
+      type: String,
+      required:true,
+      index: {unique: true}
+    },
+    password: {
+      type: String,
+      required:true
+    },
+    permissions: {
+      type: String,
+      required:true
+    },
   }
 }, {strict: true});
 

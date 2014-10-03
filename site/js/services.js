@@ -1,9 +1,12 @@
 'use strict';
+/*global angular*/
 
-var restServices = angular.module('restServices', ['ngResource']);
+angular.module('educationApp.services', [])
 
-restServices.factory('Channels', ['$resource', function($resource){
-  return($resource('channels.json', {}, {
-    query: {method: 'GET', isArray: true}
-  }));
-}]);
+.factory('channelApi', function($http){
+  var baseUrl = 'localhost:3000';
+  //var baseUrl = 'education-video.net';
+  var apiUrl = '/api/v1';
+
+
+});

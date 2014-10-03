@@ -5,12 +5,17 @@ var mongoose = require('mongoose');
 var setupModel = require('./models').setupModel;
 
 var schema = new mongoose.Schema({
-  name: {
+  youtubeId: {
     type: String,
-    required:true,
+    required: true,
     index: {unique: true}
   },
-  local: {
+  location: String,
+  title: String,
+  started: String,
+  thumbnail: String,
+  description: String,
+  local:{
     owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
   }
 }, {strict: true});
@@ -18,4 +23,4 @@ var schema = new mongoose.Schema({
 //delete the local vars and __v
 setupModel(schema);
 
-module.exports = mongoose.model('Tag', schema);
+module.exports = mongoose.model('YTChannel', schema);

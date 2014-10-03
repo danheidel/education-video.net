@@ -1,63 +1,80 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin:0;
 }
 
 a {
   color: #00B7FF;
 }
 
-.cabinet {
-  margin: 0.5rem;
-  float:left;
-  width:30%;
+input.validation-color.ng-valid.ng-dirty{
+  background-color: green;
 }
 
-.cabinet1{
-  margin: 0.5rem;
-  float:left;
-  width:95%;
+input.validation-color.ng-invalid.ng-dirty{
+  background-color: red;
 }
 
-.cabinet2{
-  margin: 0.5rem;
-  float:left;
-  width:45%;
-}
-
-.cabinet3{
-  margin: 0.5rem;
-  float:left;
-  width:31%;
-}
-
-.cabinet4{
-  margin: 0.5rem;
-  float:left;
-  width:23%;
-}
-
-.cabinet5{
-  margin: 0.5rem;
-  float:left;
-  width:18%;
-}
-
-.drawer {
-  margin:0.5rem;
-  width:100%;
+.roundnborder{
   border: 1px solid #ccc;
-  overflow-y: auto;
-  overflow-x:auto;
-  -webkit-box-shadow: 1rem 1rem 0.5rem 0rem rgba(0,0,0,0.75);
-  -moz-box-shadow: 1rem 1rem 0.5rem 0rem rgba(0,0,0,0.75);
-  box-shadow: 1rem 1rem 0.5rem 0rem rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0.5rem 0.5rem 0.4rem 0rem rgba(0,0,0,0.75);
+  -moz-box-shadow: 0.5rem 0.5rem 0.4rem 0rem rgba(0,0,0,0.75);
+  box-shadow: 0.5rem 0.5rem 0.4rem 0rem rgba(0,0,0,0.75);
   -webkit-border-radius: 2rem;
   -moz-border-radius: 2rem;
   border-radius: 2rem;
 }
 
-.drawer.closed{
+.center-block:before{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.center{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#science-canvas{
+  position:absolute;
+  z-index:-100;
+}
+
+#control-container{
+  position:absolute;
+  right:0;
+}
+
+#controls{
+  position:fixed;
+  width:80%;
+  margin-left:-3rem;
+  padding: 0.6rem 5rem;
+  background-color: #fff;
+}
+
+#control-toggle{
+  margin-left:-3rem;
+  float:left;
+}
+
+.cabinet {
+  float:left;
+  padding-right:0.7rem;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  /*border: 1px solid #ccc;*/
+}
+
+.panel {
+  width:100%;
+  margin-bottom: 0.7rem;
+  overflow-y: auto;
+  overflow-x:auto;
+}
+
+.panel.closed{
   overflow-y:hidden;
   overflow-x:hidden;
   max-height: 0;
@@ -66,19 +83,25 @@ a {
   transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
 }
 
-.drawer.odd {
+.col-odd > .row-odd{
   background-color: #666;
 }
 
-.drawer.even {
-  background-color: #BBB;
+.col-odd > .row-even {
+  background-color: #AAA;
 }
 
-.drawer.ng-move,
-.drawer.ng-enter,
-.drawer.ng-leave {
-  /*-webkit-transition:all linear 0.5s;
-  transition:all linear 0.5s;*/
+.col-even > .row-odd{
+  background-color: #CCC;
+}
+
+.col-even > .row-even {
+  background-color: #888;
+}
+
+/*.panel.ng-move,
+.panel.ng-enter,
+.panel.ng-leave {
   -webkit-transition: cubic-bezier(0, 1, 0.5, 1);
   -moz-transition: cubic-bezier(0, 1, 0.5, 1);
   -o-transition: cubic-bezier(0, 1, 0.5, 1);
@@ -86,22 +109,27 @@ a {
   transition: cubic-bezier(0, 1, 0.5, 1);
 }
 
-.drawer.ng-leave.ng-leave-active,
-.drawer.ng-move,
-.drawer.ng-enter {
+.panel.ng-leave.ng-leave-active,
+.panel.ng-move,
+.panel.ng-enter {
   overflow-y:hidden;
   overflow-x:hidden;
   max-height: 0;
 }
 
-.drawer.ng-leave,
-.drawer.ng-move.ng-move-active,
-.drawer.ng-enter.ng-enter-active {
+.panel.ng-leave,
+.panel.ng-move.ng-move-active,
+.panel.ng-enter.ng-enter-active {
   overflow-y: auto;
   overflow-x:auto;
   max-height: 40rem;
+}*/
+
+.inpanel{
+  padding:0.5rem;
 }
 
-.indrawer{
-  padding:0.5rem;
+.tag-span{
+  margin-right:1rem;
+  float:left;
 }

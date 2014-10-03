@@ -26,7 +26,7 @@ module.exports = function(iPassport){
   passport.use('local-signup', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
-    passReqToCallback: true
+    // passReqToCallback: true
   },
   function(req, email, password, done){
     User.findOne({'local.email': email}, function(err, user){
@@ -51,19 +51,21 @@ module.exports = function(iPassport){
     passReqToCallback: true
   },
   function(req, email, password, done){
-    // console.log('logging in');
-    // console.log(req.body);
+    console.log('logging in');
+    console.log(req.body);
     User.findOne({'local.email': email}, function(err, user){
       if(err){return done(err);}
       if(!user){
         console.log('User not found:' + email);
-        return done(null, false, req.flash('loginMessage', 'No user found.'));
+        // return done(null, false, req.flash('loginMessage', 'No user found.'));
+        return done(null, false, {message: 'incorrect email address'});
       }
       if(!user.validatePassword(password)){
         console.log('incorrect password: ' + password);
-        return done(null, false, req.flash('loginMessage', 'Incorrect password!'));
+        // return done(null, false, req.flash('loginMessage', 'Incorrect password!'));
+        return done(null, false, {message: 'incorrect password'});
       }
-      console.log('user validation success: ' + user.firstName + ' ' + user.lastName);
+      console.log('user validation success: ' + user.local.email);
       return done(null, user);
     });
   }));

@@ -13,7 +13,7 @@ module.exports.loginAdmin = function(done, users){
       console.log(err);
       return done(err);
     }
-    users.admin = _.find(retObject, {firstName: 'Admin'});
+    users.admin = _.find(retObject, {displayName: 'Admin'});
 
     //login as admin
     users.adminAgent = superagent.agent();
@@ -41,7 +41,7 @@ module.exports.loginUser1 = function(done, users){
       console.log(err);
       return done(err);
     }
-    users.user1 = _.find(retObject, {firstName: 'User1'});
+    users.user1 = _.find(retObject, {displayName: 'User1'});
 
     //get user1
     users.user1Agent = superagent.agent();
@@ -70,7 +70,7 @@ module.exports.loginUser2 = function(done, users){
       console.log(err);
       return done(err);
     }
-    users.user2 = _.find(retObject, {firstName: 'User2'});
+    users.user2 = _.find(retObject, {displayName: 'User2'});
 
     //get user2
     users.user2Agent = superagent.agent();
@@ -99,7 +99,7 @@ module.exports.loginNobody = function(done, users){
       console.log(err);
       return done(err);
     }
-    users.nobody = _.find(retObject, {firstName: 'Nobody'});
+    users.nobody = _.find(retObject, {displayName: 'Nobody'});
 
     //get nobody, use as unauthenticated user, don't log in
     users.nobodyAgent = superagent.agent();

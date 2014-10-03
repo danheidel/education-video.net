@@ -1,0 +1,34 @@
+<div class="inpanel">
+  <h3><a href="{{channel.location}}">{{channel.name}}</a></h3>
+  <p>Description: {{channel.description}}</p>
+  <div ng-repeat="creator in channel._creators">
+    <span>{{creator.name}}</span>
+    <ul>
+      <li>
+        <a ng-if="creator.contact.email" ng-href="{{creator.contact.email}}">email</a>
+        <span ng-if="!creator.contact.email">no email :(</span>
+      </li>
+      <li>
+        <a ng-if="creator.contact.youTube" ng-href="{{creator.contact.youTube}}">YouTube</a>
+        <span ng-if="!creator.contact.youTube">no YouTube :(</span>
+      </li>
+      <li>
+        <a ng-if="creator.contact.Website" ng-href="{{creator.contact.Website}}">Website</a>
+        <span ng-if="!creator.contact.Website">no Website :(</span>
+      </li>
+      <li>
+        <a ng-if="creator.contact.Twitter" ng-href="{{creator.contact.Twitter}}">Twitter</a>
+        <span ng-if="!creator.contact.Twitter">no Twitter :(</span>
+      </li>
+      <li>
+        <a ng-if="creator.contact.Facebook" ng-href="{{creator.contact.Facebook}}">Facebook</a>
+        <span ng-if="!creator.contact.Facebook">no Facebook :(</span>
+      </li>
+    </ul>
+  </div>
+  Tags
+  <div>
+    <span class="tag-span" ng-repeat="tag in channel._tags">{{tag.name}}</span>
+    <br/>
+  </div>
+</div>

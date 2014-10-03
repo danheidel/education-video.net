@@ -346,7 +346,7 @@ describe('tag JSON API', function(){
     }
   });
   it('can delete a tag as user1 (owner)', function(done){
-    users.adminAgent.del(url + id)
+    users.user1Agent.del(url + id)
       .end(function(err, res){
         try{
           expects(err, res);
@@ -489,7 +489,7 @@ describe('tag JSON API', function(){
     }
   });
   it('cannot update admin tag as user1', function(done){
-    users.user2Agent.put(url + id)
+    users.user1Agent.put(url + id)
       .send({name:'New tag name - user1'})
       .end(function(err, res){
         try{

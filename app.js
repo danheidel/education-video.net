@@ -13,13 +13,15 @@ require('./api/security/passport')(passport);
 var flash = require('connect-flash');
 var routeFactory = require('./api/routes/routeGenerator').routeFactory;
 var securityFuncs = require('./api/routes/securityFuncs');
+var checkFuncs = require('./api/routes/checkFuncs');
 var sanitizeFuncs = require('./api/routes/sanitizeFuncs');
 var handlerFuncs = require('./api/routes/handlerFuncs');
 var errorHandler = require('errorhandler');
-var logger = require('morgan');
+// var logger = require('morgan');
 var mongoose = require('mongoose');
 
-var env = process.env.NODE_ENV || 'test';
+var env = process.env.NODE_ENV || process.argv[4] || 'test';
+console.log('specified environment: ' + env);
 
 app.engine('hbs', cons.handlebars);
 app.set('view engine', 'hbs');
@@ -34,64 +36,76 @@ app.use(express.static(__dirname + '/site/js'));
 app.use(express.static(__dirname + '/site/templates'));
 app.use(express.static(__dirname + '/bower_components'));
 
-var sessionSecret = process.env.SESSION_SECRET || process.argv[2] || 'nokey';
+var sessionSecret = process.env.SESSION_SECRET || process.argv[5] || 'nokey';
+console.log('specified session secret: ' + sessionSecret);
 app.use(expressSession({secret: sessionSecret}));
 
 if(env === 'production'){
+  console.log('running in production environment');
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());
-}
-
-if(env === 'development'){
+} else if(env === 'development'){
+  console.log('running in development environment');
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());
   app.use(errorHandler());
-  app.use(logger());
+  // app.use(logger());
   mongoose.connect('mongodb://localhost/education-dev');
-}
-
-if(env === 'test'){
+} else if(env === 'test'){
+  console.log('runing in test environment');
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());
   app.use(errorHandler());
-  app.use(logger());
+  // app.use(logger());
   mongoose.connect('mongodb://localhost/education-test');
+} else {
+  console.error('invalid environment, exiting');
+  process.exit();
 }
 
 routeFactory('/api/v1/creators', '../models/Creator', app, {
+  securityFunc: securityFuncs.creatorSecurity,
   sanitizeInput: sanitizeFuncs.baseInput,
-  sanitizeOutput: sanitizeFuncs.baseOutput,
+  checkCreate: checkFuncs.baseCheckCreate,
+  checkUpdate: checkFuncs.baseCheckUpdate,
   handleCreate: handlerFuncs.createBase,
   handleUpdate: handlerFuncs.updateBase,
-  securityFunc: securityFuncs.creatorSecurity
+  checkInput: checkFuncs.baseCheckCreate,
+  sanitizeOutput: sanitizeFuncs.baseOutput
 });
 
 routeFactory('/api/v1/tags', '../models/Tag', app, {
+  securityFunc: securityFuncs.tagSecurity,
   sanitizeInput: sanitizeFuncs.baseInput,
-  sanitizeOutput: sanitizeFuncs.baseOutput,
+  checkCreate: checkFuncs.baseCheckCreate,
+  checkUpdate: checkFuncs.baseCheckUpdate,
   handleCreate: handlerFuncs.createBase,
   handleUpdate: handlerFuncs.updateBase,
-  securityFunc: securityFuncs.tagSecurity
+  sanitizeOutput: sanitizeFuncs.baseOutput
 });
 
 routeFactory('/api/v1/channels', '../models/Channel', app, {
+  securityFunc: securityFuncs.channelSecurity,
   sanitizeInput: sanitizeFuncs.baseInput,
-  sanitizeOutput: sanitizeFuncs.baseOutput,
+  checkCreate: checkFuncs.baseCheckCreate,
+  checkUpdate: checkFuncs.baseCheckUpdate,
   handleCreate: handlerFuncs.createBase,
   handleUpdate: handlerFuncs.updateBase,
-  securityFunc: securityFuncs.channelSecurity,
+  sanitizeOutput: sanitizeFuncs.baseOutput,
   populate: ['_creators', '_tags']
 });
 
 routeFactory('/api/v1/users', '../models/User', app, {
+  securityFunc: securityFuncs.userSecurity,
   sanitizeInput: sanitizeFuncs.baseInput,
-  sanitizeOutput: sanitizeFuncs.baseOutput,
-  handleCreate: handlerFuncs.CreateUser,
-  handleUpdate: handlerFuncs.UpdateUser,
-  securityFunc: securityFuncs.userSecurity
+  checkCreate: checkFuncs.userCheckCreate,
+  checkUpdate: checkFuncs.userCheckUpdate,
+  handleCreate: handlerFuncs.createUser,
+  handleUpdate: handlerFuncs.updateUser,
+  sanitizeOutput: sanitizeFuncs.baseOutput
 });
 
 //sets up log-in/account sign-up route handlers
