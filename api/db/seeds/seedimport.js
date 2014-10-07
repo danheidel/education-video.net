@@ -40,7 +40,7 @@ var channelsDone = 0;
 
 var tagsIDs = [];
 var creatorsIDs = [];
-var ytIDs = [];
+var ytChannels = [];
 var tempUser, user1, user2, admin, nobody;
 
 if(mode === 'test') {
@@ -182,7 +182,7 @@ function ytImport(){
           if(err){
             callback(err);
           }else{
-            ytIDs[channel.id] = saved._id;
+            ytChannels[channel.name] = saved;
             callback();
           }
         });
@@ -197,6 +197,7 @@ function ytImport(){
     if(err){
       console.error(err);
     } else {
+      console.dir(ytChannels);
       importChannels();
     }
   });
@@ -223,7 +224,7 @@ function ytRetry(channelId, channel, callback){
           callback(err);
         }else{
           console.log('retry as id worked for ' + channelId);
-          ytIDs[channel.id] = saved._id;
+          ytChannels[channel.name] = saved;
           callback();
         }
       });
@@ -242,7 +243,9 @@ function importChannels(){
     for(var rep2=0;rep2<channels[rep]._tags.length;rep2++){
       channels[rep]._tags[rep2] = tagsIDs[channels[rep]._tags[rep2]];
     }
-    channels[rep]._youtube = ytIDs[channels[rep].id];
+    channels[rep]._youtube = ytChannels[channels[rep].name]._id;
+    //overwrite with YT info
+    channels[rep].description = ytChannels[channels[rep].name].description;
     channels[rep].local = {};
     channels[rep].local.owner = admin;
     var tempChannel = new Channel(channels[rep]);
