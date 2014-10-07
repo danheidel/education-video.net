@@ -7,6 +7,5 @@ angular.module('educationApp.services', [])
   var baseUrl = 'localhost:3000';
   //var baseUrl = 'education-video.net';
   var apiUrl = '/api/v1';
-
-
 });
+
