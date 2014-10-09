@@ -36,10 +36,14 @@ module.exports = function(app, passport) {
   });
 
   app.get('/logout', function(req, res) {
+    if(!req.user){
+      console.log('attempt to log out when not logged in');
+      return res.send({message:'not logged in'});
+    }
     var tempEmail = req.user.local.email;
     req.logout();
     console.log(tempEmail + ' was logged out');
-    res.send({message: 'logged out'});
+    res.send({message: tempEmail + ' logged out'});
   });
 };
 

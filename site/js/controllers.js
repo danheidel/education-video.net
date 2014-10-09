@@ -5,13 +5,6 @@
 angular.module('educationApp.controllers', [])
 
 .controller('channelListController', function ($scope, $rootScope, $http, $filter){
-  $http.get('api/v1/channels').success(function(data){
-    $scope.baseChannels = data;
-
-    filterChannelData($scope.filter);
-    //call manually since initial window resize occurs before async return
-    splitChannelData($rootScope.windowAttr.columns);
-  });
 
   $scope.$on('columnChange', function(){
     //window resize requires changing column number
@@ -26,6 +19,16 @@ angular.module('educationApp.controllers', [])
     //re-run split for new data
     splitChannelData($rootScope.windowAttr.columns);
   }, true);
+
+  $scope.loadAllChannels = function(){
+    $http.get('api/v1/channels').success(function(data){
+      $scope.baseChannels = data;
+
+      filterChannelData($scope.filter);
+      //call manually since initial window resize occurs before async return
+      splitChannelData($rootScope.windowAttr.columns);
+    })
+  }
 
   function filterChannelData(filter){
     if(filter){
@@ -47,6 +50,7 @@ angular.module('educationApp.controllers', [])
       });
     }
   }
+  $scope.loadAllChannels();
 })
 
 .controller('accountController', function($scope, $rootScope, $http){
@@ -64,6 +68,7 @@ angular.module('educationApp.controllers', [])
     })
     .success(function(data){
       console.dir(data);
+      $rootScope.user = {};
       if(data.displayName){
         $rootScope.user.name = data.displayName;
         $rootScope.user.valid = true;
