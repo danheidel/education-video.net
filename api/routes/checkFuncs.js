@@ -17,7 +17,6 @@ module.exports.userCheckCreate = function(input, res){
 };
 
 module.exports.userCheckUpdate = function(input, res){
-  if(!input.email || !input.password){
-    res.send(403, {'error':'creating a new user requires a valid email and password'});
-  }
+  void(input);
+  void(res);
 };

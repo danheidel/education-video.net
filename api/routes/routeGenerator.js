@@ -111,7 +111,7 @@ exports.routeFactory = function(route, objectPath, app, options){
     // console.log('is authenticated? ' + req.isAuthenticated());
     if(!req.isAuthenticated() && !options.securityFunc(undefined).read){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to read this resource'});
+      res.status(403).send({'error': 'unauthenticated users do not have access to read this resource'});
       return;
     }
     res.setHeader('Content-Type', 'application/json');
@@ -125,7 +125,7 @@ exports.routeFactory = function(route, objectPath, app, options){
       }
       queryBase.exec(function(err, retArray){
         if(err){
-          res.send(500, {'error': err});
+          res.status(500).send({'error': err});
         } else {
           var checkedArray = [];
           _.each(retArray, function(retObject){
@@ -154,7 +154,7 @@ exports.routeFactory = function(route, objectPath, app, options){
     // console.log('is authenticated? ' + req.isAuthenticated());
     if(!req.isAuthenticated() && !options.securityFunc(undefined).read){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to read this resource'});
+      res.status(403).send({'error': 'unauthenticated users do not have access to read this resource'});
       return;
     }
     res.setHeader('Content-Type', 'application/json');
@@ -169,10 +169,10 @@ exports.routeFactory = function(route, objectPath, app, options){
       }
       queryBase.exec(function(err, retObject){
         if(err){
-          res.send(500, {'error': err});
+          res.status(500).send({'error': err});
         } else if(!retObject){
           // nothing with that _id was found
-          res.send(500, {'error': 'no resource with that id could be found'});
+          res.status(500).send({'error': 'no resource with that id could be found'});
         } else {
           //console.log(retObject);
           if(options.securityFunc(req.user, retObject).read){
@@ -187,7 +187,7 @@ exports.routeFactory = function(route, objectPath, app, options){
             }
             res.send(JSON.stringify(retObject));
           }else{
-            res.send(403, {'error':'user does not have access to read this resource'});
+            res.status(403).send({'error':'user does not have access to read this resource'});
           }
         }
       });
@@ -202,12 +202,12 @@ exports.routeFactory = function(route, objectPath, app, options){
     // console.log('is authenticated? ' + req.isAuthenticated());
     if(!req.isAuthenticated() && !options.securityFunc(undefined).create){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to create this resource'});
+      res.status(403).send({'error': 'unauthenticated users do not have access to create this resource'});
       return;
     }
     //see if user has access rights to create a resource
     if(!options.securityFunc(req.user, null).create){
-      res.send(403, {'error':'user does not have rights to create that resource'});
+      res.status(403).send({'error':'user does not have rights to create that resource'});
       return;
     }
     options.sanitizeInput(req.body);
@@ -222,7 +222,7 @@ exports.routeFactory = function(route, objectPath, app, options){
     if(!options.create){
       dbObject.save(function(err, createdObject){
         if(err){
-          res.send(500, {'error': err});
+          res.status(500).send({'error': err});
           console.dir(err);
         } else {
           options.sanitizeOutput(createdObject);
@@ -241,16 +241,16 @@ exports.routeFactory = function(route, objectPath, app, options){
     // console.log('is authenticated? ' + req.isAuthenticated());
     if(!req.isAuthenticated() && !options.securityFunc(undefined).update){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to modify this resource'});
+      res.status(403).send({'error': 'unauthenticated users do not have access to modify this resource'});
       return;
     }
     var id = String(req.params.id);
     //get existing db object to pull ownership, etc from it
     DbObject.findOne({'_id': String(id)}).exec(function(err, oldObject){
       if(err){
-        res.send(500, {'error': err});
+        res.status(500).send({'error': err});
       } else if(!oldObject){
-        res.send(500, {'error':'no resource with that id was found'});
+        res.status(500).send({'error':'no resource with that id was found'});
       } else {
         //complete the update
         options.sanitizeInput(req.body);
@@ -263,7 +263,7 @@ exports.routeFactory = function(route, objectPath, app, options){
           if(!options.update){
             DbObject.update({'_id': id}, req.body, function(err){
               if(err){
-                res.send(500, {'error': err});
+                res.status(500).send({'error': err});
               } else {
                 res.send({msg: 'success'});
               }
@@ -272,7 +272,7 @@ exports.routeFactory = function(route, objectPath, app, options){
             options.create();
           }
         } else {
-          res.send(403, {'error':'user does not have access to modify this resource'});
+          res.status(403).send({'error':'user does not have access to modify this resource'});
         }
       }
     });
@@ -284,23 +284,23 @@ exports.routeFactory = function(route, objectPath, app, options){
     // console.log('is authenticated? ' + req.isAuthenticated());
     if(!req.isAuthenticated() && !options.securityFunc(undefined).destroy){
       //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
-      res.send(403, {'error': 'unauthenticated users do not have access to delete this resource'});
+      res.status(403).send({'error': 'unauthenticated users do not have access to delete this resource'});
       return;
     }
     var id = String(req.params.id);
     //get existing db object to pull ownership, etc from it
     DbObject.findOne({'_id': String(id)}).exec(function(err, retObject){
       if(err){
-        res.send(500, {'error': err});
+        res.status(500).send({'error': err});
       } else if(!retObject){
-        res.send(500, {'error':'no resource with that id was found'});
+        res.status(500).send({'error':'no resource with that id was found'});
       } else {
         //complete the deletion
         if(options.securityFunc(req.user, retObject).destroy){
           if(!options.destroy){
             DbObject.remove({'_id': id}, function(err){
               if(err){
-                res.send(500, {'error': err});
+                res.status(500).send({'error': err});
               } else {
                 res.send({msg: 'success'});
               }
@@ -309,7 +309,7 @@ exports.routeFactory = function(route, objectPath, app, options){
             options.destroy();
           }
         } else {
-          res.send(403, {'error':'user does not have access to delete this resource'});
+          res.status(403).send({'error':'user does not have access to delete this resource'});
         }
       }
     });
