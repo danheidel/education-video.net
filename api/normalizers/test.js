@@ -4,7 +4,7 @@ var YTNormalizer = require('./YTNormalizer.js');
 
 global = {
   ytKey: process.argv[2]
-}
+};
 
 var options = {
   channelName: 'BrilliantBotany'

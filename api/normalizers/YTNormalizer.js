@@ -21,7 +21,7 @@ module.exports.getChannelsByName = function(store, callback){
   var channelFilter = 'forUsername=' + store.channelName;
   options.terms = part + '&' + channelFilter;
   ytCall(store, options, callback);
-}
+};
 
 module.exports.getChannelsById = function(store, callback){
   var options = {
@@ -32,7 +32,7 @@ module.exports.getChannelsById = function(store, callback){
   var channelFilter = 'id=' + store.id;
   options.terms = part + '&' + channelFilter;
   ytCall(store, options, callback);
-}
+};
 
 function ytCall(store, options, callback){
   ytReqOptions.path = ytBasePath + options.path + options.terms + '&key=' + global.ytKey;
@@ -45,7 +45,7 @@ function ytCall(store, options, callback){
     });
     res.on('end', function(){
       callback(null, JSON.parse(concatRes));
-    })
+    });
   });
 
   ytReq.on('error', function(err){
