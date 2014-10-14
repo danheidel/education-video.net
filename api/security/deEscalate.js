@@ -1,35 +1,21 @@
 'use strict';
 
-module.exports.startup = function(){
-  var user, port;
-  console.log('starting as user: ' + process.env.USER);
-  console.log('specified user: ' + (process.env.NODEUSERID || parseInt(process.argv[2])));
-  console.log('specified port: ' + (process.env.NODESERVERPORT || parseInt(process.argv[3])));
-
-  user = parseInt(process.env.NODEUSERID) || parseInt(process.argv[2]);
-  if(!user){
+module.exports = function(global, callback){
+  if(!global.userId){
     console.error('no user specified, exiting');
     process.exit();
   }
 
   //attempt to de-escalate user permissions
   try {
-    process.setgid(user);
-    process.setuid(user);
+    process.setgid(global.userId);
+    process.setuid(global.userId);
   } catch (e) {
     console.error('problem setting user/group, exiting');
     console.dir(e);
     process.exit();
   }
-  console.log('user changed to: ' + user);
+  console.log('user changed to: ' + global.userId);
 
-  port = parseInt(process.env.NODESERVERPORT) || parseInt(process.argv[3]);
-  if(!port){
-    console.error('no port defined, exiting');
-    process.exit();
-  }
-  return {
-    user: user,
-    port: port
-  };
+  callback();
 };
