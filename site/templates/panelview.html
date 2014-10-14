@@ -1,10 +1,11 @@
 
-  <div id="control-spacer"></div>
+  <div class="control-spacer" ng-class="{'retracted': controlsRetracted}"></div>
   <ng-include src="'login.html'"></ng-include>
   <canvas id="science-canvas"></canvas>
-  <div id="control-container">
+  <div class="control-container" ng-class="{'retracted': controlsRetracted}">
     <div id="controls" class="roundnborder center-block">
-      <div id="control-toggle" class="center">*</div>
+      <div id="control-toggle" class="center"
+      ng-click="controlsRetracted = !controlsRetracted">* {{controlsRetracted}}</div>
       <div>
         Creator: <input ng-model="filter.creators">
         Tags: <input ng-model="filter.tags">
