@@ -30,10 +30,16 @@ angular.module('educationApp.controllers', [])
     })
   }
 
+  $scope.loadAllTags = function(){
+    $http.get('api/v1/tags').success(function(data){
+      $scope.tags = data;
+    });
+  };
+
   function filterChannelData(filter){
     if(filter){
       $scope.filteredChannels = $filter('looseCreatorComparator')($scope.baseChannels, filter.creators);
-      $scope.filteredChannels = $filter('looseTagComparator')($scope.filteredChannels, filter.tags);
+      $scope.filteredChannels = $filter('looseTagComparator')($scope.filteredChannels, filter.selectedTag);
     } else {
       $scope.filteredChannels = $scope.baseChannels;
     }
@@ -51,6 +57,7 @@ angular.module('educationApp.controllers', [])
     }
   }
   $scope.loadAllChannels();
+  $scope.loadAllTags();
 })
 
 .controller('accountController', function($scope, $rootScope, $http){

@@ -1,6 +1,11 @@
 <div class="inpanel">
-  <h3><a class="channel-name" href="{{channel.location}}">{{channel.name}}</a></h3>
-  <p>Description: {{channel.description}}</p>
+  <h2><a class="channel-name" href="{{channel.location}}">{{channel.name}}</a></h2>
+  <div class="outlined">
+    <p>
+      <span class="channel-header">Description:</span>
+      {{channel.description}}
+    </p>
+  </div>
   <div ng-repeat="creator in channel._creators">
     <span ng-click="authorShow = !authorShow">{{creator.name}}</span>
     <ul ng-show="authorShow">
