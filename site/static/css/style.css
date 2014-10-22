@@ -12,7 +12,8 @@ h1 {
 }
 
 h2 {
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem
 }
 
 h3 {
@@ -104,10 +105,10 @@ input.validation-color.ng-invalid.ng-dirty{
 #controls{
   position:fixed;
   display: table;
-  width:90%;
+  width:94%;
   height: 4rem;
-  padding: 0.3rem 5rem 0.3rem 0.3rem;
-  background-color: #FFF;
+  padding: 0.1rem 5rem 0.1rem 0.3rem;
+  background-color: #888;
 }
 
 #control-toggle{
