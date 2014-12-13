@@ -9,16 +9,15 @@ module.exports = function(global, callback){
     process.exit();
   }
   GlobalVars.find({}, function(err, data){
-    console.log('find');
     if(err){
       console.error('global vars not found in db, exiting');
       process.exit();
     }
-    console.dir(data);
     if(!data || data.length < 1){
       console.error('global data was empty, exiting');
       process.exit();
     }
+    console.log('global var successfully pulled from db');
     global.sessionSecret = data[0].sessionSecret;
     global.userId = data[0].userId;
     global.port = data[0].port;

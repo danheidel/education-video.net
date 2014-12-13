@@ -4,15 +4,17 @@ var fs = require('fs');
 //var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
+var globalVars = require('../../../globalVars');
 var getChannelsByName = require('../../normalizers/YTNormalizer.js').getChannelsByName;
 var getChannelsById = require('../../normalizers/YTNormalizer.js').getChannelsById;
 var mode = process.argv[2];
-global = {
-  ytKey: process.argv[3]
-}
+global = {};
 
 //if no mode selected, exit
-if(!mode) {process.exit();}
+if(!mode) {
+  console.log('no mode selected, exiting');
+  process.exit();
+}
 
 switch(mode){
   case 'test' : mongoose.connect('mongodb://localhost/education-test');
@@ -22,6 +24,8 @@ switch(mode){
   case 'dev' : mongoose.connect('mongodb://localhost/education-prod');
   break;
 }
+
+globalVars(global, function(){});
 
 var Channel = require('../../models/Channel');
 var Creator = require('../../models/Creator');

@@ -22,6 +22,8 @@ var errorHandler = require('errorhandler');
 var mongoose = require('mongoose');
 
 var global = {};
+console.log('test');
+console.dir(process.env);
 var env = process.env.NODE_ENV || process.argv[2] || 'test';
 console.log('specified environment: ' + env);
 
