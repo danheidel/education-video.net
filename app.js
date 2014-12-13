@@ -24,6 +24,8 @@ var mongoose = require('mongoose');
 var global = {};
 console.log('test');
 console.dir(process.env);
+var mongoIP = process.env.MONGO_PORT_27017_TCP_ADDR;
+console.log('mongo docker container address: ' + mongoIP);
 var env = process.env.NODE_ENV || process.argv[2] || 'test';
 console.log('specified environment: ' + env);
 
@@ -58,7 +60,7 @@ process.on('exit', function(code){
 function setEnv(callback){
   if(env === 'test'){
     console.log('running in test environment');
-    mongoose.connect('mongodb://localhost/education-test');
+    mongoose.connect('mongodb://' + mongoIP + '/education-test');
   } else if(env === 'dev') {
     console.log('running in development environment');
     mongoose.connect('mongodb://localhost/education-dev');
