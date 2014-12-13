@@ -10,7 +10,7 @@ cd education-video.net
 
 npm install
 
-bower install
+bower install --allow-root
 
 node -v
 

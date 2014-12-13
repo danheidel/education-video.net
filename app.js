@@ -63,10 +63,10 @@ function setEnv(callback){
     mongoose.connect('mongodb://' + mongoIP + '/education-test');
   } else if(env === 'dev') {
     console.log('running in development environment');
-    mongoose.connect('mongodb://localhost/education-dev');
+    mongoose.connect('mongodb://' + mongoIP + '/education-dev');
   } else if(env === 'prod'){
     console.log('running in production environment');
-    mongoose.connect('mongodb://localhost/education-prod');
+    mongoose.connect('mongodb://' + mongoIP + '/education-prod');
   } else {
     console.error('Invalid environment selected');
     process.exit();
