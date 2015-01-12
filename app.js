@@ -22,10 +22,14 @@ var errorHandler = require('errorhandler');
 var mongoose = require('mongoose');
 
 var global = {};
-console.log('test');
-console.dir(process.env);
-var mongoIP = process.env.MONGO_PORT_27017_TCP_ADDR;
-console.log('mongo docker container address: ' + mongoIP);
+var mongoIP;
+if(process.env.MONGO_PORT_27017_TCP_ADDR){
+  mongoIP = process.env.MONGO_PORT_27017_TCP_ADDR;
+  console.log('mongo docker container address: ' + mongoIP);
+} else {
+  mongoIP = 'localhost';
+  console.log('no docker container linking detected, using port 27017 default');
+}
 var env = process.env.NODE_ENV || process.argv[2] || 'test';
 console.log('specified environment: ' + env);
 
