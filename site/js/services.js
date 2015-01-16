@@ -1,43 +1,21 @@
 'use strict';
 /*global angular*/
 
+var apiUrl = '/api/v1';
+
 angular.module('educationApp.services', [])
 
-.factory('channelApi', function($http){
-  var baseUrl = 'localhost:3000';
-  //var baseUrl = 'education-video.net';
-  var apiUrl = '/api/v1';
-})
+.service('channelSevices', function($http){
+  var channels;
 
-.service('channelSevices', function($http, $filter){
-  var channels = [];
-  var filteredChannels = [];
-
-  function getAllChannels(){
-    $http.get('api/v1/channels').success(function(data){
+  function getAllChannels(callback){
+    $http({
+      method: 'GET',
+      url: 'api/v1/channels'
+    }).success(function(data){
       channels = data;
+      callback(data);
     });
-  }
-
-  function filterChannelData(filter){
-    if(filter){
-      filteredChannels = $filter('looseCreatorComparator')(channels, filter.creators);
-      filteredChannels = $filter('looseTagComparator')(filteredChannels, filter.selectedTag);
-    } else {
-      filteredChannels = channels;
-    }
-  }
-
-  function splitChannelData(columns){
-    if(columns){
-      $scope.splitChannels = [];
-      for(var rep=0;rep<columns;rep++){
-        $scope.splitChannels.push([]);
-      }
-      _.forEach($scope.filteredChannels, function(channel, index){
-        $scope.splitChannels[index % columns].push(channel);
-      });
-    }
   }
 
   return {
@@ -47,6 +25,37 @@ angular.module('educationApp.services', [])
 })
 
 .service('tagServices', function($http){
+  var tags = [];
 
+  function getAllTags(callback){
+    $http({
+      method: 'GET',
+      url: 'api/v1/tags'
+    }).success(function(data){
+      tags = data;
+      callback(data);
+    });
+  }
+
+  return {
+    tags: tags,
+    getAllTags: getAllTags
+  }
+})
+
+.service('userServices', function($http){
+  function loginUser(email, password, callback){
+    $http.post('login', {
+      email: email,
+      password: password
+    })
+    .success(function(data){
+      callback(data);
+    });
+  }
+
+  return {
+    loginUser: loginUser
+  }
 });
 

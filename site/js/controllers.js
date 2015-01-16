@@ -2,13 +2,13 @@
 /*global angular*/
 /*global _*/
 
-angular.module('educationApp.controllers', [])
+angular.module('educationApp.controllers', ['educationApp.services'])
 
-.controller('channelListController', function ($scope, $rootScope, $http, $filter){
+.controller('channelListController', function ($scope, $rootScope, $http, $filter, channelSevices,
+  tagServices){
 
   $scope.$on('columnChange', function(){
     //window resize requires changing column number
-    console.log('change detected');
     splitChannelData($rootScope.windowAttr.columns);
     $scope.$apply();
   });
@@ -20,28 +20,12 @@ angular.module('educationApp.controllers', [])
     splitChannelData($rootScope.windowAttr.columns);
   }, true);
 
-  $scope.loadAllChannels = function(){
-    $http.get('api/v1/channels').success(function(data){
-      $scope.baseChannels = data;
-
-      filterChannelData($scope.filter);
-      //call manually since initial window resize occurs before async return
-      splitChannelData($rootScope.windowAttr.columns);
-    })
-  }
-
-  $scope.loadAllTags = function(){
-    $http.get('api/v1/tags').success(function(data){
-      $scope.tags = data;
-    });
-  };
-
-  function filterChannelData(filter){
+  function filterChannelData(baseChannels, filter){
     if(filter){
-      $scope.filteredChannels = $filter('looseCreatorComparator')($scope.baseChannels, filter.creators);
+      $scope.filteredChannels = $filter('looseCreatorComparator')(baseChannels, filter.creators);
       $scope.filteredChannels = $filter('looseTagComparator')($scope.filteredChannels, filter.selectedTag);
     } else {
-      $scope.filteredChannels = $scope.baseChannels;
+      $scope.filteredChannels = baseChannels;
     }
   }
 
@@ -56,17 +40,38 @@ angular.module('educationApp.controllers', [])
       });
     }
   }
-  $scope.loadAllChannels();
-  $scope.loadAllTags();
+
+  channelSevices.getAllChannels(function(data){
+    filterChannelData(data, $scope.filter);
+    splitChannelData($rootScope.windowAttr.columns);
+  });
+
+  tagServices.getAllTags(function(data){
+    //console.log(tagServices.tags);
+    $scope.tags = data;
+  });
 })
 
-.controller('accountController', function($scope, $rootScope, $http){
+.controller('accountController', function($scope, $rootScope, $http, userServices){
+  $scope.login = {};
   $scope.formLoginUser = function(form){
     if(form.$invalid){
       console.log('invalid login form');
       return;
     }
-    $scope.loginUser($scope.login.email, $scope.login.password);
+    //$scope.loginUser($scope.login.email, $scope.login.password);
+    userServices.loginUser($scope.login.email, $scope.login.password, function(data){
+      console.dir(data);
+      $rootScope.user = {};
+      if(data.displayName){
+        $rootScope.user.name = data.displayName;
+        $rootScope.user.valid = true;
+      } else {
+        $rootScope.user.name = 'Not logged in';
+        $rootScope.user.valid = false;
+      }
+      console.log($rootScope.user);
+    })
   };
   $scope.loginUser = function(email, password){
     $http.post('login', {
@@ -89,6 +94,7 @@ angular.module('educationApp.controllers', [])
     $http.get('login')
     .success(function(data){
       console.dir(data);
+      console.dir($rootScope.user);
       if(data.displayName){
         $rootScope.user.name = data.displayName;
         $rootScope.user.valid = true;

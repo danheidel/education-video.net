@@ -10,6 +10,9 @@ angular.module('educationApp.config', [])
   angular.element($window).bind('resize', function(){
     getWindowAttrs();
   });
+  $rootScope.user = {};
+  $rootScope.user.name = 'Not logged in';
+  $rootScope.user.valid = false;
 
   var breakpoints = [
     {width: 0, columns: 1},

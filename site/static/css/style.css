@@ -166,32 +166,6 @@ input.validation-color.ng-invalid.ng-dirty{
   background-color: #888;
 }
 
-/*.panel.ng-move,
-.panel.ng-enter,
-.panel.ng-leave {
-  -webkit-transition: cubic-bezier(0, 1, 0.5, 1);
-  -moz-transition: cubic-bezier(0, 1, 0.5, 1);
-  -o-transition: cubic-bezier(0, 1, 0.5, 1);
-  -ms-transition: cubic-bezier(0, 1, 0.5, 1);
-  transition: cubic-bezier(0, 1, 0.5, 1);
-}
-
-.panel.ng-leave.ng-leave-active,
-.panel.ng-move,
-.panel.ng-enter {
-  overflow-y:hidden;
-  overflow-x:hidden;
-  max-height: 0;
-}
-
-.panel.ng-leave,
-.panel.ng-move.ng-move-active,
-.panel.ng-enter.ng-enter-active {
-  overflow-y: auto;
-  overflow-x:auto;
-  max-height: 40rem;
-}*/
-
 .inpanel{
   padding:1.0rem 0.75rem;
 }
