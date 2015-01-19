@@ -41,6 +41,10 @@ input.validation-color.ng-invalid.ng-dirty{
   background-color: red;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .roundnborder{
   border: 1px solid #CCC;
   box-shadow: 0.5rem 0.5rem 0.4rem 0rem rgba(0,0,0,0.75);
@@ -65,6 +69,18 @@ input.validation-color.ng-invalid.ng-dirty{
   border-right: 2px solid #DDD;
 }
 
+.border{
+  margin: 0.2rem;
+  padding: 0.2rem;
+  border: 2px solid#555;
+}
+
+.heavy-border{
+  margin: 0.2rem;
+  padding:0.2rem;
+  border: 3px solid #555;
+}
+
 .center-block:before{
   display: inline-block;
   vertical-align: middle;
@@ -83,7 +99,7 @@ input.validation-color.ng-invalid.ng-dirty{
 .control-container{
   position:absolute;
   right: 95%;
-  top: 0.5rem;
+  top: 0.2rem;
   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
 }
@@ -108,7 +124,7 @@ input.validation-color.ng-invalid.ng-dirty{
   width:94%;
   height: 4rem;
   padding: 0.1rem 5rem 0.1rem 0.3rem;
-  background-color: #888;
+  background-color: #67779C;
 }
 
 #control-toggle{
@@ -116,7 +132,6 @@ input.validation-color.ng-invalid.ng-dirty{
   vertical-align: middle;
   width: 2.5rem;
   text-align: center;
-  cursor: pointer;
   font-size: xx-large;
   border-right: 2px solid #aaa;
 }
@@ -151,19 +166,19 @@ input.validation-color.ng-invalid.ng-dirty{
 }
 
 .col-odd > .row-odd{
-  background-color: #777;
+  background-color: #506490;
 }
 
 .col-odd > .row-even {
-  background-color: #AAA;
+  background-color: #8893AD;
 }
 
 .col-even > .row-odd{
-  background-color: #CCC;
+  background-color: #ADB3BF;
 }
 
 .col-even > .row-even {
-  background-color: #888;
+  background-color: #67779C;
 }
 
 .inpanel{

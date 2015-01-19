@@ -1,27 +1,7 @@
 
 <div class="control-spacer" ng-class="{'retracted': controlsRetracted}"></div>
-<ng-include src="'login.html'"></ng-include>
+<ng-include src="'menu.html'"></ng-include>
 <canvas id="science-canvas"></canvas>
-<div class="control-container" ng-class="{'retracted': controlsRetracted}">
-  <div id="controls" class="roundnborder">
-    <div id="control-toggle"
-    ng-click="controlsRetracted = !controlsRetracted">⚙</div>
-    <div style="margin-left: 0.3rem;">
-      <div class="outlined" id="filter-inputs">
-        Creator: <input ng-model="filter.creators">
-        Tags: <select ng-model="filter.selectedTag" ng-options="tag.name as tag.name for tag in tags">
-          <option value="">-- all --</option>
-        </select>
-        <br/>
-        <!--query: {{filter}}
-        <br/>-->
-      </div>
-      <div class="outlined" id="ordering">
-
-      </div>
-    </div>
-  </div>
-</div>
 
 <div id="header">
   <h1 id="title-text">Educational Videos</h1>

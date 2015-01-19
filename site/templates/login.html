@@ -1,37 +1,45 @@
 <div id="login-panel" ng-controller="accountController">
   <div ng-click="loginShow = true" ng-show="!loginShow">
-    Show login
+    Log in / Register
   </div>
-  <modal-dialog show="loginShow">
-    <h3>User: {{$root.user.name}}</h3>
+  <modal-dialog show="loginShow" width="75%">
     <div style="width: 50%; float:left;">
-      <h3>Login</h3>
-      <form name="loginForm">
-        Email: <input type="email" class="input-required validation-color" ng-model="login.email" required> *
+      <div class="border">
+        <h3>Login</h3>
         <br>
-        Password: <input class="input-required validation-color" ng-show="showpassword" type="text" ng-model="login.password" required>
-          <input class="input-required validation-color" ng-hide="showpassword" type="password" ng-model="login.password"> *
-        show password <input type="checkbox" ng-model="showpassword" ng-checked="false">
-        <br>
-        {{login}}
-        <input type="button" value="send" ng-click="formLoginUser(loginForm)">
-      </form>
+        <form name="loginForm">
+          Email: <input type="email" class="input-required validation-color" ng-model="login.email" required> *
+          <br>
+          <br>
+          Password: <input class="input-required validation-color" ng-show="showpassword" type="text" ng-model="login.password" required>
+            <input class="input-required validation-color" ng-hide="showpassword" type="password" ng-model="login.password"> *
+          show password <input type="checkbox" ng-model="showpassword" ng-checked="false">
+          <br>
+          <br>
+          <input type="button" value="send" ng-click="formLoginUser(loginForm)">
+        </form>
+      </div>
     </div>
     <div style="width: 50%; float:right;">
-      <h3>Create account</h3>
-      <form name="accountForm">
-        Account name: <input class="input-required validation-color" ng-model="user.displayName" required> *
+      <div class="border">
+        <h3>Create account</h3>
         <br>
-        Email: <input type="email" class="input-required validation-color" ng-model="user.email" required> *
-        <br>
-        Password: <input class="input-required validation-color" ng-show="showpassword" type="text" ng-model="user.password" required>
-          <input class="input-required validation-color" ng-hide="showpassword" type="password" ng-model="user.password"> *
-        show password <input type="checkbox" ng-model="showpassword" ng-checked="false">
-        <br>
-        <input type="button" value="send" ng-click="submitNewUser(accountForm)">
-      </form>
+        <form name="accountForm">
+          Account name: <input class="input-required validation-color" ng-model="user.displayName" required> *
+          <br>
+          <br>
+          Email: <input type="email" class="input-required validation-color" ng-model="user.email" required> *
+          <br>
+          <br>
+          Password: <input class="input-required validation-color" ng-show="showpassword" type="text" ng-model="user.password" required>
+            <input class="input-required validation-color" ng-hide="showpassword" type="password" ng-model="user.password"> *
+          show password <input type="checkbox" ng-model="showpassword" ng-checked="false">
+          <br>
+          <br>
+          <input type="button" value="send" ng-click="submitNewUser(accountForm)">
+        </form>
+      </div>
     </div>
-    <h3 ng-click="logoutUser()">Logout</h3>
-    <h3 ng-click="getUser()">check user</h3>
+    <h3 style="float:right;" ng-click="logoutUser()">Logout</h3>
   </modal-dialog>
 </div>
