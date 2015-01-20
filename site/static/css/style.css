@@ -1,6 +1,7 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   margin:0;
+  background: #555;
 }
 
 a {
@@ -13,7 +14,7 @@ h1 {
 
 h2 {
   margin-top: 0.25rem;
-  margin-bottom: 0.75rem
+  margin-bottom: 0.25rem
 }
 
 h3 {
@@ -23,6 +24,10 @@ h3 {
 
 p {
   margin: 0;
+}
+
+input[type="button"] {
+  cursor: pointer;
 }
 
 .channel-name{
@@ -43,6 +48,10 @@ input.validation-color.ng-invalid.ng-dirty{
 
 .pointer {
   cursor: pointer;
+}
+
+.default-cursor{
+  cursor:default;
 }
 
 .roundnborder{
@@ -182,10 +191,16 @@ input.validation-color.ng-invalid.ng-dirty{
 }
 
 .inpanel{
-  padding:1.0rem 0.75rem;
+  padding:0.4rem 0.4rem;
+  margin:0.4rem 0.35rem;
+  border-radius:1.5rem;
 }
 
 .tag-span{
-  margin-right:1rem;
-  float:left;
+  display:inline-block;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  background: #C6E4AE;
+  margin: 0.1rem 0.2rem;
+  padding: 0 0.2rem;
 }

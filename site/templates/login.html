@@ -1,8 +1,12 @@
 <div id="login-panel" ng-controller="accountController">
-  <div ng-click="loginShow = true" ng-show="!loginShow">
+  <div ng-click="loginShow = true" class="pointer" ng-show="!loginShow">
     Log in / Register
   </div>
   <modal-dialog show="loginShow" width="75%">
+    <div style="width:50%; float:left;">
+      user: {{$root.user.name}}
+    </div>
+    <br>
     <div style="width: 50%; float:left;">
       <div class="border">
         <h3>Login</h3>
@@ -40,6 +44,8 @@
         </form>
       </div>
     </div>
-    <h3 style="float:right;" ng-click="logoutUser()">Logout</h3>
+    <div class="border pointer" style="float:left;">
+      <h3 ng-click="logoutUser()">Logout</h3>
+    </div>
   </modal-dialog>
 </div>

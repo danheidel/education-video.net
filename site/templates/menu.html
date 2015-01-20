@@ -2,12 +2,14 @@
 <div class="control-container" ng-class="{'retracted': controlsRetracted}">
   <div id="controls" class="roundnborder">
     <div id="control-toggle" class="pointer"
-    ng-click="controlsRetracted = !controlsRetracted">⚙</div>
+      ng-click="controlsRetracted = !controlsRetracted">
+      ⚙
+    </div>
     <div style="margin-left: 0.3rem;">
       <div class="outlined" id="status-bar">
         <span>User: {{$root.user.name}}</span>
         {{loginShow}}
-        <span style="float:right" class="pointer"><ng-include src="'login.html'"></ng-include></span>
+        <span style="float:right"><ng-include src="'login.html'"></ng-include></span>
       </div>
       <div class="outlined" id="filter-inputs">
         Creator: <input ng-model="filter.creators">
