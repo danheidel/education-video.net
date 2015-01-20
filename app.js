@@ -136,6 +136,16 @@ function setupRoutes(callback){
     sanitizeOutput: sanitizeFuncs.baseOutput
   });
 
+  routeFactory('/api/v1/ytchannels', '../models/YTChannel', app, {
+    securityFunc: securityFuncs.ytChannelSecurity,
+    sanitizeInput: sanitizeFuncs.baseInput,
+    checkCreate: checkFuncs.baseCheckCreate,
+    checkUpdate: checkFuncs.baseCheckUpdate,
+    handleCreate: handlerFuncs.createBase,
+    handleUpdate: handlerFuncs.updateBase,
+    sanitizeOutput: sanitizeFuncs.baseOutput
+  });
+
   routeFactory('/api/v1/channels', '../models/Channel', app, {
     securityFunc: securityFuncs.channelSecurity,
     sanitizeInput: sanitizeFuncs.baseInput,
@@ -144,7 +154,7 @@ function setupRoutes(callback){
     handleCreate: handlerFuncs.createBase,
     handleUpdate: handlerFuncs.updateBase,
     sanitizeOutput: sanitizeFuncs.baseOutput,
-    populate: ['_creators', '_tags']
+    populate: ['_creators', '_tags', '_youtube']
   });
 
   routeFactory('/api/v1/users', '../models/User', app, {
