@@ -80,16 +80,16 @@ module.exports.tagSecurity = function(user, dbObject){
       //no dbObject supplied - e.g.: object is being created
       //does user have rights to do this?
       return {
-        create: true,
+        create: false,
       };
     }
     if(dbObject.local.owner.equals(user._id)){
       //user owns this object, can do updates
       return {
         read: true,
-        create: true,
-        update: true,
-        destroy: true
+        create: false,
+        update: false,
+        destroy: false
       };
     }else{
       //doesn't own, can only read
@@ -188,16 +188,16 @@ module.exports.ytChannelSecurity = function(user, dbObject){
       //no dbObject supplied - e.g.: object is being created
       //does user have rights to do this?
       return {
-      create: true,
+      create: false,
     };
     }
     if(dbObject.local.owner.equals(user._id)){
       //user owns this object, can do updates
       return {
       read: true,
-      create: true,
-      update: true,
-      destroy: true
+      create: false,
+      update: false,
+      destroy: false
     };
     }else{
       //doesn't own, can only read
