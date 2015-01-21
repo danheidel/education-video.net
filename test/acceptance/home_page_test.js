@@ -2,7 +2,7 @@
 /*global casper*/
 
 casper.test.begin('home page', 3, function suite(test){
-  casper.start('http://localhost:3000/', function(){
+  casper.start('http://localhost:5000/', function(){
     test.assertHttpStatus(200);
   });
 

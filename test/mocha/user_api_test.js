@@ -11,7 +11,7 @@ var testLogin = require('../testLogin');
 var users = {};
 
 var id;
-var url = 'http://localhost:3000/api/v1/users/';
+var url = 'http://localhost:5000/api/v1/users/';
 
 describe('user JSON API', function(){
   before(function(done){

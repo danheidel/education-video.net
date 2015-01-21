@@ -13,7 +13,7 @@ var tags = [];
 var creators = [];
 
 var id;
-var url = 'http://localhost:3000/api/v1/channels/';
+var url = 'http://localhost:5000/api/v1/channels/';
 
 describe('Channel JSON API', function(){
   before(function(done){
