@@ -2,6 +2,7 @@
 /*jshint expr: true*/
 // var _ = require('lodash');
 // var superagent = require('superagent');
+console.log('starting channel api test');
 var chai = require('chai');
 var expect = chai.expect;
 var should = chai.should();

@@ -12,9 +12,9 @@ var expressSession = require('express-session');
 var passport = require('passport');
 require('./api/security/passport')(passport);
 var flash = require('connect-flash');
+var routeGenerator = require('./api/routes/routeGenerator');
 var routeFactory = require('./api/routes/routeGenerator').routeFactory;
 var securityFuncs = require('./api/routes/securityFuncs');
-var checkFuncs = require('./api/routes/checkFuncs');
 var sanitizeFuncs = require('./api/routes/sanitizeFuncs');
 var handlerFuncs = require('./api/routes/handlerFuncs');
 var errorHandler = require('errorhandler');
@@ -53,12 +53,18 @@ async.series([
 });
 
 process.on('exit', function(code){
+  console.log(code);
   console.log('shutting down server');
   server.close();
   console.log('closed port');
   mongoose.disconnect();
   console.log('disconnected mongodb');
   console.log('preparing to exit with code: ' + code);
+});
+
+process.on('uncaughtException', function (err) {
+  console.log('uncaught exception');
+  console.log(err);
 });
 
 function setEnv(callback){
@@ -111,64 +117,43 @@ function setupExpress(callback){
     app.use(errorHandler());
     // app.use(logger());
   }
+  console.log('express setup finished');
   callback();
 }
 
 function setupRoutes(callback){
+  //set up default generator functions
+  routeGenerator.defaultSanitizeInput = sanitizeFuncs.baseInput;
+  routeGenerator.defaultHandleCreate = handlerFuncs.createBase;
+  routeGenerator.defaultHandleUpdate = handlerFuncs.updateBase;
+  routeGenerator.defaultSanitizeOutput = sanitizeFuncs.baseOutput;
+
   routeFactory('/api/v1/creators', '../models/Creator', app, {
-    securityFunc: securityFuncs.creatorSecurity,
-    sanitizeInput: sanitizeFuncs.baseInput,
-    checkCreate: checkFuncs.baseCheckCreate,
-    checkUpdate: checkFuncs.baseCheckUpdate,
-    handleCreate: handlerFuncs.createBase,
-    handleUpdate: handlerFuncs.updateBase,
-    checkInput: checkFuncs.baseCheckCreate,
-    sanitizeOutput: sanitizeFuncs.baseOutput
+    securityFunc: securityFuncs.creatorSecurity
   });
 
   routeFactory('/api/v1/tags', '../models/Tag', app, {
-    securityFunc: securityFuncs.tagSecurity,
-    sanitizeInput: sanitizeFuncs.baseInput,
-    checkCreate: checkFuncs.baseCheckCreate,
-    checkUpdate: checkFuncs.baseCheckUpdate,
-    handleCreate: handlerFuncs.createBase,
-    handleUpdate: handlerFuncs.updateBase,
-    sanitizeOutput: sanitizeFuncs.baseOutput
+    securityFunc: securityFuncs.tagSecurity
   });
 
   routeFactory('/api/v1/ytchannels', '../models/YTChannel', app, {
-    securityFunc: securityFuncs.ytChannelSecurity,
-    sanitizeInput: sanitizeFuncs.baseInput,
-    checkCreate: checkFuncs.baseCheckCreate,
-    checkUpdate: checkFuncs.baseCheckUpdate,
-    handleCreate: handlerFuncs.createBase,
-    handleUpdate: handlerFuncs.updateBase,
-    sanitizeOutput: sanitizeFuncs.baseOutput
+    securityFunc: securityFuncs.ytChannelSecurity
   });
 
   routeFactory('/api/v1/channels', '../models/Channel', app, {
     securityFunc: securityFuncs.channelSecurity,
-    sanitizeInput: sanitizeFuncs.baseInput,
-    checkCreate: checkFuncs.baseCheckCreate,
-    checkUpdate: checkFuncs.baseCheckUpdate,
-    handleCreate: handlerFuncs.createBase,
-    handleUpdate: handlerFuncs.updateBase,
-    sanitizeOutput: sanitizeFuncs.baseOutput,
     populate: ['_creators', '_tags', '_youtube']
   });
 
   routeFactory('/api/v1/users', '../models/User', app, {
     securityFunc: securityFuncs.userSecurity,
-    sanitizeInput: sanitizeFuncs.baseInput,
-    checkCreate: checkFuncs.userCheckCreate,
-    checkUpdate: checkFuncs.userCheckUpdate,
     handleCreate: handlerFuncs.createUser,
-    handleUpdate: handlerFuncs.updateUser,
-    sanitizeOutput: sanitizeFuncs.baseOutput
+    handleUpdate: handlerFuncs.updateUser
   });
 
   //sets up log-in/account sign-up route handlers
   require('./api/security/loginRoutes.js')(app, passport);
+  console.log('routes set up');
   callback();
 }
 
@@ -180,5 +165,6 @@ function startServer(callback){
   var server = app.listen(global.port, function(){
     console.log('serving on port: ' + global.port);
   });
+  console.log('server started');
   callback();
 }
