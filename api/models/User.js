@@ -11,6 +11,10 @@ var schema = new mongoose.Schema({
     required: true,
     index: {unique: true}
   },
+  isAdmin: {
+    type: Boolean,
+    required: true,
+  },
   local: {
     email: {
       type: String,

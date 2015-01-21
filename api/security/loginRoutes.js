@@ -22,7 +22,6 @@ module.exports = function(app, passport) {
         });
       } else {
         //!user, authentication failed
-        console.log(info);
         res.send(info);
       }
       // console.dir('req.user');

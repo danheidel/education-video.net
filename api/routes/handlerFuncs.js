@@ -32,6 +32,7 @@ module.exports.createUser = function(input, userId, newObject){
       error: 'must have displayName, email and password to create new user'
     };
   }
+  newObject.isAdmin = false;
   newObject.local.email = input.email;
   newObject.local.password = newObject.generateHash(input.password);
   newObject.local.permissions = 'user';
@@ -45,9 +46,6 @@ module.exports.updateUser = function(input, userId, oldObject){
   var hashedPassword = oldObject.generateHash(input.oldPassword);
   if(hashedPassword !== oldObject.local.password){
     //old password does not match what is in the database
-    input.local.email = oldObject.local.email;
-    input.local.password = oldObject.local.password;
-    input.local.permissions = oldObject.local.permissions;
     return {
       status: 403,
       error: 'does not match existing password'
@@ -55,6 +53,7 @@ module.exports.updateUser = function(input, userId, oldObject){
   } else {
     if(input.newPassword){
       //changing the password
+      input.isAdmin = oldObject.isAdmin;
       input.local.email = oldObject.local.email;
       input.local.password = oldObject.generateHash(input.newPassword);
       input.local.permissions = 'user';
@@ -64,6 +63,7 @@ module.exports.updateUser = function(input, userId, oldObject){
     }
     if(input.newEmail){
       //changing the email address
+      input.isAdmin = oldObject.isAdmin;
       input.local.email = input.newEmail;
       input.local.password = oldObject.local.password;
       input.local.permissions = 'user';

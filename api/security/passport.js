@@ -58,12 +58,12 @@ module.exports = function(iPassport){
       if(!user){
         console.log('User not found:' + email);
         // return done(null, false, req.flash('loginMessage', 'No user found.'));
-        return done(null, false, {message: 'incorrect email address'});
+        return done(null, false, {err: 'incorrect email address'});
       }
       if(!user.validatePassword(password)){
         console.log('incorrect password: ' + password);
         // return done(null, false, req.flash('loginMessage', 'Incorrect password!'));
-        return done(null, false, {message: 'incorrect password'});
+        return done(null, false, {err: 'incorrect password'});
       }
       console.log('user validation success: ' + user.local.email);
       return done(null, user);
