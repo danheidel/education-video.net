@@ -41,15 +41,26 @@ angular.module('educationApp.controllers', ['educationApp.services'])
     }
   }
 
-  channelSevices.getAllChannels(function(data){
-    filterChannelData(data, $scope.filter);
-    splitChannelData($rootScope.windowAttr.columns);
+  channelSevices.getAllChannels(function(err, data){
+    if(err){
+      console.log(err);
+    } else {
+      filterChannelData(data, $scope.filter);
+      splitChannelData($rootScope.windowAttr.columns);
+    }
   });
 
-  tagServices.getAllTags(function(data){
-    //console.log(tagServices.tags);
-    $scope.tags = data;
+  tagServices.getAllTags(function(err, data){
+    if(err){
+      console.log(err);
+    } else {
+      $scope.tags = data;
+    }
   });
+})
+
+.controller('panelEditController', function($scope, $rootScope, $http, channelServices){
+
 })
 
 .controller('accountController', function($scope, $rootScope, $http, userServices){
@@ -60,54 +71,48 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       return;
     }
     //$scope.loginUser($scope.login.email, $scope.login.password);
-    userServices.loginUser($scope.login.email, $scope.login.password, function(data){
-      console.dir(data);
-      $rootScope.user = {};
-      if(data.displayName){
-        $rootScope.user.name = data.displayName;
-        $rootScope.user.valid = true;
+    userServices.loginUser($scope.login.email, $scope.login.password, function(err, data){
+      if(err){
+        console.error(err);
       } else {
-        $rootScope.user.name = 'Not logged in';
-        $rootScope.user.valid = false;
+        console.dir(data);
+        $rootScope.user = {};
+        if(data.displayName){
+          $rootScope.user.name = data.displayName;
+          $rootScope.user.valid = true;
+        } else {
+          $rootScope.user.name = 'Not logged in';
+          $rootScope.user.valid = false;
+        }
+        console.log($rootScope.user);
       }
-      console.log($rootScope.user);
     })
   };
-  $scope.loginUser = function(email, password){
-    $http.post('login', {
-      email: email,
-      password: password
-    })
-    .success(function(data){
-      console.dir(data);
-      $rootScope.user = {};
-      if(data.displayName){
-        $rootScope.user.name = data.displayName;
-        $rootScope.user.valid = true;
+  $scope.logoutUser = function(){
+    userServices.logoutUser(function(err, data){
+      if(err){
+        console.log(err);
       } else {
-        $rootScope.user.name = 'Not logged in';
-        $rootScope.user.valid = false;
+        if(data.message){
+          $rootScope.user.name = 'Not logged in';
+          $rootScope.user.valid = false;
+        }
       }
     });
   };
   $scope.getUser = function(){
-    $http.get('login')
-    .success(function(data){
-      console.dir(data);
-      console.dir($rootScope.user);
-      if(data.displayName){
-        $rootScope.user.name = data.displayName;
-        $rootScope.user.valid = true;
+    userServices.getUser(function(err, data){
+      if(err){
+        console.log(err);
       } else {
-        $rootScope.user.name = 'Not logged in';
-        $rootScope.user.valid = false;
+        if(data.displayName){
+          $rootScope.user.name = data.displayName;
+          $rootScope.user.valid = true;
+        } else {
+          $rootScope.user.name = 'Not logged in';
+          $rootScope.user.valid = false;
+        }
       }
-    });
-  };
-  $scope.logoutUser = function(){
-    $http.get('logout')
-    .success(function(data){
-      console.dir(data);
     });
   };
   $scope.editUserPassword = function(form){
@@ -115,11 +120,12 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       console.log('invalid user password change form)');
       return;
     }
-    $http.put('api/v1/users', {
-      password: $scope.user.password
-    })
-    .success(function(data){
-      console.dir(data);
+    userServices.editUserPassword(newPassword, oldPassword, function(err, data){
+      if(err){
+        console.log(err);
+      } else {
+        console.log('password was sucessfully updated');
+      }
     });
   };
   $scope.submitNewUser = function(form){
@@ -127,17 +133,29 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       console.log('invalid new user form');
       return;
     }
-    $http.post('api/v1/users', {
-      displayName: $scope.user.displayName,
-      email: $scope.user.email,
-      password: $scope.user.password
-    })
-    .success(function(data){
-      console.dir(data);
-      $scope.loginUser($scope.user.email, $scope.user.password)
-      .success(function(data){
-        console.dir(data);
-      });
+    userServices.submitNewUser($scope.user.displayName, $scope.user.email, $scope.user.password, function(err, data){
+      if(err){
+        console.log('failed to create new user');
+        console.log(err);
+      } else {
+        console.log(data);
+        userServices.loginUser($scope.user.email, $scope.user.password, function(err, data){
+          if(err){
+            console.log('failed to log in as new user');
+            $rootScope.user.name = 'Not logged in';
+            $rootScope.user.valid = false;
+          } else {
+            if(data.displayName){
+              $rootScope.user.name = data.displayName;
+              $rootScope.user.valid = true;
+            } else {
+              $rootScope.user.name = 'Not logged in';
+              $rootScope.user.valid = false;
+            }
+            console.log($rootScope.user);
+          }
+        });
+      }
     });
   };
 });
