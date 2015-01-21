@@ -30,15 +30,10 @@ module.exports = function(grunt) {
         NODE_ENV: 'production'
       },
       dev: {
-        NODE_ENV: 'development',
-        NODEUSERID: '1000',
-        NODESERVERPORT: '3000'
+        NODE_ENV: 'development'
       },
       test: {
-        NODE_ENV: 'test',
-        NODEUSERID: '1000',
-        NODESERVERPORT: '3000',
-        SESSION_SECRET: 'test'
+        NODE_ENV: 'test'
       }
     },
 
@@ -145,7 +140,7 @@ module.exports = function(grunt) {
         options:{
           reporter: 'spec',
           slow: 200,
-          timeout: 2000,
+          timeout: 3000,
           node_env: 'test'
         }
       }
