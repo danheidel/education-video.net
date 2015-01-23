@@ -145,6 +145,15 @@ input.validation-color.ng-invalid.ng-dirty{
   border-right: 2px solid #aaa;
 }
 
+.control-block{
+  display: inline-block;
+}
+
+.control-block-right{
+  display:inline-block;
+  float: right;
+}
+
 #title-text{
   margin-left:2rem;
   font-size: xx-large;

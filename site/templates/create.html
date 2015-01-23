@@ -1,0 +1,19 @@
+<div id="panel-create-modal" ng-controller="channelCreateController">
+  <div ng-click="createShow = true" class="pointer" ng-show="!createShow">
+    Create a new channel
+  </div>
+  <modal-dialog show="createShow" width="75%">
+    <div style="width: 50%; float:left;">
+      <div class="border">
+        <h3>Tags</h3>
+        <br>
+        <form name="newTagForm">
+          Tag name: <input type="text" class="input-required validation-color" ng-model="newTag.name" required> *
+          <br>
+          <br>
+          <input type="button" value="send" ng-click="formNewTag(newTagForm)">
+        </form>
+      </div>
+    </div>
+  </modal-dialog>
+</div>
