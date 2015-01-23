@@ -181,11 +181,57 @@ exports.routeFactory = function(route, objectPath, app, options){
         }
       });
     }else{
-      options.collection();
+      options.collection(req, res);
     }
   };
   //set up the basic get collection route
   app.get(route, collection);
+
+  var findByQuery = function(req, res){
+    console.log('findByQuery');
+    if(!req.isAuthenticated() && !options.securityFunc(undefined).read){
+      //if resource is not available to unauthenticated users and user is unauthenticated, skip db, return 403
+      res.status(403).send({'error': 'unauthenticated users do not have access to read this resource'});
+      return;
+    }
+    res.setHeader('Content-Type', 'application/json');
+    var query = req.query;
+    if(!options.findByQuery){
+      var queryBase;
+      //if populate array is provided, populate return object with linked mongodb documents
+      if(options.populate){
+        queryBase = DbObject.find(query).populate(popArray);
+      }else{
+        queryBase = DbObject.find(query);
+      }
+      queryBase.exec(function(err, retArray){
+        console.log(query);
+        console.log(retArray);
+        if(err){
+          res.status(500).send({'error': err});
+        } else {
+          var checkedArray = [];
+          _.each(retArray, function(retObject){
+            //for each element, do access check and sanitize
+            if(options.securityFunc(req.user, retObject).read){
+              //if user has at read / full access to resource
+              options.sanitizeOutput(retObject);
+              if(options.populate){
+                //sanitize child objects from populate if necessary
+                handlePopulate(req.user, retObject);
+              }
+              checkedArray.push(retObject);
+            }
+          });
+          res.send(JSON.stringify(checkedArray));
+        }
+      });
+    } else {
+      options.findByQuery(req, res);
+    }
+  };
+  //set up the query-able route
+  app.get(route + '/query', findByQuery);
 
   var findById = function(req, res){
     // console.log('is authenticated? ' + req.isAuthenticated());
@@ -229,7 +275,7 @@ exports.routeFactory = function(route, objectPath, app, options){
         }
       });
     }else{
-      options.findById();
+      options.findById(req, res);
     }
   };
   //set up the get by id route
@@ -271,7 +317,7 @@ exports.routeFactory = function(route, objectPath, app, options){
       });
     }else{
       //if default behavior has been overridden
-      options.create();
+      options.create(req, res);
     }
   };
   //set up the create route
@@ -312,7 +358,7 @@ exports.routeFactory = function(route, objectPath, app, options){
               }
             });
           }else{
-            options.create();
+            options.update(req, res);
           }
         } else {
           res.status(403).send({'error':'user does not have access to modify this resource'});
@@ -349,7 +395,7 @@ exports.routeFactory = function(route, objectPath, app, options){
               }
             });
           }else{
-            options.destroy();
+            options.destroy(req, res);
           }
         } else {
           res.status(403).send({'error':'user does not have access to delete this resource'});
