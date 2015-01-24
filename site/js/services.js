@@ -1,26 +1,29 @@
 'use strict';
 /*global angular*/
 
-var apiUrl = '/api/v1';
+var apiUrl = '/api/v1/';
 
 angular.module('educationApp.services', [])
 
-.service('channelSevices', function($http){
+.service('channelServices', function($http){
   var channels;
 
   function getAllChannels(callback){
-    $http({
-      method: 'GET',
-      url: 'api/v1/channels'
-    }).success(function(data){
+    $http.get(apiUrl + 'channels')
+    .success(function(data){
       channels = data;
       callback(null, data);
     });
   }
 
+  function createChannel(name, creators, tags, ytURL, callback){
+
+  }
+
   return {
     channels: channels,
-    getAllChannels: getAllChannels
+    getAllChannels: getAllChannels,
+    createChannel: createChannel
   };
 })
 
@@ -28,10 +31,8 @@ angular.module('educationApp.services', [])
   var creators = [];
 
   function getAllCreators(callback){
-    $http({
-      method: 'GET',
-      url: 'api/v1/creators'
-    }).success(function(data){
+    $http.get(apiUrl + 'creators')
+    .success(function(data){
       creators = data;
       callback(null, data);
     });
@@ -47,18 +48,38 @@ angular.module('educationApp.services', [])
   var tags = [];
 
   function getAllTags(callback){
-    $http({
-      method: 'GET',
-      url: 'api/v1/tags'
-    }).success(function(data){
+    $http.get(apiUrl + 'tags')
+    .success(function(data){
       tags = data;
       callback(null, data);
     });
   }
 
+  function createTag(tagName, callback){
+    $http.post(apiUrl + 'tags', {
+      'name': tagName
+    }).success(function(data){
+      callback(null, data);
+    }).error(function(data){
+      callback(data, null);
+    })
+  }
+
+  function checkForTag(tagName, callback){
+    $http.get(apiUrl + 'tags/query?name=' + tagName)
+    .success(function(data){
+      callback(null, data);
+    })
+    .error(function(data){
+      callback(data, null);
+    })
+  }
+
   return {
     tags: tags,
-    getAllTags: getAllTags
+    getAllTags: getAllTags,
+    createTag: createTag,
+    checkForTag: checkForTag
   }
 })
 
@@ -66,10 +87,8 @@ angular.module('educationApp.services', [])
   var ytChannels = [];
 
   function getAllYTChannels(callback){
-    $http({
-      method: 'GET',
-      url: 'api/v1/ytchannels'
-    }).success(function(data){
+    $http.get(apiUrl + 'ytchannels')
+    .success(function(data){
       ytChannels = data;
       callback(null, data);
     })
@@ -107,7 +126,7 @@ angular.module('educationApp.services', [])
   }
 
   function editUserPassword(newPassword, oldPassword, callback){
-    $http.put('api/v1/users', {
+    $http.put(apiUrl + 'users', {
       newPassword: newPassword,
       oldPassword: oldPassword
     })
@@ -120,7 +139,7 @@ angular.module('educationApp.services', [])
   }
 
   function submitNewUser(displayName, email, password, callback){
-    $http.post('api/v1/users', {
+    $http.post(apiUrl + 'users', {
       displayName: displayName,
       email: email,
       password: password
@@ -139,6 +158,27 @@ angular.module('educationApp.services', [])
     getUser: getUser,
     editUserPassword: editUserPassword,
     submitNewUser: submitNewUser
+  }
+})
+
+.service('loginServices', function($http){
+  function checkIfLoggedIn(callback){
+    $http.get('/login')
+    .success(function(data){
+      if(data.displayName){
+        callback(null, data);
+      } else {
+        //no user identity
+        callback({error: 'Not logged in'}, null);
+      }
+    })
+    .error(function(data){
+      callback(data, null);
+    })
+  }
+
+  return {
+    checkIfLoggedIn: checkIfLoggedIn
   }
 });
 

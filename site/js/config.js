@@ -2,17 +2,27 @@
 /*global angular*/
 /*global _*/
 
-angular.module('educationApp.config', [])
+angular.module('educationApp.config', ['educationApp.services'])
 
 .config(['$routeProvider', function($routeProvider){}])
 
-.run(function($window, $rootScope){
+.run(function($window, $rootScope, loginServices){
   angular.element($window).bind('resize', function(){
     getWindowAttrs();
   });
   $rootScope.user = {};
   $rootScope.user.name = 'Not logged in';
   $rootScope.user.valid = false;
+  $rootScope.user.isAdmin - false;
+  loginServices.checkIfLoggedIn(function(err, data){
+    if(err){
+      console.log(err);
+    } else {
+      $rootScope.user.name = data.displayName;
+      $rootScope.user.valid= true;
+      $rootScope.user.isAdmin = data.isAdmin;
+    }
+  })
 
   var breakpoints = [
     {width: 0, columns: 1},

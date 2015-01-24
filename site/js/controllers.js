@@ -4,7 +4,7 @@
 
 angular.module('educationApp.controllers', ['educationApp.services'])
 
-.controller('channelListController', function ($scope, $rootScope, $http, $filter, channelSevices,
+.controller('channelListController', function ($scope, $rootScope, $filter, channelServices,
   tagServices){
 
   $scope.$on('columnChange', function(){
@@ -41,7 +41,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
     }
   }
 
-  channelSevices.getAllChannels(function(err, data){
+  channelServices.getAllChannels(function(err, data){
     if(err){
       console.log(err);
     } else {
@@ -59,8 +59,43 @@ angular.module('educationApp.controllers', ['educationApp.services'])
   });
 })
 
-.controller('panelEditController', function($scope, $rootScope, $http, channelServices){
+// .controller('channelEditController', function($scope, $rootScope, channelServices,
+//   creatorServices, tagServices, ytServices){
 
+
+// })
+
+.controller('channelCreateController', function($scope, $rootScope, channelServices,
+  creatorServices, tagServices, ytServices){
+  $scope.newTag = {};
+
+  $scope.$watch($scope.newTag, function(newVal){
+    console.log(newVal);
+  })
+
+  $scope.formNewTag = function(form){
+    console.log($scope);
+    if(form.$invalid){
+      console.log('invalid login form');
+      return;
+    } else {
+      tagServices.createTag($scope.newTag.name, function(err, data){
+        if(err){
+          console.log(err);
+        } else {
+          //console.log(data);
+          tagServices.getAllTags(function(err, data){
+            if(err){
+              console.log(err);
+            } else {
+              $scope.tags = data;
+              console.log($scope.tags);
+            }
+          })
+        }
+      })
+    }
+  }
 })
 
 .controller('accountController', function($scope, $rootScope, $http, userServices){

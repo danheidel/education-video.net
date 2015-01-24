@@ -6,10 +6,14 @@
       ⚙
     </div>
     <div style="margin-left: 0.3rem;">
-      <div class="outlined" id="status-bar">
-        <span>User: {{$root.user.name}}</span>
-        {{loginShow}}
-        <span style="float:right"><ng-include src="'login.html'"></ng-include></span>
+      <div class="outlined control-block">
+        <ng-include src="'create.html'"></ng-include>
+      </div>
+      <div class="outlined control-block-right">
+        User: {{$root.user.name}}
+      </div>
+      <div class="outlined control-block-right">
+        <ng-include src="'login.html'"></ng-include>
       </div>
       <div class="outlined" id="filter-inputs">
         Creator: <input ng-model="filter.creators">
