@@ -6,7 +6,7 @@ angular.module('educationApp.config', ['educationApp.services'])
 
 .config(['$routeProvider', function($routeProvider){}])
 
-.run(function($window, $rootScope, loginServices){
+.run(function($window, $rootScope, userServices){
   angular.element($window).bind('resize', function(){
     getWindowAttrs();
   });
@@ -14,7 +14,9 @@ angular.module('educationApp.config', ['educationApp.services'])
   $rootScope.user.name = 'Not logged in';
   $rootScope.user.valid = false;
   $rootScope.user.isAdmin - false;
-  loginServices.checkIfLoggedIn(function(err, data){
+
+  //query server for login state to handle page reloads, etc
+  userServices.checkIfLoggedIn(function(err, data){
     if(err){
       console.log(err);
     } else {

@@ -152,16 +152,6 @@ angular.module('educationApp.services', [])
     });
   }
 
-  return {
-    loginUser: loginUser,
-    logoutUser: logoutUser,
-    getUser: getUser,
-    editUserPassword: editUserPassword,
-    submitNewUser: submitNewUser
-  }
-})
-
-.service('loginServices', function($http){
   function checkIfLoggedIn(callback){
     $http.get('/login')
     .success(function(data){
@@ -178,6 +168,11 @@ angular.module('educationApp.services', [])
   }
 
   return {
+    loginUser: loginUser,
+    logoutUser: logoutUser,
+    getUser: getUser,
+    editUserPassword: editUserPassword,
+    submitNewUser: submitNewUser,
     checkIfLoggedIn: checkIfLoggedIn
   }
 });

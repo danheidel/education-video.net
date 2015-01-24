@@ -7,6 +7,9 @@ angular.module('educationApp.controllers', ['educationApp.services'])
 .controller('channelListController', function ($scope, $rootScope, $filter, channelServices,
   tagServices){
 
+  $scope.menu = {};
+  $scope.menu.retracted = false;
+
   $scope.$on('columnChange', function(){
     //window resize requires changing column number
     splitChannelData($rootScope.windowAttr.columns);
@@ -114,9 +117,11 @@ angular.module('educationApp.controllers', ['educationApp.services'])
         $rootScope.user = {};
         if(data.displayName){
           $rootScope.user.name = data.displayName;
+          $rootScope.user.isAdmin = data.isAdmin;
           $rootScope.user.valid = true;
         } else {
           $rootScope.user.name = 'Not logged in';
+          $rootScope.user.isAdmin = false;
           $rootScope.user.valid = false;
         }
         console.log($rootScope.user);
@@ -130,6 +135,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       } else {
         if(data.message){
           $rootScope.user.name = 'Not logged in';
+          $rootScope.user.isAdmin = false;
           $rootScope.user.valid = false;
         }
       }
@@ -142,9 +148,11 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       } else {
         if(data.displayName){
           $rootScope.user.name = data.displayName;
+          $rootScope.user.isAdmin = data.isAdmin;
           $rootScope.user.valid = true;
         } else {
           $rootScope.user.name = 'Not logged in';
+          $rootScope.user.isAdmin = false;
           $rootScope.user.valid = false;
         }
       }

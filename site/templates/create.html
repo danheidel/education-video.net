@@ -3,7 +3,7 @@
     Create a new channel
   </div>
   <modal-dialog show="createShow" width="75%">
-    <div style="width: 50%; display:inline-block">
+    <div style="width: 50%; display:inline-block" ng-show="$root.user.isAdmin">
       <div class="border">
         <h3>Tags</h3>
         <br>
