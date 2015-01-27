@@ -71,13 +71,15 @@ angular.module('educationApp.controllers', ['educationApp.services'])
 .controller('channelCreateController', function($scope, $rootScope, channelServices,
   creatorServices, tagServices, ytServices){
   $scope.newTag = {};
+  $scope.newCreator = {};
+  $scope.newYouTube = {};
+  $scope.newChannel = {};
 
   $scope.$watch($scope.newTag, function(newVal){
     console.log(newVal);
   })
 
   $scope.formNewTag = function(form){
-    console.log($scope);
     if(form.$invalid){
       console.log('invalid login form');
       return;
@@ -86,18 +88,47 @@ angular.module('educationApp.controllers', ['educationApp.services'])
         if(err){
           console.log(err);
         } else {
-          //console.log(data);
-          tagServices.getAllTags(function(err, data){
-            if(err){
-              console.log(err);
-            } else {
-              $scope.tags = data;
-              console.log($scope.tags);
-            }
-          })
+          refreshTags();
         }
       })
     }
+  }
+
+  function refreshTags(){
+    tagServices.getAllTags(function(err, data){
+      if(err){
+        console.log(err);
+      } else {
+        $scope.tags = data;
+        console.log($scope.tags);
+      }
+    });
+  }
+
+  $scope.formNewCreator = function(form){
+    if(form.$invalid){
+      console.log('invalid login form');
+      return;
+    } else {
+      creatorServices.createCreator($scope.newCreator, function(err, data){
+        if(err){
+          console.log(err);
+        } else {
+          refreshCreators();
+        }
+      });
+    }
+  }
+
+  function refreshCreators(){
+    creatorServices.getAllCreators(function(err, data){
+      if(err){
+        console.log(err);
+      } else {
+        $scope.creators = data;
+        console.log(data);
+      }
+    });
   }
 })
 

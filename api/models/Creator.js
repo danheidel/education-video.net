@@ -17,7 +17,8 @@ var schema = new mongoose.Schema({
     youTube: String,
     email: String,
     twitter: String,
-    facebook: String
+    facebook: String,
+    tumblr: String
   },
   local: {
     owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}

@@ -3,9 +3,33 @@
     Create a new channel
   </div>
   <modal-dialog show="createShow" width="75%">
-    <div style="width: 50%; display:inline-block" ng-show="$root.user.isAdmin">
+    <div style="width: 55%; display:inline-block" ng-show="$root.user.isAdmin">
       <div class="border">
-        <h3>Tags</h3>
+        <h3>Add Creators</h3>
+        <br>
+        <form name="newCreatorForm">
+          Creator name: <input type="text" class="input-required validation-color" ng-model="newCreator.name" require> *
+          <br>
+          Description: <input type="text" ng-model="newCreator.description">
+          <br>
+          Website: <input type="url" class="validation-color" ng-model="newCreator.contact.website">
+          <br>
+          Email: <input type="email" class="validation-color" ng-model="newCreator.contact.email">
+          <br>
+          Twitter: <input type="url" class="validation-color" ng-model="newCreator.contact.twitter">
+          <br>
+          Facebook: <input type="url" class="validation-color" ng-model="newCreator.contact.facebook">
+          <br>
+          Tumblr: <input type="url" class="validation-color" ng-model="newCreator.contact.tumblr">
+          <br>
+          <br>
+          <input type="button" value="send" ng-click="formNewCreator(newCreatorForm)">
+        </form>
+      </div>
+    </div>
+    <div style="width: 40%; display:inline-block" ng-show="$root.user.isAdmin">
+      <div class="border">
+        <h3>Add Tags</h3>
         <br>
         <form name="newTagForm">
           Tag name: <input type="text" class="input-required validation-color" ng-model="newTag.name" required> *

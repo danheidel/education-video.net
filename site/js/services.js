@@ -38,9 +38,28 @@ angular.module('educationApp.services', [])
     });
   }
 
+  function createCreator(newCreator, callback){
+    console.log(newCreator);
+    $http.post(apiUrl + 'creators', {
+      name: newCreator.name,
+      description: newCreator.description ? newCreator.description : '',
+      website: newCreator.website ? newCreator.website : '',
+      youTube: newCreator.youTube ? newCreator.youTube : '',
+      email: newCreator.email ? newCreator.email : '',
+      twitter: newCreator.twitter ? newCreator.twitter : '',
+      facebook: newCreator.facebook ? newCreator.facebook : '',
+      tumblr : newCreator.tumblr ? newCreator.tumblr : ''
+    }).success(function(data){
+      callback(null, data);
+    }).error(function(data){
+      callback(data, null);
+    })
+  }
+
   return {
     creators: creators,
-    getAllCreators: getAllCreators
+    getAllCreators: getAllCreators,
+    createCreator: createCreator
   }
 })
 
