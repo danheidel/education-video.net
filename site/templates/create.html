@@ -8,7 +8,7 @@
         <h3>Add Creators</h3>
         <br>
         <form name="newCreatorForm">
-          Creator name: <input type="text" class="input-required validation-color" ng-model="newCreator.name" require> *
+          Creator name: <input type="text" class="input-required validation-color" ng-model="newCreator.name" ng-model-options="{ debounce: 500 }" require> *
           <br>
           Description: <input type="text" ng-model="newCreator.description">
           <br>
@@ -32,7 +32,13 @@
         <h3>Add Tags</h3>
         <br>
         <form name="newTagForm">
-          Tag name: <input type="text" class="input-required validation-color" ng-model="newTag.name" required> *
+          Tag name:
+          <input type="text"
+            class="input-required validation-color"
+            ng-model="newTag.name"
+            ng-model-options="{ debounce: 1000 }"
+            required> *
+          {{newTag.name}}
           <br>
           <br>
           <input type="button" value="send" ng-click="formNewTag(newTagForm)">

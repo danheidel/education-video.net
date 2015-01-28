@@ -9,6 +9,9 @@ angular.module('educationApp.controllers', ['educationApp.services'])
 
   $scope.menu = {};
   $scope.menu.retracted = false;
+  $scope.filter = {};
+  $scope.filteredChannels = [];
+  $scope.splitChannels = [];
 
   $scope.$on('columnChange', function(){
     //window resize requires changing column number
@@ -18,7 +21,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
 
   $scope.$watch('filter', function(newVal){
   //the filters are changed
-    filterChannelData(newVal);
+    filterChannelData(channelServices.channels, newVal);
     //re-run split for new data
     splitChannelData($rootScope.windowAttr.columns);
   }, true);
@@ -48,6 +51,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
     if(err){
       console.log(err);
     } else {
+      channelServices.channels = data;
       filterChannelData(data, $scope.filter);
       splitChannelData($rootScope.windowAttr.columns);
     }
@@ -71,12 +75,24 @@ angular.module('educationApp.controllers', ['educationApp.services'])
 .controller('channelCreateController', function($scope, $rootScope, channelServices,
   creatorServices, tagServices, ytServices){
   $scope.newTag = {};
+  $scope.dupeTag = false;
   $scope.newCreator = {};
+  $scope.dupeCreator = false;
   $scope.newYouTube = {};
   $scope.newChannel = {};
 
-  $scope.$watch($scope.newTag, function(newVal){
-    console.log(newVal);
+  $scope.$watch('newTag.name', function(newVal){
+    $scope.dupeTag = false;
+    tagServices.checkForTag(newVal, function(err, data){
+      if(err){
+        return;
+      } else {
+        if(data.length != 0){
+          console.log(data[0].name);
+          $scope.dupeTag = true;
+        }
+      }
+    })
   })
 
   $scope.formNewTag = function(form){
@@ -104,6 +120,20 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       }
     });
   }
+
+  $scope.$watch('newCreator.name', function(newVal){
+    $scope.dupeCreator = false;
+    creatorServices.checkForCreator(newVal, function(err, data){
+      if(err){
+        return;
+      } else {
+        if(data.length != 0){
+          console.log(data[0].name);
+          $scope.dupeCreator = true;
+        }
+      }
+    })
+  })
 
   $scope.formNewCreator = function(form){
     if(form.$invalid){

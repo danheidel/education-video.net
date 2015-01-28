@@ -56,10 +56,20 @@ angular.module('educationApp.services', [])
     })
   }
 
+  function checkForCreator(name, callback){
+    $http.get(apiUrl + 'creators/query?name=' + name)
+    .success(function(data){
+      callback(null, data);
+    }).error(function(data){
+      callback(data, null);
+    })
+  }
+
   return {
     creators: creators,
     getAllCreators: getAllCreators,
-    createCreator: createCreator
+    createCreator: createCreator,
+    checkForCreator: checkForCreator
   }
 })
 
@@ -85,6 +95,7 @@ angular.module('educationApp.services', [])
   }
 
   function checkForTag(tagName, callback){
+    console.log(tagName);
     $http.get(apiUrl + 'tags/query?name=' + tagName)
     .success(function(data){
       callback(null, data);
@@ -111,6 +122,10 @@ angular.module('educationApp.services', [])
       ytChannels = data;
       callback(null, data);
     })
+  }
+
+  function createYTChannel(newYT, callback){
+
   }
 
   return {
