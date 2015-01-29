@@ -15,7 +15,6 @@ var flash = require('connect-flash');
 var routeGenerator = require('./api/routes/routeGenerator');
 var routeFactory = require('./api/routes/routeGenerator').routeFactory;
 var securityFuncs = require('./api/routes/securityFuncs');
-var sanitizeFuncs = require('./api/routes/sanitizeFuncs');
 var handlerFuncs = require('./api/routes/handlerFuncs');
 var errorHandler = require('errorhandler');
 // var logger = require('morgan');
@@ -122,11 +121,6 @@ function setupExpress(callback){
 }
 
 function setupRoutes(callback){
-  //set up default generator functions
-  routeGenerator.defaultSanitizeInput = sanitizeFuncs.baseInput;
-  routeGenerator.defaultHandleCreate = handlerFuncs.createBase;
-  routeGenerator.defaultHandleUpdate = handlerFuncs.updateBase;
-  routeGenerator.defaultSanitizeOutput = sanitizeFuncs.baseOutput;
 
   routeFactory('/api/v1/creators', '../models/Creator', app, {
     securityFunc: securityFuncs.creatorSecurity

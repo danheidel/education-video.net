@@ -1,26 +1,12 @@
 'use strict';
+var YTNormalizer = require('../normalizers/YTNormalizer');
 
-var createBase = function(input, userId, newObject){
-  if(!newObject.local){
-    newObject.local = {};
-  }
-  newObject.local.owner = userId;
-  return null;
-};
+//important note - always nake sure that ownership is applied to all new objects,
+  //handle unathenticated users by finding an alternate source of ownership
 
-module.exports.createBase = createBase;
+module.exports.getUser = function(outputObject, dbObject, userId){
 
-var updateBase = function(input, userId, oldObject){
-  if(!input.local){
-    input.local = {};
-  }
-  input.local.owner = oldObject.local.owner;
-  return null;
-};
-
-module.exports.updateBase = updateBase;
-
-//important note - always nake sure that ownership is applied to all new objects, handle unathenticated users by finding an alternate source of ownership
+}
 
 module.exports.createUser = function(input, userId, newObject){
   if(!newObject.local){
@@ -32,7 +18,6 @@ module.exports.createUser = function(input, userId, newObject){
       error: 'must have displayName, email and password to create new user'
     };
   }
-  newObject.isAdmin = false;
   newObject.local.email = input.email;
   newObject.local.password = newObject.generateHash(input.password);
   newObject.local.permissions = 'user';
@@ -53,7 +38,6 @@ module.exports.updateUser = function(input, userId, oldObject){
   } else {
     if(input.newPassword){
       //changing the password
-      input.isAdmin = oldObject.isAdmin;
       input.local.email = oldObject.local.email;
       input.local.password = oldObject.generateHash(input.newPassword);
       input.local.permissions = 'user';
@@ -63,7 +47,6 @@ module.exports.updateUser = function(input, userId, oldObject){
     }
     if(input.newEmail){
       //changing the email address
-      input.isAdmin = oldObject.isAdmin;
       input.local.email = input.newEmail;
       input.local.password = oldObject.local.password;
       input.local.permissions = 'user';
@@ -78,3 +61,17 @@ module.exports.updateUser = function(input, userId, oldObject){
     };
   }
 };
+
+module.exports.createYTChannel = function(input, userId, newObject){
+  if(!newObject.local){
+    newObject.local = {};
+  }
+
+}
+
+module.exports.updateYTChannel = function(input, userId, oldObject){
+  if(!input.local){
+    input.local = {};
+  }
+
+}

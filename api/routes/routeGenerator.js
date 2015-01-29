@@ -27,40 +27,58 @@ var _ = require('lodash');
   //documents.  Takes (user, dbobject), representing req.user and the returned db
   //object.  Returns 'full', 'read', 'none' depending on whether the user is allowed
   //read/write, read-only or no access to given resource.  If called with user = undefined,
-  //returns the API-level access for unathenticated users.
+  //returns the API-level access for unauthenticated users.
   //Defaults to no access if no function provided.
 
-//sanitizeInput(input) - custom function to validate data before saving it to db.
-  //Takes input, modifies it.  Defaults to no-op.
+//sanitizeInput(input) - function to validate data before saving it to db.
+  //Primarily handles security, preventing modification of the local object
+  //Takes input, modifies it.  Default removes any _id or local objects
+  //from incoming object
 
-//sanitizeOutput(output) - custom function to remove db private data, etc from
-  //outgoing data.  Takes output, modifies it.  Defaults to no-op.
+//sanitizeOutput(output) - function to remove db private data, etc from
+  //outgoing data.  Takes output, modifies it.  Defaults to removing local
+  //object and __v from all outgoing objects.
+  //returns a new JS object cast from the DB object
 
-//handleCreate(newObject, req) - custom function to handle non-public information
-  //creation on creation of new resource, e.g.: handling ownership and permissions
-  //level in db which are not accessible from the public API.  Takes newly created
-  //object and req and modifies the new object, e.g.: assigning req.user._id to the
-  //ownership field of the new object.  Defaults to no-op
-  //Returns error object on error else null
+//handleGet(outputObject, dbObject, userId) - function to handle any processing
+  //for the API GET routes such as creating temporary fields based off of DB data.
+  //Called after sanitizeOutput to simplify handling of properties in case of Mongoose
+  //Default is a simple no-op stub
+  //outputObject - JS object ready to be sent out, has already been sanitized
+  //dbObject - the retrieved DB object, passed in in case sanitized properties need to
+    //be accessed
+  //userId - user identity for permissions operations
+  //returns null on success, otherwise an error object
 
-//handleUpdate(newObject, oldObject) - custom function like handleCreate() to deal
-  //with non-public data when a resource is modified.  Takes newObject and old Object,
-  //modifies newObject.  E.g.: copies local non-visible properties from old object
-  //instance to the new object.  (incoming non-visible values populating new object
-  //are deleted to prevent injection attacks)  Defaults to no-op
-  //Returns error object on error else null
+//handleCreate(input, userId, newObject) - function to handle API POST operations.
+  //e.g.: handling hidden ownership and permissions and any other custom operations on
+  //the newly created db object.  Default function creates an empty object on the local
+  //property and populates the user identity into local.owner
+  //input - incoming data object from req
+  //userId - user identity for permissions operations
+  //newObject - newly created DB object previously made from input
+  //returns null on success, otherwise an error object
+
+//handleUpdate(input, userId, oldObject) - function to handle API PUT operations.
+  //e.g.: handling hidden ownership and permissions and any other custom operations on
+  //the DB object being modified.  Defalt function ensures there is a local object and
+  //copies the local.owner data into input to preserve it when the DB is updated
+  //input - incoming data object from req
+  //userId - user identity for permissions operations
+  //oldObject - retrieved DB object that is being modified
+  //returns null on success, otherwise an error object
 
 //populate: [] - array of paths to populate on retrieval
 
-//collection() - custom collection retrieval function,
+//collection() - collection retrieval function,
 
-//findById() - custom single retrieval function
+//findById() - single retrieval function
 
-//create() - custom create function
+//create() - create function
 
-//update() - custom update function
+//update() - update function
 
-//destroy() - custom delete function
+//destroy() - delete function
 
 //default, no-op stub versions of the security/sanitization/handler functions
 //exposed to allow changing of defaults
@@ -79,20 +97,43 @@ exports.defaultSanitizeInput = function(input){
   void(input);
 };
 
+exports.defaultSanitizeOutput = function(output){
+  //It is a good idea to modify the mongo schema options.toJSON
+  //function to also delete the local object on outgoing data.
+  //That handles *all* outgoing objects, including ones
+  //on routes not defined by the route generator
+  var outputObject = {};
+  //assumes that if an object has toObject, it is a Mongoose schema
+  if(output.toObject){
+    outputObject = output.toObject();
+    delete outputObject.local;
+    delete outputObject.__v;
+    return outputObject;
+  } else {
+    delete output.local;
+    delete output.__v;
+    return output;
+  }
+};
+
+exports.defaultHandleGet = function(outputObject, dbObject, userId){
+  return null;
+}
+
 exports.defaultHandleCreate = function(input, userId, newObject){
-  void(newObject);
-  void(input);
-  void(userId);
+  if(!newObject.local){
+    newObject.local = {};
+  }
+  newObject.local.owner = userId;
+  return null;
 };
 
 exports.defaultHandleUpdate = function(input, userId, oldObject){
-  void(input);
-  void(oldObject);
-  void(userId);
-};
-
-exports.defaultSanitizeOutput = function(output){
-  void(output);
+  if(!input.local){
+    input.local = {};
+  }
+  input.local.owner = oldObject.local.owner;
+  return null;
 };
 
 exports.routeFactory = function(route, objectPath, app, options){
@@ -103,6 +144,10 @@ exports.routeFactory = function(route, objectPath, app, options){
   //if no sanitizeInput, replace with default
   if(!options.sanitizeInput){
     options.sanitizeInput = exports.defaultSanitizeInput;
+  }
+  //if no handleGet, replace with default
+  if(!options.handleGet){
+    options.handleGet = exports.defaultHandleGet;
   }
   //if no handleCreate, replace with default
   if(!options.handleCreate){
@@ -165,14 +210,18 @@ exports.routeFactory = function(route, objectPath, app, options){
           res.status(500).send({'error': err});
         } else {
           var checkedArray = [];
-          _.each(retArray, function(retObject){
+          _.each(retArray, function(dbReturn){
             //for each element, do access check and sanitize
-            if(options.securityFunc(req.user, retObject).read){
+            if(options.securityFunc(req.user, dbReturn).read){
               //if user has at read / full access to resource
-              options.sanitizeOutput(retObject);
+              var retObject = options.sanitizeOutput(dbReturn);
               if(options.populate){
                 //sanitize child objects from populate if necessary
                 handlePopulate(req.user, retObject);
+              }
+              var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null))
+              if(getErr){
+                return res.status(getErr.status).send(getErr.error);
               }
               checkedArray.push(retObject);
             }
@@ -211,14 +260,18 @@ exports.routeFactory = function(route, objectPath, app, options){
           res.status(500).send({'error': err});
         } else {
           var checkedArray = [];
-          _.each(retArray, function(retObject){
+          _.each(retArray, function(dbReturn){
             //for each element, do access check and sanitize
-            if(options.securityFunc(req.user, retObject).read){
+            if(options.securityFunc(req.user, dbReturn).read){
               //if user has at read / full access to resource
-              options.sanitizeOutput(retObject);
+              var retObject = options.sanitizeOutput(dbReturn);
               if(options.populate){
                 //sanitize child objects from populate if necessary
                 handlePopulate(req.user, retObject);
+              }
+              var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null))
+              if(getErr){
+                return res.status(getErr.status).send(getErr.error);
               }
               checkedArray.push(retObject);
             }
@@ -250,23 +303,23 @@ exports.routeFactory = function(route, objectPath, app, options){
       }else{
         queryBase = DbObject.findOne({'_id': String(id)});
       }
-      queryBase.exec(function(err, retObject){
+      queryBase.exec(function(err, dbReturn){
         if(err){
           res.status(500).send({'error': err});
-        } else if(!retObject){
+        } else if(!dbReturn){
           // nothing with that _id was found
           res.status(500).send({'error': 'no resource with that id could be found'});
         } else {
-          //console.log(retObject);
-          if(options.securityFunc(req.user, retObject).read){
+          if(options.securityFunc(req.user, dbReturn).read){
             //if user has at read / full access to resource
-            if(retObject){
-              //if object returned, sanitize it
-              options.sanitizeOutput(retObject);
-              if(options.populate){
-                //sanitize child objects from populate if necessary
-                handlePopulate(req.user, retObject);
-              }
+            var retObject = options.sanitizeOutput(dbReturn);
+            if(options.populate){
+              //sanitize child objects from populate if necessary
+              handlePopulate(req.user, retObject);
+            }
+            var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null))
+            if(getErr){
+              return res.status(getErr.status).send(getErr.error);
             }
             res.send(JSON.stringify(retObject));
           }else{
@@ -302,7 +355,7 @@ exports.routeFactory = function(route, objectPath, app, options){
     //returns non-null if an error
     var createErr = options.handleCreate(req.body, (req.user ? req.user._id : null), dbObject);
     if(createErr){
-      return res.status(createError.status).send(createErr.error);
+      return res.status(createErr.status).send(createErr.error);
     }
 
     if(!options.create){

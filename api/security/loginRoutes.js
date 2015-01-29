@@ -18,7 +18,11 @@ module.exports = function(app, passport) {
             console.log(err);
             return next(err);
           }
-          return res.send(req.user);
+          var sanitizedUser = req.user.toObject();
+          sanitizedUser.isAdmin = (sanitizedUser.local.permissions === 'admin') ? true : false;
+          delete(sanitizedUser.local);
+          delete(sanitizedUser.__v);
+          return res.send(sanitizedUser);
         });
       } else {
         //!user, authentication failed
@@ -31,7 +35,16 @@ module.exports = function(app, passport) {
   });
 
   app.get('/login', function(req, res, next){
-    res.send(req.user ? req.user : {message: 'unauthenticated'});
+    var sanitizedUser;
+    if(req.user){
+      sanitizedUser = req.user.toObject();
+      sanitizedUser.isAdmin = (sanitizedUser.local.permissions === 'admin') ? true : false;
+      delete(sanitizedUser.local);
+      delete(sanitizedUser.__v);
+    } else {
+      sanitizedUser = {message: 'unathenticated'};
+    }
+    res.send(sanitizedUser);
   });
 
   app.get('/logout', function(req, res) {

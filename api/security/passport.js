@@ -52,7 +52,6 @@ module.exports = function(iPassport){
   },
   function(req, email, password, done){
     console.log('logging in');
-    console.log(req.body);
     User.findOne({'local.email': email}, function(err, user){
       if(err){return done(err);}
       if(!user){
