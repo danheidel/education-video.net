@@ -79,6 +79,7 @@
   {
     "name": "space & spaceflight history",
     "location": "https://www.youtube.com/channel/UCw95T_TgbGHhTml4xZ9yIqg",
+    "id": "UCw95T_TgbGHhTml4xZ9yIqg",
     "description": "short videos on space and spaceflight history",
     "_creators": [
       7
@@ -269,17 +270,6 @@
     ],
     "_tags": [
       0
-    ]
-  },
-  {
-    "name": "SourceFed Nerd",
-    "location": "https://www.youtube.com/user/sourcefednerd",
-    "description": "Trisha is one of the 3 main vloggers on SourceFed Nerd. She is BRILLIANT at tech, and I trust her reviews on a new device more than anyone else's. Meg Turney is also freaking awesome, but less STEM focused (more general nerd focused, into cosplaying and whatnot). ",
-    "_creators": [
-      29
-    ],
-    "_tags": [
-      1
     ]
   },
   {

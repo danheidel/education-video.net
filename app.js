@@ -142,7 +142,8 @@ function setupRoutes(callback){
   routeFactory('/api/v1/users', '../models/User', app, {
     securityFunc: securityFuncs.userSecurity,
     handleCreate: handlerFuncs.createUser,
-    handleUpdate: handlerFuncs.updateUser
+    handleUpdate: handlerFuncs.updateUser,
+    handleGet: handlerFuncs.getUser
   });
 
   //sets up log-in/account sign-up route handlers

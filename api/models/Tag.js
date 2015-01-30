@@ -10,6 +10,10 @@ var schema = new mongoose.Schema({
     required:true,
     index: {unique: true}
   },
+  category: {
+    type: String,
+    required: true
+  },
   local: {
     owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
   }

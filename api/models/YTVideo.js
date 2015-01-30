@@ -5,24 +5,22 @@ var mongoose = require('mongoose');
 var setupModel = require('./models').setupModel;
 
 var schema = new mongoose.Schema({
-  youtubeChannelId: {
+  youtubeVideoId: {
     type: String,
     required: true,
     index: {unique: true}
   },
-  updated: Date,
-  lastUpload: Date,
-  location: String,
   title: String,
-  started: Date,
-  thumbnail: String,
   description: String,
-  viewCount: Number,
-  commentCount: Number,
-  subscriberCount: Number,
-  videoCount: Number,
-  uploadPlaylist: String,
-  _videos: [{type: mongoose.Schema.Types.ObjectId, ref: 'YTVideo'}],
+  published: Date,
+  thumbnail: String,
+  length: String,
+  views: Number,
+  likes: Number,
+  dislikes: Number,
+  favorites: Number,
+  comments: Number,
+  captions: Boolean,
   local:{
     owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
   }
@@ -31,4 +29,4 @@ var schema = new mongoose.Schema({
 //delete the local vars and __v
 setupModel(schema);
 
-module.exports = mongoose.model('YTChannel', schema);
+module.exports = mongoose.model('YTVideo', schema);

@@ -1,11 +1,13 @@
 'use strict';
 var YTNormalizer = require('../normalizers/YTNormalizer');
+var _ = require('lodash');
 
 //important note - always nake sure that ownership is applied to all new objects,
   //handle unathenticated users by finding an alternate source of ownership
 
 module.exports.getUser = function(outputObject, dbObject, userId){
-
+  //return isAdmin bool to reflect permissions level
+  outputObject.isAdmin = (dbObject.local.permissions === 'admin') ? true : false;
 }
 
 module.exports.createUser = function(input, userId, newObject){
