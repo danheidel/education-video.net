@@ -14,10 +14,13 @@ var schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  update: Date,
   visible: Boolean,
   votes: Number,
   description: String,
+  myDescription: String,
   longDescription: String,
+  thumbnail: String,
   _tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
   _creators: [{type: mongoose.Schema.Types.ObjectId, ref: 'Creator'}],
   _ytchannels: [{type: mongoose.Schema.Types.ObjectId, ref: 'YTChannel'}],

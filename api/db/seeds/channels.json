@@ -3,7 +3,7 @@
     "name": "Brilliant Botany Series",
     "links": [
       {"youTube": "https://www.youtube.com/user/BrilliantBotany"},
-      {"tumblr": "http://brilliantbotany.com"}
+      {"website": "http://brilliantbotany.com"}
     ],
     "description": "An excellent botany vlog covering different areas in plant science, an often neglected area of science reporting",
     "_creators": [
@@ -17,7 +17,7 @@
     "name": "Shed Science",
     "links": [
       {"youTube": "https://www.youtube.com/user/shedscience"},
-      {"website": "http://sallylepage.co.uk"}
+      {"website": "http://www.shedscience.com"}
     ],
     "description": "Interesting and fun biology videos, covering topics from evolutionary fitness and sexual selection to recording underwater marine life sounds.",
     "_creators": [
@@ -31,7 +31,7 @@
     "name": "That's So Science",
     "links": [
       {"youTube": "https://www.youtube.com/user/wildescience"},
-      {"tumblr": "http://thatssoscience.tumblr.com"}
+      {"website": "http://thatssoscience.tumblr.com"}
     ],
     "description": "Enthusiastic videos about general biology, evolution and science gender issues.",
     "_creators": [
@@ -58,7 +58,7 @@
     "name": "BrainCraft",
     "links": [
       {"youTube": "https://www.youtube.com/user/braincraftvideo"},
-      {"tumblr": "http://www.braincraft.tumblr.com"}
+      {"website": "http://braincraft.tumblr.com"}
     ],
     "description": "Psychology, neuroscience and why we act the way we do - illustrated with great stop motion animation.  ",
     "_creators": [
@@ -145,7 +145,7 @@
     "name": "Looking Glass Universe",
     "links": [
       {"youTube": "https://www.youtube.com/user/LookingGlassUniverse"},
-      {"tumblr": "http://looking-glass-universe.tumblr.com"}
+      {"website": "http://looking-glass-universe.tumblr.com"}
     ],
     "description": "Easy to understand videos explaining quantum physics and mathematics.",
     "_creators": [
@@ -161,7 +161,7 @@
     "links": [
       {"youTube": "https://www.youtube.com/user/BlinkPopShift"},
       {"website": "http://emilyeifler.com"},
-      {"tumblr": "http://blinkpopshift.tumblr.com"}
+      {"website": "http://blinkpopshift.tumblr.com"}
     ],
     "description": "Videos about disruptive technologies, art and the culture of tech.",
     "_creators": [
@@ -236,7 +236,7 @@
     "name": "The Brain Scoop",
     "links": [
       {"youTube": "http://www.youtube.com/user/thebrainscoop"},
-      {"tumblr": "http://thebrainscoop.tumblr.com"}
+      {"website": "http://thebrainscoop.tumblr.com"}
     ],
     "description": "Animal dissections, zoology, botany, field studies, the role of museums and women in science.  The main matovator for making the website!",
     "_creators": [
@@ -251,7 +251,7 @@
     "links": [
       {"youTube": "http://www.youtube.com/user/techkimtutorials"},
       {"website": "http://www.tech-girls.org"},
-      {"tumblr": "http://tech-girls.tumblr.com"}
+      {"website": "http://tech-girls.tumblr.com"}
     ],
     "description": "Video tutorials exploring technology tools and the CS concepts that they are built upon",
     "_creators": [
@@ -325,7 +325,7 @@
     "name": "FY Fluid Dynamics",
     "links": [
       {"youTube": "http://www.youtube.com/user/fyfluiddynamics"},
-      {"tumblr": "http://fuckyeahfluiddynamics.tumblr.com"}
+      {"website": "http://fuckyeahfluiddynamics.tumblr.com"}
     ],
     "description": "celebrating the physics of all that flows",
     "_creators": [
@@ -353,7 +353,7 @@
     "name": "The Physics Factor",
     "links": [
       {"youTube": "https://www.youtube.com/thephysicsfactor"},
-      {"tumblr": "http://muchtoofullofsand.tumblr.com"}
+      {"website": "http://muchtoofullofsand.tumblr.com"}
     ],
     "description": "a vlog for the love of physics!",
     "_creators": [

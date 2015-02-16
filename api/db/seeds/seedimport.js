@@ -2,6 +2,9 @@
 
 var fs = require('fs');
 var _ = require('lodash');
+var http = require('http');
+var request = require('request');
+var cheerio = require('cheerio');
 var async = require('async');
 var mongoose = require('mongoose');
 var globalVars = require('../../../globalVars');
@@ -46,6 +49,7 @@ var User = require('../../models/User');
 var YTChannel = require('../../models/YTChannel');
 var YTPlaylist = require('../../models/YTPlaylist');
 var YTVideo = require('../../models/YTVideo');
+var Website = require('../../models/Website');
 
 var channels = JSON.parse(fs.readFileSync('channels.json'));
 var creators = JSON.parse(fs.readFileSync('creators.json'));
@@ -59,7 +63,7 @@ var ytPlaylists = [];
 var tempUser, user1, user2, admin, nobody;
 
 deleteCollections(['channels', 'creators', 'tags', 'ytchannels',
-  'ytplaylists', 'ytvideos', 'users']);
+  'ytplaylists', 'ytvideos', 'websites', 'users']);
 
 function deleteCollections(collectionList){
   async.each(collectionList, function(collection, callback){
@@ -305,6 +309,7 @@ function importChannels(outerCallback){
     channel._ytchannels = [];
     channel._ytplaylists = [];
     channel._websites = [];
+    channel._comments = [];
     console.log('******* importing data for channel: ' + channel.name);
     for(var rep2=0;rep2<channel._creators.length;rep2++){
       channel._creators[rep2] = creatorsIDs[channel._creators[rep2]];
@@ -312,9 +317,16 @@ function importChannels(outerCallback){
     for(var rep2=0;rep2<channel._tags.length;rep2++){
       channel._tags[rep2] = tagsIDs[channel._tags[rep2]];
     }
+    channel.update = Date.now();
     channel.visible = true;
+    channel.myDescription = channel.description;
     channel.local = {};
     channel.local.owner = admin;
+
+    //hack to pass iteration index into async.each
+    for(var rep2=0;rep2<channel.links.length;rep2++){
+      channel.links[rep2].position = rep2;
+    }
 
     async.each(channel.links, function(link, linkCallback){
       var key = Object.keys(link)[0];
@@ -333,6 +345,13 @@ function importChannels(outerCallback){
             }
             channel._ytchannels.push(data._id);
             console.log('added ytchannel _id: ', data._id, ' to ', channel.name);
+            if(link.position === 0){
+              //assume that the first link in the JSON is where we get values from
+              console.log('saving position 1');
+              channel.location = data.location;
+              channel.longDescription = data.description;
+              channel.thumbnail = data.thumbnail;
+            }
             linkCallback();
           });
       } else if(key === 'youTubeID') {
@@ -349,6 +368,13 @@ function importChannels(outerCallback){
             }
             channel._ytchannels.push(data._id);
             console.log('added ytchannel _id: ', data._id, ' to ', channel.name);
+            if(link.position === 0){
+              //assume that the first link in the JSON is where we get values from
+              console.log('saving position 1');
+              channel.location = data.location;
+              channel.longDescription = data.description;
+              channel.thumbnail = data.thumbnail;
+            }
             linkCallback();
           });
       } else if(key === 'youTubePL'){
@@ -368,15 +394,22 @@ function importChannels(outerCallback){
           });
       } else {
         //a website, place into _websites
-        linkCallback();
+        getWebsites(link.website, function(err, data){
+          if(err){
+            console.log('error getting website data', err);
+            process.exit();
+          }
+          console.log(data);
+          channel._websites.push(data._id);
+          console.log('added website _id: ', data._id, 'to', channel.name);
+          linkCallback();
+        });
       }
     }, function(err){
       if(err){
         console.log(err);
         process.exit();
       }
-      channel.location = channel.links[0].youTube ?
-        channel.links[0].youTube : channel.links[0].youTubeID;
       var newChannel = new Channel(channel);
       console.log('new channel: ', newChannel);
       console.log('&&&&&&&&&&&&&&&&&&');
@@ -499,8 +532,41 @@ function getYtPlaylists(playlistId, name, location, ytPlaylistCallback){
   });
 }
 
-function getWebsites(name, location, websiteCallback){
-
+function getWebsites(location, websiteCallback){
+  console.log('getting website data for: ', location);
+  var reqOptions = {
+    url: location,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.111 Safari/537.36'
+    }
+  };
+  request(reqOptions, function(err, response, html){
+    if(err){
+      console.log(err);
+      websiteCallback(err, null);
+    } else {
+      var $ = cheerio.load(html);
+      if(!$('html').text()){
+        console.log(html);
+        websiteCallback('empty response', null);
+      } else {
+        var tempWeb = new Website({
+          URL: location,
+          updated: Date.now(),
+          title: $('title').text().trim()
+        });
+        tempWeb.save(function(err, saved){
+          if(err){
+            console.log('error saving website for: ', tempWeb.URL);
+            websiteCallback(err, null);
+          } else {
+            console.log(saved.URL, ' website saved');
+            websiteCallback(null, saved);
+          }
+        });
+      }
+    }
+  });
 }
 
 function getVideos(tempYT, videoCallback){

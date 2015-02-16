@@ -9,7 +9,7 @@ angular.module('educationApp.services', [])
   var channels;
 
   function getAllChannels(callback){
-    $http.get(apiUrl + 'channels')
+    $http.get(apiUrl + 'stubchannels')
     .success(function(data){
       channels = data;
       callback(null, data);

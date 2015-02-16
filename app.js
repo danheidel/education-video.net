@@ -139,6 +139,11 @@ function setupRoutes(callback){
     populate: ['_creators', '_tags', '_ytchannels', 'ytplaylists']
   });
 
+  routeFactory('/api/v1/stubchannels', '../models/Channel', app, {
+    securityFunc: securityFuncs.channelSecurity,
+    populate: ['_creators', '_tags']
+  });
+
   routeFactory('/api/v1/users', '../models/User', app, {
     securityFunc: securityFuncs.userSecurity,
     handleCreate: handlerFuncs.createUser,
