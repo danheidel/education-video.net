@@ -1,6 +1,6 @@
 'use strict';
 
-/*global global*/
+/*global globals*/
 
 var https = require('https');
 var _ = require('lodash');
@@ -41,7 +41,7 @@ module.exports.getChannelsById = function(store, callback){
 
 module.exports.getActivitiesByChannelId = function(store, callback){
   var options = {
-    path: 'channels?',
+    path: 'activities?',
     pageToken: '',
     terms: '',
     items: []
@@ -49,6 +49,19 @@ module.exports.getActivitiesByChannelId = function(store, callback){
   var part = 'part=id%2C+snippet%2C+contentDetails';
   var activityFilter = 'channelId=' + store.channelId;
   options.terms = part + '&' + activityFilter;
+  ytCall(store, options, callback);
+};
+
+module.exports.getPlaylistByPlaylistId = function(store, callback){
+  var options = {
+    path: 'playlists?',
+    pageToken: '',
+    terms: '',
+    items: []
+  };
+  var part = 'part=id%2Csnippet%2Cstatus%2CcontentDetails';
+  var playlistFilter = 'id=' + store.playlistId;
+  options.terms = part + '&' + playlistFilter;
   ytCall(store, options, callback);
 };
 
@@ -61,10 +74,10 @@ module.exports.searchVideosByChannelId = function(store, callback){
   };
   var part = 'part=id%2Csnippet';
   var searchFilter = 'channelId=' + store.channelId;
-  var properties = '&maxResults=50&order=date&type=video';
-  options.terms = part + '&' + searchFilter + properties;
+  var properties = 'maxResults=50&order=date&type=video';
+  options.terms = part + '&' + searchFilter+ '&' + properties;
   ytCall(store, options, callback);
-}
+};
 
 module.exports.getVideoById = function(store, callback){
   var options = {
@@ -77,12 +90,26 @@ module.exports.getVideoById = function(store, callback){
   var searchFilter = 'id=' + store.videoId;
   options.terms = part + '&' + searchFilter;
   ytCall(store, options, callback);
-}
+};
+
+module.exports.getVideosByPlaylistId = function(store, callback){
+  var options = {
+    path: 'playlistItems?',
+    pageToken: '',
+    terms: '',
+    items: []
+  };
+  var part = 'part=+id%2C+snippet%2C+contentDetails%2C+status';
+  var searchFilter = 'playlistId=' + store.playlistId;
+  var properties = 'maxResults=50';
+  options.terms = part + '&' + searchFilter + '&' + properties;
+  ytCall(store, options, callback);
+};
 
 function ytCall(store, options, callback){
   ytReqOptions.path = ytBasePath + options.path + options.terms +
-    '&key=' + global.ytKey + options.pageToken;
-  //console.dir(ytReqOptions);
+    '&key=' + globals.ytKey + options.pageToken;
+  // console.dir(ytReqOptions);
   var ytReq = https.request(ytReqOptions, function(res){
     var concatRes = '';
     res.setEncoding('utf8');
@@ -91,6 +118,11 @@ function ytCall(store, options, callback){
     });
     res.on('end', function(){
       var parsedRes = JSON.parse(concatRes);
+      // console.log(parsedRes);
+      if(parsedRes.error){
+        console.log(parsedRes.error);
+        return callback(parsedRes.error, null);
+      }
       if(store.deepSearch === true && parsedRes.nextPageToken){
         //doing recursive search and last hit still had another page
         options.pageToken = parsedRes.nextPageToken ?
@@ -110,6 +142,10 @@ function ytCall(store, options, callback){
         //console.log(options.items);
         callback(null, options.items);
       }
+    });
+    res.on('error', function(err){
+      console.log(err);
+      callback(err, null);
     });
   });
 

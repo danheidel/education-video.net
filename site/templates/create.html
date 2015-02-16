@@ -8,7 +8,12 @@
         <h3>Add Creators</h3>
         <br>
         <form name="newCreatorForm">
-          Creator name: <input type="text" class="input-required validation-color" ng-model="newCreator.name" ng-model-options="{ debounce: 500 }" require> *
+          Creator name:
+          <input type="text"
+            class="input-required validation-color"
+            ng-model="newCreator.name"
+            ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+            required> *
           <br>
           Description: <input type="text" ng-model="newCreator.description">
           <br>
@@ -36,7 +41,7 @@
           <input type="text"
             class="input-required validation-color"
             ng-model="newTag.name"
-            ng-model-options="{ debounce: 1000 }"
+            ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
             required> *
           {{newTag.name}}
           <br>

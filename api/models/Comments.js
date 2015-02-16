@@ -3,21 +3,16 @@
 
 var mongoose = require('mongoose');
 var setupModel = require('./models').setupModel;
-var subSchema = mongoose.Schema({
-  location: String,
-  site: String,
-  notes: String
-}, {_id: false});
 
 var schema = new mongoose.Schema({
   //_id: String,
-  name: {
+  text: {
     type: String,
     required:true,
     index: {unique: true}
   },
-  description: String,
-  contact:[subSchema],
+  time: Date,
+  userName: String,
   local: {
     owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
   }
@@ -26,4 +21,4 @@ var schema = new mongoose.Schema({
 //delete the local vars and __v
 setupModel(schema);
 
-module.exports = mongoose.model('Creator', schema);
+module.exports = mongoose.model('Comments', schema);

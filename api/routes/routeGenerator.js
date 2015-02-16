@@ -94,7 +94,11 @@ exports.defaultSecurityFunc = function(user, dbObject){
 };
 
 exports.defaultSanitizeInput = function(input){
-  void(input);
+  //default function removes and reference to _id or the local object
+  //to help prevent injection attacks
+  delete(input._id);
+  delete(input.__v);
+  delete(input.local);
 };
 
 exports.defaultSanitizeOutput = function(output){

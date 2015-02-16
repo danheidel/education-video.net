@@ -14,10 +14,16 @@ var schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  visible: Boolean,
+  votes: Number,
   description: String,
+  longDescription: String,
   _tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
   _creators: [{type: mongoose.Schema.Types.ObjectId, ref: 'Creator'}],
-  _youtube: [{type: mongoose.Schema.Types.ObjectId, ref: 'YTChannel'}],
+  _ytchannels: [{type: mongoose.Schema.Types.ObjectId, ref: 'YTChannel'}],
+  _ytplaylists: [{type: mongoose.Schema.Types.ObjectId, ref: 'YTPlaylist'}],
+  _websites: [{type: mongoose.Schema.Types.ObjectId, ref: 'Websites'}],
+  _comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comments'}],
   local:{
     owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
   }

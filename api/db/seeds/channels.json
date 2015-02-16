@@ -1,8 +1,11 @@
 [
   {
     "name": "Brilliant Botany Series",
-    "location": "https://www.youtube.com/user/BrilliantBotany",
-    "description": "educational blog series by a botanist and public outreach enthusiast",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/BrilliantBotany"},
+      {"tumblr": "http://brilliantbotany.com"}
+    ],
+    "description": "An excellent botany vlog covering different areas in plant science, an often neglected area of science reporting",
     "_creators": [
       0
     ],
@@ -12,8 +15,11 @@
   },
   {
     "name": "Shed Science",
-    "location": "https://www.youtube.com/user/shedscience",
-    "description": "the really interesting bits of biology",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/shedscience"},
+      {"website": "http://sallylepage.co.uk"}
+    ],
+    "description": "Interesting and fun biology videos, covering topics from evolutionary fitness and sexual selection to recording underwater marine life sounds.",
     "_creators": [
       1
     ],
@@ -23,8 +29,11 @@
   },
   {
     "name": "That's So Science",
-    "location": "https://www.youtube.com/user/wildescience",
-    "description": "science is awesome",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/wildescience"},
+      {"tumblr": "http://thatssoscience.tumblr.com"}
+    ],
+    "description": "Enthusiastic videos about general biology, evolution and science gender issues.",
     "_creators": [
       2
     ],
@@ -34,8 +43,10 @@
   },
   {
     "name": "My Adventures in Biology",
-    "location": "http://www.youtube.com/user/DrBondar",
-    "description": "biologist with a twist",
+    "links": [
+      {"youTube": "http://www.youtube.com/user/DrBondar"}
+    ],
+    "description": "Biology videos with a twist.  Sex, evolutionary biology, adventures in French Polynesia and science music video parodies.",
     "_creators": [
       3
     ],
@@ -45,8 +56,11 @@
   },
   {
     "name": "BrainCraft",
-    "location": "https://www.youtube.com/user/braincraftvideo",
-    "description": "talking psychology, neuroscience and why we act the way we do",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/braincraftvideo"},
+      {"tumblr": "http://www.braincraft.tumblr.com"}
+    ],
+    "description": "Psychology, neuroscience and why we act the way we do - illustrated with great stop motion animation.  ",
     "_creators": [
       4
     ],
@@ -56,8 +70,11 @@
   },
   {
     "name": "I F#!&ing Love Science",
-    "location": "https://www.youtube.com/user/IFLScience",
-    "description": "vlog wherein Elise talks about her favorite curated posts",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/IFLScience"},
+      {"website": "http://testtube.com/iflscience"}
+    ],
+    "description": "Quick videos summarizing science news and events, possibly on hiatus?",
     "_creators": [
       5
     ],
@@ -67,8 +84,10 @@
   },
   {
     "name": "Bite Sci-zed",
-    "location": "https://www.youtube.com/user/Lexie527",
-    "description": "science videos every Monday",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/Lexie527"}
+    ],
+    "description": "Lots of videos about general biology, genetics, zoology, evolution and chemistry.",
     "_creators": [
       6
     ],
@@ -77,10 +96,14 @@
     ]
   },
   {
-    "name": "space & spaceflight history",
-    "location": "https://www.youtube.com/channel/UCw95T_TgbGHhTml4xZ9yIqg",
+    "name": "Vintage Space",
+    "links": [
+      {"youTubeID": "https://www.youtube.com/channel/UCw95T_TgbGHhTml4xZ9yIqg"},
+      {"website": "http://amyshirateitel.com"},
+      {"website": "http://www.popsci.com/blog-network/vintage-space"}
+    ],
     "id": "UCw95T_TgbGHhTml4xZ9yIqg",
-    "description": "short videos on space and spaceflight history",
+    "description": "Videos about early history of the space race.  Learn about the interesting personalities, accidents and other bits that the history books left out.",
     "_creators": [
       7
     ],
@@ -92,8 +115,12 @@
   },
   {
     "name": "Gummi Science",
-    "location": "https://www.youtube.com/user/joannelovesscience",
-    "description": "introduction to science concepts using everyday items",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/joannelovesscience"},
+      {"website": "http://www.joannelovesscience.com"},
+      {"website": "http://blogs.scientificamerican.com/psi-vid"}
+    ],
+    "description": "Science concepts explained with everyday items, book reviews and science news.",
     "_creators": [
       8
     ],
@@ -103,8 +130,10 @@
   },
   {
     "name": "Field Notes",
-    "location": "http://www.youtube.com/user/jessicasfieldnotes",
-    "description": "happenings from the field of life",
+    "links": [
+      {"youTube": "http://www.youtube.com/user/jessicasfieldnotes"}
+    ],
+    "description": "Videos about geology, anthropology and the how-tos of field studies.",
     "_creators": [
       9
     ],
@@ -114,8 +143,11 @@
   },
   {
     "name": "Looking Glass Universe",
-    "location": "https://www.youtube.com/user/LookingGlassUniverse",
-    "description": "understanding quantum mechanics",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/LookingGlassUniverse"},
+      {"tumblr": "http://looking-glass-universe.tumblr.com"}
+    ],
+    "description": "Easy to understand videos explaining quantum physics and mathematics.",
     "_creators": [
       11
     ],
@@ -126,8 +158,12 @@
   },
   {
     "name": "BlinkPopShift",
-    "location": "https://www.youtube.com/user/BlinkPopShift",
-    "description": "digital culture and make art",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/BlinkPopShift"},
+      {"website": "http://emilyeifler.com"},
+      {"tumblr": "http://blinkpopshift.tumblr.com"}
+    ],
+    "description": "Videos about disruptive technologies, art and the culture of tech.",
     "_creators": [
       13
     ],
@@ -137,8 +173,11 @@
   },
   {
     "name": "Geek Gurl Diaries",
-    "location": "https://www.youtube.com/user/GeekGurlDiaries",
-    "description": "gurl's discuss, create, demo and interview all things geek",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/GeekGurlDiaries"},
+      {"website": "http://www.geekgurldiaries.co.uk"}
+    ],
+    "description": "Videos about programming, computer science, logic, electronics, Raspberry Pi, Arduino, Python and being geeky and awesome",
     "_creators": [
       14
     ],
@@ -148,8 +187,12 @@
   },
   {
     "name": "Super-Awesome Maker Show",
-    "location": "https://www.youtube.com/user/SuperAwesomeSylvia",
-    "description": "super awesome projects you can do at home",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/SuperAwesomeSylvia"},
+      {"website": "http://sylviashow.com"},
+      {"youTubePL": "https://www.youtube.com/watch?v=Qmp-Qi7-ltY&list=PLN7b6uU-KpjHiLm4o7T4AHTre4WCFcUbP"}
+    ],
+    "description": "Awesome DIY science, electronics and programming projects that kids can do at home.",
     "_creators": [
       15
     ],
@@ -162,8 +205,12 @@
   },
   {
     "name": "Vi Hart",
-    "location": "http://www.youtube.com/vihart",
-    "description": "doodling in math class",
+    "links": [
+      {"youTube": "http://www.youtube.com/vihart"},
+      {"website": "http://vihart.com"},
+      {"youTube": "http://www.youtube.com/vihartvihart"}
+    ],
+    "description": "Teaching you math the right way, through drawing, triangles, snakes and beans.",
     "_creators": [
       16
     ],
@@ -173,8 +220,10 @@
   },
   {
     "name": "amateur science experiments",
-    "location": "https://www.youtube.com/user/jeriellsworth",
-    "description": "amateur science experiments",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/jeriellsworth"}
+    ],
+    "description": "One of the best DIY hackers around, building racecars, radar and 3D VR glasses.",
     "_creators": [
       17
     ],
@@ -185,8 +234,11 @@
   },
   {
     "name": "The Brain Scoop",
-    "location": "http://www.youtube.com/user/thebrainscoop",
-    "description": "sharing amazing things from The Field Musueum",
+    "links": [
+      {"youTube": "http://www.youtube.com/user/thebrainscoop"},
+      {"tumblr": "http://thebrainscoop.tumblr.com"}
+    ],
+    "description": "Animal dissections, zoology, botany, field studies, the role of museums and women in science.  The main matovator for making the website!",
     "_creators": [
       18
     ],
@@ -196,8 +248,12 @@
   },
   {
     "name": "TechKim Tutorials",
-    "location": "http://www.youtube.com/user/techkimtutorials",
-    "description": "video tutorials exploring technology tools and the CS concepts that they are built upon",
+    "links": [
+      {"youTube": "http://www.youtube.com/user/techkimtutorials"},
+      {"website": "http://www.tech-girls.org"},
+      {"tumblr": "http://tech-girls.tumblr.com"}
+    ],
+    "description": "Video tutorials exploring technology tools and the CS concepts that they are built upon",
     "_creators": [
       19
     ],
@@ -207,8 +263,13 @@
   },
   {
     "name": "Adafruit Industries",
-    "location": "http://www.youtube.com/user/adafruit",
-    "description": "Ask an Engineer",
+    "links": [
+      {"youTube": "http://www.youtube.com/user/adafruit"},
+      {"website": "https://www.adafruit.com"},
+      {"website": "http://learn.adafruit.com"},
+      {"youTubePL": "https://www.youtube.com/playlist?list=PLjF7R1fz_OOXWHQhEVEI5Jqf18TQRr5Hu"}
+    ],
+    "description": "Videos on programming and electronics from one of the big names in DIY electronics.",
     "_creators": [
       20
     ],
@@ -219,7 +280,11 @@
   },
   {
     "name": "The eTextile Lounge",
-    "location": "https://www.youtube.com/user/LynneBruning",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/LynneBruning"},
+      {"website": "http://etextilelounge.com"},
+      {"website": "http://lbruning.com"}
+    ],
     "description": "how to videos for creating eTextiles, wearable computing, craft tech",
     "_creators": [
       21
@@ -230,7 +295,10 @@
   },
   {
     "name": "The Penguin Prof",
-    "location": "http://www.youtube.com/user/ThePenguinProf",
+    "links": [
+      {"youTube": "http://www.youtube.com/user/ThePenguinProf"},
+      {"website": "http://www.penguinprof.com"}
+    ],
     "description": "features general biology, anatomy, physiology and college success tutorials",
     "_creators": [
       23
@@ -241,7 +309,10 @@
   },
   {
     "name": "This Week in Science",
-    "location": "https://www.youtube.com/user/ThisWeekinScience",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/ThisWeekinScience"},
+      {"website": "http://www.twis.org/"}
+    ],
     "description": "weekly dose of of science news made fun and relevant",
     "_creators": [
       24
@@ -252,7 +323,10 @@
   },
   {
     "name": "FY Fluid Dynamics",
-    "location": "http://www.youtube.com/user/fyfluiddynamics",
+    "links": [
+      {"youTube": "http://www.youtube.com/user/fyfluiddynamics"},
+      {"tumblr": "http://fuckyeahfluiddynamics.tumblr.com"}
+    ],
     "description": "celebrating the physics of all that flows",
     "_creators": [
       26
@@ -263,7 +337,10 @@
   },
   {
     "name": "Sustainable Agriculture",
-    "location": "http://www.youtube.com/user/AllisonLHJack",
+    "links": [
+      {"youTube": "http://www.youtube.com/user/AllisonLHJack"},
+      {"website": "http://agroecologyaz.wordpress.com"}
+    ],
     "description": "sustainable agriculture education and food sovereignty lectures, workshops, farm tours and outreach videos",
     "_creators": [
       27
@@ -274,7 +351,10 @@
   },
   {
     "name": "The Physics Factor",
-    "location": "https://www.youtube.com/thephysicsfactor",
+    "links": [
+      {"youTube": "https://www.youtube.com/thephysicsfactor"},
+      {"tumblr": "http://muchtoofullofsand.tumblr.com"}
+    ],
     "description": "a vlog for the love of physics!",
     "_creators": [
       32
@@ -285,7 +365,11 @@
   },
   {
     "name": "Amoeba Sisters",
-    "location": "https://www.youtube.com/user/AmoebaSisters",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/AmoebaSisters"},
+      {"website": "http://www.amoebasisters.com"},
+      {"website": "http://amoebasisters.blogspot.com"}
+    ],
     "description": "demystifying difficult science concepts by using real world examples in a funny context",
     "_creators": [
       33
@@ -296,7 +380,11 @@
   },
   {
     "name": "OS.ALT",
-    "location": "https://www.youtube.com/user/nixiedoeslinux",
+    "links": [
+      {"youTube": "https://www.youtube.com/user/nixiedoeslinux"},
+      {"youTube": "https://www.youtube.com/user/NixiePixel"},
+      {"website": "http://www.nixiepixel.com"}
+    ],
     "description": "covers the indie/hacking/geek community, including open source alternatives to operating systems and gaming",
     "_creators": [
       35
@@ -307,8 +395,11 @@
   },
   {
     "name": "Contour Corsets",
-    "location": "https://www.youtube.com/ContourCorsets",
-    "description": "Fran is a corset maker, pedal designer, engineer, artist, musician, occasional radio DJ, subpar singer, and full time goofball",
+    "links": [
+      {"youTube": "https://www.youtube.com/ContourCorsets"},
+      {"website": "http://www.frantone.com"}
+    ],
+    "description": "Lots of videos about vintage electronics and technology.",
     "_creators": [
       36
     ],
@@ -319,26 +410,14 @@
   },
   {
     "name": "Dead Bunny Guides",
-    "location": "https://www.youtube.com/deadbunnyguides",
-    "description": "each video provides a short, straightforward explanation of each skill, and shows how different skills build off each other to help you better learn and remember how to do them",
+    "links": [
+      {"youTube": "https://www.youtube.com/deadbunnyguides"}
+    ],
+    "description": "Videos providing a short, straightforward explanation of basic math concepts.",
     "_creators": [
       37
     ],
     "_tags": [
-      3
-    ]
-  },
-  {
-    "name": "Purposeful Women",
-    "location": "https://www.youtube.com/user/jjdigeronimo",
-    "description": "This channel is designed for Women in Leadership, Women in STEM, Women Entrepreneurs, Emerging Women and Young Girls in Science, Technology Engineering and Math!",
-    "_creators": [
-      45
-    ],
-    "_tags": [
-      0,
-      1,
-      2,
       3
     ]
   }
