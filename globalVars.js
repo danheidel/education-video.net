@@ -9,6 +9,7 @@ module.exports = function(global, callback){
     process.exit();
   }
   GlobalVars.find({}, function(err, data){
+    // console.log(err, data);
     if(err){
       console.error('global vars not found in db, exiting');
       process.exit();

@@ -5,19 +5,20 @@ var superagent = require('superagent');
 var User = require('../api/models/User');
 var Tag = require('../api/models/Tag');
 var Creator = require('../api/models/Creator');
+var port = 5000;
 
 module.exports.loginAdmin = function(done, users){
   //pull in the test users for checking security models
   User.find({}, function(err, retObject){
     if(err){
-      console.log(err);
+      console.log('db error: ' + err);
       return done(err);
     }
     users.admin = _.find(retObject, {displayName: 'Admin'});
 
     //login as admin
     users.adminAgent = superagent.agent();
-    users.adminAgent.post('http://localhost:3000/login')
+    users.adminAgent.post('http://localhost:' + port + '/login')
       .type('form')
       .send({
         email: users.admin.local.email,
@@ -25,7 +26,7 @@ module.exports.loginAdmin = function(done, users){
       })
       .end(function(err, res){
         if(err) {
-          console.error(err);
+          console.error('admin login error: ' + err);
           process.exit();
         }
         console.log('got admin');
@@ -45,7 +46,7 @@ module.exports.loginUser1 = function(done, users){
 
     //get user1
     users.user1Agent = superagent.agent();
-    users.user1Agent.post('http://localhost:3000/login')
+    users.user1Agent.post('http://localhost:' + port + '/login')
       .type('form')
       .send({
         email: users.user1.local.email,
@@ -74,7 +75,7 @@ module.exports.loginUser2 = function(done, users){
 
     //get user2
     users.user2Agent = superagent.agent();
-    users.user2Agent.post('http://localhost:3000/login')
+    users.user2Agent.post('http://localhost:' + port + '/login')
       .type('form')
       .send({
         email: users.user2.local.email,

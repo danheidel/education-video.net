@@ -20,7 +20,7 @@ var errorHandler = require('errorhandler');
 // var logger = require('morgan');
 var mongoose = require('mongoose');
 
-var global = {};
+global.globals = {};
 var mongoIP;
 if(process.env.MONGO_PORT_27017_TCP_ADDR){
   mongoIP = process.env.MONGO_PORT_27017_TCP_ADDR;
@@ -34,12 +34,12 @@ console.log('specified environment: ' + env);
 
 async.series([
   setEnv,
-  globalVars.bind(null, global),
+  globalVars.bind(null, globals),
   function(callback){
-    console.dir(global);
+    console.dir(globals);
     callback();
   },
-  deEscalate.bind(null, global),
+  deEscalate.bind(null, globals),
   setupExpress,
   setupRoutes,
   startServer
@@ -102,8 +102,8 @@ function setupExpress(callback){
   app.use(express.static(__dirname + '/site/templates'));
   app.use(express.static(__dirname + '/bower_components'));
 
-  console.log('specified session secret: ' + global.sessionSecret);
-  app.use(expressSession({secret: global.sessionSecret}));
+  console.log('specified session secret: ' + globals.sessionSecret);
+  app.use(expressSession({secret: globals.sessionSecret}));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());
@@ -136,7 +136,7 @@ function setupRoutes(callback){
 
   routeFactory('/api/v1/channels', '../models/Channel', app, {
     securityFunc: securityFuncs.channelSecurity,
-    populate: ['_creators', '_tags', '_youtube']
+    populate: ['_creators', '_tags', '_ytchannels', 'ytplaylists']
   });
 
   routeFactory('/api/v1/users', '../models/User', app, {
@@ -153,12 +153,12 @@ function setupRoutes(callback){
 }
 
 function startServer(callback){
-  if(!global.port){
+  if(!globals.port){
     console.error('no port provided, exiting');
     process.exit();
   }
-  var server = app.listen(global.port, function(){
-    console.log('serving on port: ' + global.port);
+  var server = app.listen(globals.port, function(){
+    console.log('serving on port: ' + globals.port);
   });
   console.log('server started');
   callback();

@@ -135,14 +135,29 @@ module.exports = function(grunt) {
       }
     },
     simplemocha: {
-      test:{
-        src:['test/mocha/*_test.js','!test/acceptance/*_test.js'],
+      all: {
         options:{
           reporter: 'spec',
           slow: 200,
-          timeout: 3000,
-          node_env: 'test'
-        }
+          timeout: 3000
+        },
+        src:['test/unit_tests/*_test.js','test/api_tests/*_test.js']
+      },
+      unit: {
+        options:{
+          reporter: 'spec',
+          slow: 200,
+          timeout: 3000
+        },
+        src:['test/unit_tests/*_test.js']
+      },
+      api: {
+        options:{
+          reporter: 'spec',
+          slow: 200,
+          timeout: 3000
+        },
+        src:['test/api_tests/*_test.js']
       }
     },
 
@@ -240,7 +255,9 @@ module.exports = function(grunt) {
   grunt.registerTask('build:test', ['clean:test', 'concurrent:buildDev', 'copy:dev']);
   grunt.registerTask('build:dev', ['clean:dev', 'concurrent:buildDev', 'copy:dev']);
   grunt.registerTask('build:prod', ['clean:prod', 'browserify:prod', 'jshint:all', 'copy:prod']);
-  grunt.registerTask('test', ['env:test', 'simplemocha']);
+  grunt.registerTask('test', ['env:test', 'simplemocha:all']);
+  grunt.registerTask('api', ['env:test', 'simplemocha:api']);
+  grunt.registerTask('unit', ['env:test', 'simplemocha:unit']);
   grunt.registerTask('test:cover', ['env:test', 'jshint', 'mochacov:unit','mochacov:coverage' ]);
   grunt.registerTask('travis', ['jshint', 'mochacov:unit', 'mochacov:coverage', 'mochacov:coveralls']);
   grunt.registerTask('server', [ 'env:dev', 'build:dev', 'express:dev', 'watch:express','notify' ]);

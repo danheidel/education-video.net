@@ -16,6 +16,7 @@ var id;
 var url = 'http://localhost:5000/api/v1/channels/';
 
 describe('Channel JSON API', function(){
+  console.log('setting up testing users');
   before(function(done){
     testLogin.loginAdmin(done, users);
   });
