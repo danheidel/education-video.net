@@ -4,6 +4,12 @@ body {
   background: #555;
 }
 
+*, *:after, *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 a {
   color: #227799;
 }
@@ -14,7 +20,7 @@ h1 {
 
 h2 {
   margin-top: 0.25rem;
-  margin-bottom: 0.25rem
+  margin-bottom: 0.25rem;
 }
 
 h3 {
@@ -181,6 +187,14 @@ input.validation-color.ng-invalid.ng-touched{
   transition-property:all;
   transition-duration: 0.7s;
   transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.pop-button{
+  float:right;
+  width:1.2rem;
+  margin-top: 0.3rem;
+  margin-right:-1.8rem;
+  cursor: pointer;
 }
 
 .col-odd > .row-odd{

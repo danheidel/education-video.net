@@ -6,7 +6,8 @@
       ⚙
     </div>
     <div style="margin-left: 0.3rem;">
-      <div class="outlined control-block">
+      <div class="outlined control-block"
+        ng-if="$root.user.isAdmin">
         <ng-include src="'create.html'"></ng-include>
       </div>
       <div class="outlined control-block-right">
@@ -17,7 +18,8 @@
       </div>
       <div class="outlined" id="filter-inputs">
         Creator: <input ng-model="filter.creators">
-        Tags: <select ng-model="filter.selectedTag" ng-options="tag.name as tag.name for tag in tags">
+        Tags: <select ng-model="filter.selectedTag"
+          ng-options="tag.name as tag.name for tag in tags">
           <option value="">-- all --</option>
         </select>
         <br/>
