@@ -1,6 +1,10 @@
-<div class="inpanel" style="background:linear-gradient(to bottom, rgba(255,255,255,0.87) 0%,rgba(255,255,255,0.87) 100%),
-    url({{channel.thumbnail}}) repeat no-repeat">
-  <h2><a class="channel-name" href="{{channel.location}}">{{channel.name}}</a></h2>
+<div class="inpanel" style="background:linear-gradient(to bottom, rgba(255,255,255,0.87) 0%,rgba(255,255,255,0.87) 100%), url({{channel.thumbnail}}) repeat no-repeat">
+  <div style="margin-right:1.8rem">
+    <h2 style="float:left; width:100%;">
+      <a class="channel-name" href="{{channel.location}}">{{channel.name}}</a>
+    </h2>
+    <img src="img/popout.svg" class="pop-button"/>
+  </div>
   <div>
     <span class="tag-span" ng-repeat="tag in channel._tags">{{tag.name}}</span>
   </div>

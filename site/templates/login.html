@@ -12,12 +12,26 @@
         <h3>Login</h3>
         <br>
         <form name="loginForm">
-          Email: <input type="email" class="input-required validation-color" ng-model="login.email" required> *
+          Email: <input type="email"
+          class="input-required validation-color"
+          ng-model="login.email" required> *
           <br>
           <br>
-          Password: <input class="input-required validation-color" ng-show="showpassword" type="text" ng-model="login.password" required>
-            <input class="input-required validation-color" ng-hide="showpassword" type="password" ng-model="login.password"> *
-          show password <input type="checkbox" ng-model="showpassword" ng-checked="false">
+          Password:
+          <input class="input-required validation-color"
+          ng-show="showpassword"
+          type="text"
+          ng-model="login.password" required>
+          <input class="input-required validation-color"
+          ng-hide="showpassword"
+          type="password"
+          ng-model="login.password"> *
+          <br>
+          show password
+          <input type="checkbox"
+          ng-model="showpassword"
+          ng-checked="false"
+          tabindex="-1">
           <br>
           <br>
           <input type="button" value="send" ng-click="formLoginUser(loginForm)">
@@ -29,15 +43,31 @@
         <h3>Create account</h3>
         <br>
         <form name="accountForm">
-          Account name: <input class="input-required validation-color" ng-model="user.displayName" required> *
+          Account name:
+          <input class="input-required validation-color"
+          ng-model="user.displayName" required> *
           <br>
           <br>
-          Email: <input type="email" class="input-required validation-color" ng-model="user.email" required> *
+          Email:
+          <input type="email"
+          class="input-required validation-color"
+          ng-model="user.email" required> *
           <br>
           <br>
-          Password: <input class="input-required validation-color" ng-show="showpassword" type="text" ng-model="user.password" required>
-            <input class="input-required validation-color" ng-hide="showpassword" type="password" ng-model="user.password"> *
-          show password <input type="checkbox" ng-model="showpassword" ng-checked="false">
+          Password:
+          <input class="input-required validation-color"
+          ng-show="showpassword"
+          type="text"
+          ng-model="user.password" required>
+          <input class="input-required validation-color"
+          ng-hide="showpassword"
+          type="password"
+          ng-model="user.password"> *
+          show password
+          <input type="checkbox"
+          ng-model="showpassword"
+          ng-checked="false"
+          tabindex="-1">
           <br>
           <br>
           <input type="button" value="send" ng-click="submitNewUser(accountForm)">

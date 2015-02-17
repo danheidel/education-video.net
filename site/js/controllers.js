@@ -180,6 +180,9 @@ angular.module('educationApp.controllers', ['educationApp.services'])
           $rootScope.user.name = data.displayName;
           $rootScope.user.isAdmin = data.isAdmin;
           $rootScope.user.valid = true;
+          $scope.login.email = '';
+          $scope.login.password = '';
+          $scope.loginShow = false;
         } else {
           $rootScope.user.name = 'Not logged in';
           $rootScope.user.isAdmin = false;
@@ -198,6 +201,9 @@ angular.module('educationApp.controllers', ['educationApp.services'])
           $rootScope.user.name = 'Not logged in';
           $rootScope.user.isAdmin = false;
           $rootScope.user.valid = false;
+          $scope.login.email = '';
+          $scope.login.password = '';
+          $scope.loginShow = false;
         }
       }
     });
@@ -228,7 +234,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       if(err){
         console.log(err);
       } else {
-        console.log('password was sucessfully updated');
+        console.log('password was successfully updated');
       }
     });
   };
@@ -252,6 +258,9 @@ angular.module('educationApp.controllers', ['educationApp.services'])
             if(data.displayName){
               $rootScope.user.name = data.displayName;
               $rootScope.user.valid = true;
+              $scope.login.email = '';
+              $scope.login.password = '';
+              $scope.loginShow = false;
             } else {
               $rootScope.user.name = 'Not logged in';
               $rootScope.user.valid = false;
