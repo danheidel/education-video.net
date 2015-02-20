@@ -1,4 +1,5 @@
 'use strict';
+/*global globals*/
 
 //fire app.js to get db connections
 var mongoose = require('mongoose');
@@ -39,15 +40,15 @@ describe('YTNormalizer', function(){
     it('should return a list of YouTube channels', function(done){
       getChannelsByName({channelName: 'BrilliantBotany'}, function(err, data){
         try{
-          expect(err).not.exist;
-          expect(data).exist;
+          expect(err).not.exist();
+          expect(data).exist();
           expect(data).have.length.above(0);
           data.should.all.have.property('kind', 'youtube#channel');
           done();
         } catch(e){
           done(e);
         }
-      })
+      });
     });
   });
 
@@ -55,15 +56,15 @@ describe('YTNormalizer', function(){
     it('should return a list of YouTube channels', function(done){
       getChannelsById({id: 'UCcut0VhjxE1MFXHIGJ9ZfTA'}, function(err, data){
         try{
-          expect(err).not.exist;
-          expect(data).exist;
+          expect(err).not.exist();
+          expect(data).exist();
           expect(data).have.length(1);
           data.should.all.have.property('kind', 'youtube#channel');
           done();
         } catch(e){
           done(e);
         }
-      })
+      });
     });
   });
 
@@ -71,15 +72,15 @@ describe('YTNormalizer', function(){
     it('should return a list of YouTube activities', function(done){
       getActivitiesByChannelId({channelId: 'UCcut0VhjxE1MFXHIGJ9ZfTA'}, function(err, data){
         try{
-          expect(err).not.exist;
-          expect(data).exist;
+          expect(err).not.exist();
+          expect(data).exist();
           expect(data).have.length.above(0);
           data.should.all.have.property('kind', 'youtube#activity');
           done();
         } catch(e){
           done(e);
         }
-      })
+      });
     });
   });
 
@@ -87,15 +88,15 @@ describe('YTNormalizer', function(){
     it('should return a list of YouTube activities', function(done){
       getPlaylistByPlaylistId({playlistId: 'PLN7b6uU-KpjHiLm4o7T4AHTre4WCFcUbP'}, function(err, data){
         try{
-          expect(err).not.exist;
-          expect(data).exist;
+          expect(err).not.exist();
+          expect(data).exist();
           expect(data).have.length(1);
           data.should.all.have.property('kind', 'youtube#playlist');
           done();
         } catch(e){
           done(e);
         }
-      })
+      });
     });
   });
 
@@ -103,8 +104,8 @@ describe('YTNormalizer', function(){
     it('should return a list of YouTube activities', function(done){
       searchVideosByChannelId({channelId: 'UCcut0VhjxE1MFXHIGJ9ZfTA'}, function(err, data){
         try{
-          expect(err).not.exist;
-          expect(data).exist;
+          expect(err).not.exist();
+          expect(data).exist();
           expect(data).have.length.above(0);
           data.should.all.have.property('kind', 'youtube#searchResult');
           data.should.all.have.deep.property('id.kind', 'youtube#video');
@@ -112,7 +113,7 @@ describe('YTNormalizer', function(){
         } catch(e){
           done(e);
         }
-      })
+      });
     });
   });
 
@@ -120,15 +121,15 @@ describe('YTNormalizer', function(){
     it('should return a list of YouTube activities', function(done){
       getVideoById({videoId: 'Qmp-Qi7-ltY'}, function(err, data){
         try{
-          expect(err).not.exist;
-          expect(data).exist;
+          expect(err).not.exist();
+          expect(data).exist();
           expect(data).have.length(1);
           data.should.all.have.property('kind', 'youtube#video');
           done();
         } catch(e){
           done(e);
         }
-      })
+      });
     });
   });
 
@@ -136,8 +137,8 @@ describe('YTNormalizer', function(){
     it('should return a list of YouTube activities', function(done){
       getVideosByPlaylistId({playlistId: 'PLN7b6uU-KpjHiLm4o7T4AHTre4WCFcUbP'}, function(err, data){
         try{
-          expect(err).not.exist;
-          expect(data).exist;
+          expect(err).not.exist();
+          expect(data).exist();
           expect(data).have.length.above(0);
           data.should.all.have.property('kind', 'youtube#playlistItem');
           data.should.all.have.deep.property('snippet.resourceId.kind', 'youtube#video');
@@ -145,7 +146,7 @@ describe('YTNormalizer', function(){
         } catch(e){
           done(e);
         }
-      })
+      });
     });
   });
 

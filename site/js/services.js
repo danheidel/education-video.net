@@ -53,7 +53,7 @@ angular.module('educationApp.services', [])
       callback(null, data);
     }).error(function(data){
       callback(data, null);
-    })
+    });
   }
 
   function checkForCreator(name, callback){
@@ -62,7 +62,7 @@ angular.module('educationApp.services', [])
       callback(null, data);
     }).error(function(data){
       callback(data, null);
-    })
+    });
   }
 
   return {
@@ -70,7 +70,7 @@ angular.module('educationApp.services', [])
     getAllCreators: getAllCreators,
     createCreator: createCreator,
     checkForCreator: checkForCreator
-  }
+  };
 })
 
 .service('tagServices', function($http){
@@ -92,7 +92,7 @@ angular.module('educationApp.services', [])
       callback(null, data);
     }).error(function(data){
       callback(data, null);
-    })
+    });
   }
 
   function checkForTag(tag, callback){
@@ -105,7 +105,7 @@ angular.module('educationApp.services', [])
     })
     .error(function(data){
       callback(data, null);
-    })
+    });
   }
 
   return {
@@ -113,7 +113,7 @@ angular.module('educationApp.services', [])
     getAllTags: getAllTags,
     createTag: createTag,
     checkForTag: checkForTag
-  }
+  };
 })
 
 .service('ytServices', function($http){
@@ -124,7 +124,7 @@ angular.module('educationApp.services', [])
     .success(function(data){
       ytChannels = data;
       callback(null, data);
-    })
+    });
   }
 
   function createYTChannel(newYT, callback){
@@ -134,7 +134,7 @@ angular.module('educationApp.services', [])
   return {
     ytChannels: ytChannels,
     getAllYTChannels: getAllYTChannels
-  }
+  };
 })
 
 .service('userServices', function($http){
@@ -201,7 +201,7 @@ angular.module('educationApp.services', [])
     })
     .error(function(data){
       callback(data, null);
-    })
+    });
   }
 
   return {
@@ -211,6 +211,6 @@ angular.module('educationApp.services', [])
     editUserPassword: editUserPassword,
     submitNewUser: submitNewUser,
     checkIfLoggedIn: checkIfLoggedIn
-  }
+  };
 });
 

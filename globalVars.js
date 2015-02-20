@@ -26,4 +26,4 @@ module.exports = function(global, callback){
 
     callback();
   });
-}
+};

@@ -1,7 +1,8 @@
 'use strict';
+/*global globals*/
 
 module.exports = function(global, callback){
-  if(!global.userId){
+  if(!globals.userId){
     console.error('no user specified, exiting');
     process.exit();
   }
@@ -15,7 +16,7 @@ module.exports = function(global, callback){
     console.dir(e);
     process.exit();
   }
-  console.log('user changed to: ' + global.userId);
+  console.log('user changed to: ' + globals.userId);
 
   callback();
 };

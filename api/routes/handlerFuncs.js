@@ -8,7 +8,7 @@ var _ = require('lodash');
 module.exports.getUser = function(outputObject, dbObject, userId){
   //return isAdmin bool to reflect permissions level
   outputObject.isAdmin = (dbObject.local.permissions === 'admin') ? true : false;
-}
+};
 
 module.exports.createUser = function(input, userId, newObject){
   if(!newObject.local){
@@ -69,11 +69,11 @@ module.exports.createYTChannel = function(input, userId, newObject){
     newObject.local = {};
   }
 
-}
+};
 
 module.exports.updateYTChannel = function(input, userId, oldObject){
   if(!input.local){
     input.local = {};
   }
 
-}
+};

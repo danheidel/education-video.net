@@ -122,7 +122,7 @@ exports.defaultSanitizeOutput = function(output){
 
 exports.defaultHandleGet = function(outputObject, dbObject, userId){
   return null;
-}
+};
 
 exports.defaultHandleCreate = function(input, userId, newObject){
   if(!newObject.local){
@@ -223,7 +223,7 @@ exports.routeFactory = function(route, objectPath, app, options){
                 //sanitize child objects from populate if necessary
                 handlePopulate(req.user, retObject);
               }
-              var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null))
+              var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null));
               if(getErr){
                 return res.status(getErr.status).send(getErr.error);
               }
@@ -273,7 +273,7 @@ exports.routeFactory = function(route, objectPath, app, options){
                 //sanitize child objects from populate if necessary
                 handlePopulate(req.user, retObject);
               }
-              var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null))
+              var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null));
               if(getErr){
                 return res.status(getErr.status).send(getErr.error);
               }
@@ -321,7 +321,7 @@ exports.routeFactory = function(route, objectPath, app, options){
               //sanitize child objects from populate if necessary
               handlePopulate(req.user, retObject);
             }
-            var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null))
+            var getErr = options.handleGet(retObject, dbReturn, (req.user ? req.user._id : null));
             if(getErr){
               return res.status(getErr.status).send(getErr.error);
             }
@@ -399,7 +399,7 @@ exports.routeFactory = function(route, objectPath, app, options){
         options.sanitizeInput(req.body);
 
         //handle any special modification steps, returns non-null if this has failed
-        var updateErr = options.handleUpdate(req.body, (req.user ? req.user._id : null), oldObject)
+        var updateErr = options.handleUpdate(req.body, (req.user ? req.user._id : null), oldObject);
         if(updateErr){
           return res.status(updateErr.status).send(updateErr.error);
         }

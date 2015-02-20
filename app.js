@@ -1,4 +1,5 @@
 'use strict';
+/*global globals*/
 
 var globalVars = require('./globalVars');
 var deEscalate = require('./api/security/deEscalate');
@@ -12,13 +13,13 @@ var expressSession = require('express-session');
 var passport = require('passport');
 require('./api/security/passport')(passport);
 var flash = require('connect-flash');
-var routeGenerator = require('./api/routes/routeGenerator');
 var routeFactory = require('./api/routes/routeGenerator').routeFactory;
 var securityFuncs = require('./api/routes/securityFuncs');
 var handlerFuncs = require('./api/routes/handlerFuncs');
 var errorHandler = require('errorhandler');
 // var logger = require('morgan');
 var mongoose = require('mongoose');
+var server;
 
 global.globals = {};
 var mongoIP;
@@ -162,7 +163,7 @@ function startServer(callback){
     console.error('no port provided, exiting');
     process.exit();
   }
-  var server = app.listen(globals.port, function(){
+  server = app.listen(globals.port, function(){
     console.log('serving on port: ' + globals.port);
   });
   console.log('server started');

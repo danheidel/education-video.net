@@ -73,7 +73,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
 // })
 
 .controller('channelCreateController', function($scope, $rootScope, channelServices,
-  creatorServices, tagServices, ytServices){
+  creatorServices, tagServices){
   $scope.newTag = {};
   $scope.dupeTag = false;
   $scope.newCreator = {};
@@ -101,7 +101,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       if(err){
         return;
       } else {
-        if(data.length != 0){
+        if(data.length !== 0){
           $scope.dupeTag = true;
         }
       }
@@ -119,7 +119,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       }, function(err, data){
         if(err){
           console.log(err);
-        } else if(data.length != 0){
+        } else if(data.length !== 0){
           console.log('already in the db');
         } else {
           tagServices.createTag({
@@ -135,7 +135,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
         }
       });
     }
-  }
+  };
 
   function refreshTags(){
     tagServices.getAllTags(function(err, data){
@@ -155,13 +155,13 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       if(err){
         return;
       } else {
-        if(data.length != 0){
+        if(data.length !== 0){
           console.log(data[0].name);
           $scope.dupeCreator = true;
         }
       }
-    })
-  })
+    });
+  });
 
   $scope.formNewCreator = function(form){
     if(form.$invalid){
@@ -171,7 +171,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       creatorServices.checkForCreator($scope.newCreator.name, function(err, data){
         if(err){
           console.log(err);
-        } else if(data.length != 0){
+        } else if(data.length !== 0){
           console.log('already in db');
         } else {
           creatorServices.createCreator($scope.newCreator, function(err, data){
@@ -184,7 +184,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
         }
       });
     }
-  }
+  };
 
   function refreshCreators(){
     creatorServices.getAllCreators(function(err, data){
@@ -226,7 +226,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
         }
         console.log($rootScope.user);
       }
-    })
+    });
   };
   $scope.logoutUser = function(){
     userServices.logoutUser(function(err, data){

@@ -13,7 +13,7 @@ angular.module('educationApp.config', ['educationApp.services'])
   $rootScope.user = {};
   $rootScope.user.name = 'Not logged in';
   $rootScope.user.valid = false;
-  $rootScope.user.isAdmin - false;
+  $rootScope.user.isAdmin = false;
 
   //query server for login state to handle page reloads, etc
   userServices.checkIfLoggedIn(function(err, data){
@@ -24,7 +24,7 @@ angular.module('educationApp.config', ['educationApp.services'])
       $rootScope.user.valid= true;
       $rootScope.user.isAdmin = data.isAdmin;
     }
-  })
+  });
 
   var breakpoints = [
     {width: 0, columns: 1},

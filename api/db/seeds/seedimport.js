@@ -1,8 +1,8 @@
 'use strict';
+/*global globals*/
 
 var fs = require('fs');
-var _ = require('lodash');
-var http = require('http');
+// var _ = require('lodash');
 var request = require('request');
 var cheerio = require('cheerio');
 var async = require('async');
@@ -78,7 +78,7 @@ function deleteCollections(collectionList){
           console.log('dropped' + collection);
           callback();
         }
-      })
+      });
   }, function(err){
     if(err){
       console.log(err);
@@ -171,7 +171,7 @@ function makeTestUsers(){
 function makeNonTestUsers(){
   //create admin user account
   if(!displayName || !email || !password){
-    console.log('non test setup requires format:')
+    console.log('non test setup requires format:');
     console.log('node seedimport.js (dev/prod) displayName email password');
     process.exit();
   }
@@ -312,12 +312,13 @@ function importChannels(outerCallback){
     channel._ytplaylists = [];
     channel._websites = [];
     channel._comments = [];
+    var i;
     console.log('******* importing data for channel: ' + channel.name);
-    for(var rep2=0;rep2<channel._creators.length;rep2++){
-      channel._creators[rep2] = creatorsIDs[channel._creators[rep2]];
+    for(i=0;i<channel._creators.length;i++){
+      channel._creators[i] = creatorsIDs[channel._creators[i]];
     }
-    for(var rep2=0;rep2<channel._tags.length;rep2++){
-      channel._tags[rep2] = tagsIDs[channel._tags[rep2]];
+    for(i=0;i<channel._tags.length;i++){
+      channel._tags[i] = tagsIDs[channel._tags[i]];
     }
     channel.lName = channel.name.toLowerCase();
     channel.update = Date.now();
@@ -327,8 +328,8 @@ function importChannels(outerCallback){
     channel.local.owner = admin;
 
     //hack to pass iteration index into async.each
-    for(var rep2=0;rep2<channel.links.length;rep2++){
-      channel.links[rep2].position = rep2;
+    for(i=0;i<channel.links.length;i++){
+      channel.links[i].position = i;
     }
 
     async.each(channel.links, function(link, linkCallback){
@@ -414,12 +415,13 @@ function importChannels(outerCallback){
         process.exit();
       }
       var newChannel = new Channel(channel);
-      console.log('new channel: ', newChannel);
-      console.log('&&&&&&&&&&&&&&&&&&');
       newChannel.save(function(err, saved){
         if(err){
           console.log('error saving new Channel ', err);
           process.exit();
+        } else {
+          console.log('new channel: ', saved);
+          console.log('&&&&&&&&&&&&&&&&&&');
         }
       });
       channelCallback();
@@ -488,7 +490,7 @@ function getYtChannels(ytChannelName, channelId, name, location, ytChannelCallba
     } else {
       ytChannelCallback('no data returned for: ' + ytChannelName);
     }
-  })
+  });
 }
 
 function getYtPlaylists(playlistId, name, location, ytPlaylistCallback){
@@ -528,7 +530,7 @@ function getYtPlaylists(playlistId, name, location, ytPlaylistCallback){
             }
           });
         }
-      })
+      });
     } else {
       ytPlaylistCallback('no data returned for: ', playlistId);
     }
@@ -595,9 +597,9 @@ function getVideos(tempYT, videoCallback){
       //console.log(data);
       console.log('got ' + data.length + ' videos for ' + tempYT.title);
       async.eachSeries(data, function(video, searchCallback){
-        if(video.id && !video.id.kind === 'youtube#video'){
+        if(video.id && video.id.kind !== 'youtube#video'){
           searchCallback('not a video: ' + video);
-        } else if(video.snippet.resourceId && !video.snippet.resourceId.kind === 'youtube#video'){
+        } else if(video.snippet.resourceId && video.snippet.resourceId.kind !== 'youtube#video'){
           searchCallback('not a video: ' + video);
         } else {
           var videoId = video.id.videoId ? video.id.videoId : video.snippet.resourceId.videoId;
@@ -640,7 +642,7 @@ function getVideos(tempYT, videoCallback){
         }
       });
     }
-  })
+  });
 }
 
 function populateVideos(outerCallback){
@@ -681,7 +683,7 @@ function populateVideos(outerCallback){
                 console.log('populated video: ' + video.youtubeVideoId);
                 callback();
               }
-            })
+            });
           }
         });
       }, function(err){
