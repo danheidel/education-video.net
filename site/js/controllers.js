@@ -82,31 +82,58 @@ angular.module('educationApp.controllers', ['educationApp.services'])
   $scope.newChannel = {};
 
   $scope.$watch('newTag.name', function(newVal){
+    if(!newVal) { return; }
+    checkTag();
+  });
+
+  $scope.$watch('newTag.category', function(newVal){
+    if(!newVal) { return; }
+    checkTag();
+  });
+
+  function checkTag(){
     $scope.dupeTag = false;
-    tagServices.checkForTag(newVal, function(err, data){
+    // console.log($scope.newTag);
+    tagServices.checkForTag({
+      name: $scope.newTag.name,
+      category: $scope.newTag.category
+    }, function(err, data){
       if(err){
         return;
       } else {
         if(data.length != 0){
-          console.log(data[0].name);
           $scope.dupeTag = true;
         }
       }
-    })
-  })
+    });
+  }
 
   $scope.formNewTag = function(form){
     if(form.$invalid){
       console.log('invalid login form');
       return;
     } else {
-      tagServices.createTag($scope.newTag.name, function(err, data){
+      tagServices.checkForTag({
+        name: $scope.newTag.name,
+        category: $scope.newTag.category
+      }, function(err, data){
         if(err){
           console.log(err);
+        } else if(data.length != 0){
+          console.log('already in the db');
         } else {
-          refreshTags();
+          tagServices.createTag({
+            name: $scope.newTag.name,
+            category: $scope.newTag.category
+          }, function(err, data){
+            if(err){
+              console.log(err);
+            } else {
+              refreshTags();
+            }
+          });
         }
-      })
+      });
     }
   }
 
@@ -122,6 +149,7 @@ angular.module('educationApp.controllers', ['educationApp.services'])
   }
 
   $scope.$watch('newCreator.name', function(newVal){
+    if(!newVal) { return; }
     $scope.dupeCreator = false;
     creatorServices.checkForCreator(newVal, function(err, data){
       if(err){
@@ -140,11 +168,19 @@ angular.module('educationApp.controllers', ['educationApp.services'])
       console.log('invalid login form');
       return;
     } else {
-      creatorServices.createCreator($scope.newCreator, function(err, data){
+      creatorServices.checkForCreator($scope.newCreator.name, function(err, data){
         if(err){
           console.log(err);
+        } else if(data.length != 0){
+          console.log('already in db');
         } else {
-          refreshCreators();
+          creatorServices.createCreator($scope.newCreator, function(err, data){
+            if(err){
+              console.log(err);
+            } else {
+              refreshCreators();
+            }
+          });
         }
       });
     }

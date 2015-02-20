@@ -13,6 +13,10 @@ var schema = new mongoose.Schema({
   //_id: String,
   name: {
     type: String,
+    required:true
+  },
+  lName: {
+    type: String,
     required:true,
     index: {unique: true}
   },

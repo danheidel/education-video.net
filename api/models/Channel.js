@@ -7,6 +7,10 @@ var setupModel = require('./models').setupModel;
 var schema = new mongoose.Schema({
   name: {
     type: String,
+    required: true
+  },
+  lName: {
+    type: String,
     required: true,
     index: {unique: true}
   },

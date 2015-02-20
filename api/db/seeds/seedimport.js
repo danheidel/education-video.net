@@ -228,6 +228,7 @@ function checkForAdmin(outerCallback){
 function populateCreators(outerCallback){
   console.log('populating creators');
   async.each(creators, function(creator, callback){
+    creator.lName = creator.name.toLowerCase();
     creator.local = {};
     creator.local.owner = admin;
     var tempContacts = [];
@@ -277,10 +278,11 @@ function populateCreators(outerCallback){
 function populateTags(outerCallback){
   console.log('populating tags');
   async.each(tags, function(tag, callback){
+    tag.lName = tag.name.toLowerCase();
     tag.local = {};
     tag.local.owner = admin;
     var tempTag = new Tag(tag);
-    tempTag.category = 'Subject';
+    tempTag.category = 'subject';
     console.log(tempTag);
     tempTag.save(function(err, saved){
       if(err){
@@ -317,6 +319,7 @@ function importChannels(outerCallback){
     for(var rep2=0;rep2<channel._tags.length;rep2++){
       channel._tags[rep2] = tagsIDs[channel._tags[rep2]];
     }
+    channel.lName = channel.name.toLowerCase();
     channel.update = Date.now();
     channel.visible = true;
     channel.myDescription = channel.description;

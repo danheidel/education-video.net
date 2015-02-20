@@ -57,7 +57,7 @@ angular.module('educationApp.services', [])
   }
 
   function checkForCreator(name, callback){
-    $http.get(apiUrl + 'creators/query?name=' + name)
+    $http.get(apiUrl + 'creators/query?lName=' + name.toLowerCase())
     .success(function(data){
       callback(null, data);
     }).error(function(data){
@@ -84,9 +84,10 @@ angular.module('educationApp.services', [])
     });
   }
 
-  function createTag(tagName, callback){
+  function createTag(tag, callback){
     $http.post(apiUrl + 'tags', {
-      'name': tagName
+      name: tag.name,
+      category: tag.category
     }).success(function(data){
       callback(null, data);
     }).error(function(data){
@@ -94,9 +95,11 @@ angular.module('educationApp.services', [])
     })
   }
 
-  function checkForTag(tagName, callback){
-    console.log(tagName);
-    $http.get(apiUrl + 'tags/query?name=' + tagName)
+  function checkForTag(tag, callback){
+    console.log(tag.name);
+    if(!tag.name || !tag.category) { return; }
+    $http.get(apiUrl + 'tags/query?lName=' + tag.name.toLowerCase() +
+      '&category=' + tag.category.toLowerCase())
     .success(function(data){
       callback(null, data);
     })

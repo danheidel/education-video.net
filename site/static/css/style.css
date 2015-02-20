@@ -44,11 +44,11 @@ input[type="button"] {
   font-size: large;
 }
 
-input.validation-color.ng-valid.ng-touched{
+input.validation-color.ng-valid{
   background-color: #78FA89;
 }
 
-input.validation-color.ng-invalid.ng-touched{
+input.validation-color.ng-invalid{
   background-color: #FA787E;
 }
 

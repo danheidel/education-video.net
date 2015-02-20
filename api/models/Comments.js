@@ -8,8 +8,7 @@ var schema = new mongoose.Schema({
   //_id: String,
   text: {
     type: String,
-    required:true,
-    index: {unique: true}
+    required:true
   },
   time: Date,
   userName: String,

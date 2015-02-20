@@ -12,23 +12,51 @@
           <input type="text"
             class="input-required validation-color"
             ng-model="newCreator.name"
-            ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-            required> *
+            ng-model-options="{ updateOn: 'default', debounce: {'default': 250} }"
+            required/> *
           <br>
-          Description: <input type="text" ng-model="newCreator.description">
+          Description:
+          <input type="text"
+            ng-model="newCreator.description"/>
           <br>
-          Website: <input type="url" class="validation-color" ng-model="newCreator.contact.website">
+          Website:
+          <input type="url"
+            class="validation-color"
+            ng-model="newCreator.contact.website"/>
           <br>
-          Email: <input type="email" class="validation-color" ng-model="newCreator.contact.email">
+          Email:
+          <input type="email"
+            class="validation-color"
+            ng-model="newCreator.contact.email"/>
           <br>
-          Twitter: <input type="url" class="validation-color" ng-model="newCreator.contact.twitter">
+          Twitter:
+          <input type="url"
+            class="validation-color"
+            ng-model="newCreator.contact.twitter"/>
           <br>
-          Facebook: <input type="url" class="validation-color" ng-model="newCreator.contact.facebook">
+          Facebook:
+          <input type="url"
+            class="validation-color"
+            ng-model="newCreator.contact.facebook"/>
           <br>
-          Tumblr: <input type="url" class="validation-color" ng-model="newCreator.contact.tumblr">
+          Tumblr:
+          <input type="url"
+            class="validation-color"
+            ng-model="newCreator.contact.tumblr"/>
           <br>
           <br>
-          <input type="button" value="send" ng-click="formNewCreator(newCreatorForm)">
+          <input type="button"
+            value="send"
+            ng-if="!dupeCreator && newCreatorForm.$valid"
+            ng-click="formNewCreator(newCreatorForm)"/>
+          <div style="background: #FA787E"
+            ng-if="!newCreatorForm.$valid">
+            Form incomplete
+          </div>
+          <div style="background: #FA787E"
+            ng-if="dupeCreator">
+            Already in the DB
+          </div>
         </form>
       </div>
     </div>
@@ -41,12 +69,29 @@
           <input type="text"
             class="input-required validation-color"
             ng-model="newTag.name"
-            ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-            required> *
-          {{newTag.name}}
+            ng-model-options="{ updateOn: 'default', debounce: {'default': 250} }"
+            required/> *
+          <br>
+          Tag category:
+          <input type="text"
+            class="input-required validation-color"
+            ng-model="newTag.category"
+            ng-model-options="{ updateOn: 'default', debounce: {'default': 250} }"
+            required/> *
           <br>
           <br>
-          <input type="button" value="send" ng-click="formNewTag(newTagForm)">
+          <input type="button"
+            value="send"
+            ng-if="!dupeTag && newTagForm.$valid"
+            ng-click="formNewTag(newTagForm)"/>
+          <div style="background: #FA787E"
+            ng-if="!newTagForm.$valid">
+            Form incomplete
+          </div>
+          <div style="background: #FA787E"
+            ng-if="dupeTag">
+            Already in the DB
+          </div>
         </form>
       </div>
     </div>
